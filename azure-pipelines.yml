@@ -1,0 +1,25 @@
+trigger:
+  branches:
+    include:
+      - master
+pr:
+  branches:
+    include:
+      - master
+jobs:
+  - job: Build
+    steps:
+      - task: NodeTool@0
+        displayName: 'Use Node 10.14.0'
+        inputs:
+          versionSpec: 10.14.0
+      - script: npm install
+      - script: npm run lint-ci
+      - script: npm run snyk
+      - script: npm run coverage
+      - script: npm run codecov
+      - task: PublishCodeCoverageResults@1
+        inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*cobertura-coverage.xml'
+          reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
