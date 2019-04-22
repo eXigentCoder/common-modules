@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "checkJs": true,
+        "moduleResolution": "node"
+    },
+    "typeAcquisition": {
+        "include": ["jest", "mocha", "chai"]
+    }
+}
