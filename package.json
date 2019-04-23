@@ -6,9 +6,7 @@
     "npm": ">= 6.0.0"
   },
   "description": "A collection of shared js modules used primarily on the server side.",
-  "files": [
-    "packages"
-  ],
+  "files": ["packages"],
   "scripts": {
     "coverage": "nyc mocha",
     "codecov": "codecov",
@@ -19,9 +17,9 @@
     "snyk": "snyk test",
     "prettier": "prettier --write \"packages/**/*.js\"",
     "update": "npm-check -Eu",
-    "patch": "npm version patch && npm publish",
-    "minor": "npm version minor && npm publish",
-    "major": "npm version major && npm publish",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major",
     "preversion": "npm run prettier && npm run lint && npm run coverage && npm run snyk",
     "postversion": "echo %s",
     "bitAdd": "bit add packages/* --tests src/*.test.js",
@@ -31,9 +29,7 @@
     "type": "git",
     "url": "git+https://github.com/KrimZen Ninja/krimzen-ninja-common-errors.git"
   },
-  "keywords": [
-    "KrimZen-Ninja"
-  ],
+  "keywords": ["KrimZen-Ninja"],
   "author": "Ryan Kotzen <ryan@krimzen.ninja> (https://github.com/KrimzenNinja)",
   "license": "MIT",
   "devDependencies": {
