@@ -1,12 +1,14 @@
 {
   "name": "@exigentcoder/common-modules",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "node": "^10.0.0",
     "npm": ">= 6.0.0"
   },
   "description": "A collection of shared js modules used primarily on the server side.",
-  "files": ["packages"],
+  "files": [
+    "packages"
+  ],
   "scripts": {
     "coverage": "nyc mocha",
     "codecov": "codecov",
@@ -29,7 +31,9 @@
     "type": "git",
     "url": "git+https://github.com/KrimZen Ninja/krimzen-ninja-common-errors.git"
   },
-  "keywords": ["KrimZen-Ninja"],
+  "keywords": [
+    "KrimZen-Ninja"
+  ],
   "author": "Ryan Kotzen <ryan@krimzen.ninja> (https://github.com/KrimzenNinja)",
   "license": "MIT",
   "devDependencies": {
