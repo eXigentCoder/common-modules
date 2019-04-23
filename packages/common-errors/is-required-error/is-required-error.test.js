@@ -4,6 +4,9 @@ var chai = require('chai');
 var expect = chai.expect;
 
 describe('IsRequiredError', () => {
+    it('should throw an error if no arguments provided', () => {
+        expect(() => new IsRequiredError()).to.throw(IsRequiredError);
+    });
     it('should be an instance of the Error class', () => {
         const error = new IsRequiredError('test');
         expect(error).to.be.instanceOf(Error);
