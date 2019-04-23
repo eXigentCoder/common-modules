@@ -7,6 +7,11 @@ module.exports = class IsRequiredError extends Error {
      * @param {string} [functionName] The name of the function where the required value was supposed to be provided too
      */
     constructor(requiredValue, functionName) {
+        if (!requiredValue) {
+            console.error(
+                'The IsRequiredError constructor must be provided with a non-falsy requiredValue'
+            );
+        }
         if (functionName) {
             super(`You must provide "${requiredValue}" to the "${functionName}" function`);
         } else {
