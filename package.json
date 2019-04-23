@@ -1,6 +1,6 @@
 {
   "name": "@exigentcoder/common-modules",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "node": "^10.0.0",
     "npm": ">= 6.0.0"
@@ -22,10 +22,9 @@
     "major": "npm version major",
     "preversion": "npm run prettier && npm run lint && npm run coverage && npm run snyk && npm run bit-add",
     "postversion": "node build/bit-tag && npm run bit-export",
-    "bit-add": "bit add packages/* --tests src/*.test.js",
+    "bit-add": "bit add packages/* --tests packages/*.test.js",
     "bit-export": "bit export exigentcoder.common-modules"
   },
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KrimZen Ninja/krimzen-ninja-common-errors.git"
