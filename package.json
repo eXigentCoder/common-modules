@@ -21,6 +21,7 @@
     "minor": "npm version minor && npm publish",
     "major": "npm version major && npm publish",
     "preversion": "npm run prettier && npm run lint && npm run coverage && npm run snyk && git add . && git commit -m \"adding build artifacts\"",
+    "postversion": "echo %s",
     "bitAdd": "bit add packages/* --tests src/*.test.js",
     "bitExport": "bit export exigentcoder.common-modules"
   },
