@@ -7,9 +7,6 @@ console.log(`Setting version number to ${version}`);
 exec(`bit tag --all ${version} --force`, options, function(err, stdout, stderr) {
     if (stdout) {
         console.log(stdout);
-        if (stdout.toLowerCase().indexOf('nothing to tag') >= 0) {
-            throw new Error(stdout);
-        }
     }
     if (stderr) {
         console.error(stderr);
