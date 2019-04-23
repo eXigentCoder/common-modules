@@ -17,7 +17,7 @@ jobs:
       - script: npm run lint-ci
       - script: npm run snyk
       - script: npm run coverage
-      - script: npm run codecov
+      - script: npm run codecov --required
       - task: PublishCodeCoverageResults@1
         inputs:
           codeCoverageTool: Cobertura

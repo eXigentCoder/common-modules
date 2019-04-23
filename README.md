@@ -1,16 +1,4 @@
-## Lerna
-
-This project uses [Lerna](https://github.com/lerna/lerna)
-
-## Using the private NPM registry
-
-Recommended (for Windows users):Install and run the auth helper
-
-`npm install -g vsts-npm-auth --registry https://registry.npmjs.com --always-auth false`
-`vsts-npm-auth -config .npmrc`
-
-This should pop up a window to log in to the organisation.
-
+[![Build Status](https://dev.azure.com/krimzen-ninja/Common%20Modules/_apis/build/status/eXigentCoder.common-modules?branchName=master)](https://dev.azure.com/krimzen-ninja/Common%20Modules/_build/latest?definitionId=1&branchName=master)
 
 # bit.dev
 
