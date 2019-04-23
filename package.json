@@ -21,7 +21,7 @@
     "minor": "npm version minor",
     "major": "npm version major",
     "preversion": "npm run prettier && npm run lint && npm run coverage && npm run snyk && npm run bit-add",
-    "postversion": "node build/bit-tag && npm run bit-export",
+    "postversion": "git push --follow-tags && node build/bit-tag && npm run bit-export",
     "bit-add": "bit add packages/* --tests packages/*.test.js",
     "bit-export": "bit export exigentcoder.common-modules"
   },
