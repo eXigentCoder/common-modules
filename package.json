@@ -6,9 +6,7 @@
     "npm": ">= 6.0.0"
   },
   "description": "A collection of shared js modules used primarily on the server side.",
-  "files": [
-    "packages"
-  ],
+  "files": ["packages"],
   "scripts": {
     "coverage": "nyc mocha",
     "codecov": "codecov",
@@ -23,17 +21,16 @@
     "minor": "npm version minor",
     "major": "npm version major",
     "preversion": "npm run lint-ci && npm run coverage && npm run snyk",
-    "postversion": "node build/bit-tag && git add . && git commit -m \"[skip ci]Updating .bitmap file post tag\" && git push --follow-tags && npm run bit-export",
+    "postversion": "node build/bit-tag && git push --follow-tags && npm run bit-export",
     "bit-add": "bit add packages/* --tests packages/**/*.test.js",
-    "bit-export": "bit export exigentcoder.common-modules"
+    "bit-export": "bit export exigentcoder.common-modules",
+    "bit-commit": "git add . && git commit -m \"[skip ci]Updating .bitmap file post tag\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KrimZen Ninja/krimzen-ninja-common-errors.git"
   },
-  "keywords": [
-    "KrimZen-Ninja"
-  ],
+  "keywords": ["KrimZen-Ninja"],
   "author": "Ryan Kotzen <ryan@krimzen.ninja> (https://github.com/KrimzenNinja)",
   "license": "MIT",
   "devDependencies": {
