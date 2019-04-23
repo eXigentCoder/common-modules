@@ -1,10 +1,10 @@
 'use strict';
 module.exports = {
     'check-coverage': true,
-    lines: 75,
-    statements: 75,
+    statements: 70,
+    branches: 75,
     functions: 90,
-    branches: 90,
+    lines: 70,
     all: true,
     include: ['packages/**'],
     exclude: ['packages/**/*.test.js'],
