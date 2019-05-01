@@ -8,8 +8,8 @@ const uuid = {
     maxLength: 36,
 };
 
-// internal string identifier
-const name = {
+const identifier = {
+    description: 'A human readable string identifier used to refer to an entitiy',
     type: 'string',
     minLength: 1,
     pattern: convertRegexToAjvString(/^[a-zA-Z0-9-]+$/),
@@ -128,7 +128,7 @@ const boolean = {
 
 module.exports = {
     uuid,
-    name,
+    identifier,
     title,
     description,
     dateTime,

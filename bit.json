@@ -2,7 +2,13 @@
     "env": {
         "tester": "bit.envs/testers/mocha@0.0.17"
     },
-    "dependencies": {},
     "componentsDefaultDirectory": "packages/{name}",
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "overrides": {
+        "exigentcoder.common-modules/json-schema": {
+            "env": {
+                "tester": "bit.envs/testers/mocha@0.0.17"
+            }
+        }
+    }
 }

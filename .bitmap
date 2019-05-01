@@ -34,44 +34,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/json-schema@0.1.1": {
-        "files": [
-            {
-                "relativePath": "packages/json-schema/date-time.test.js",
-                "test": true,
-                "name": "date-time.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/description.test.js",
-                "test": true,
-                "name": "description.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/email.test.js",
-                "test": true,
-                "name": "email.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/json-schema/name.test.js",
-                "test": true,
-                "name": "name.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/title.test.js",
-                "test": true,
-                "name": "title.test.js"
-            }
-        ],
-        "mainFile": "packages/json-schema/index.js",
-        "trackDir": "packages/json-schema",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "exigentcoder.common-modules/validation@0.1.1": {
         "files": [
             {
@@ -123,5 +85,46 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "version": "14.0.6"
+    "exigentcoder.common-modules/json-schema@0.1.2": {
+        "files": [
+            {
+                "name": "date-time.test.js",
+                "relativePath": "packages/json-schema/date-time.test.js",
+                "test": true
+            },
+            {
+                "name": "description.test.js",
+                "relativePath": "packages/json-schema/description.test.js",
+                "test": true
+            },
+            {
+                "name": "email.test.js",
+                "relativePath": "packages/json-schema/email.test.js",
+                "test": true
+            },
+            {
+                "name": "index.js",
+                "relativePath": "packages/json-schema/index.js",
+                "test": false
+            },
+            {
+                "name": "name.test.js",
+                "relativePath": "packages/json-schema/name.test.js",
+                "test": true
+            },
+            {
+                "name": "title.test.js",
+                "relativePath": "packages/json-schema/title.test.js",
+                "test": true
+            }
+        ],
+        "mainFile": "packages/json-schema/index.js",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.1.1",
+            "exigentcoder.common-modules/validation@0.1.1"
+        ],
+        "exported": true
+    },
+    "version": "14.1.0"
 }
