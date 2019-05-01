@@ -15,3 +15,7 @@ https://krimzen-ninja@dev.azure.com/krimzen-ninja/krimzen-ninja-shared-npm/_git/
 git+https://github.com/KrimZen Ninja/krimzen-ninja-common-errors.git
 
 bit remove exigentcoder.shared-components --remote
+
+# Semver
+
+This project follows [Semver](https://semver.org/) guidelines for version numbering
