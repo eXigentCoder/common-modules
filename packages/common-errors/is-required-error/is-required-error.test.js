@@ -5,6 +5,7 @@ var expect = chai.expect;
 
 describe('IsRequiredError', () => {
     it('should throw an error if no arguments provided', () => {
+        //@ts-ignore
         expect(() => new IsRequiredError()).to.throw(IsRequiredError);
     });
     it('should be an instance of the Error class', () => {

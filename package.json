@@ -30,12 +30,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KrimZen Ninja/krimzen-ninja-common-errors.git"
+    "url": "https://github.com/eXigentCoder/common-modules.git"
   },
   "keywords": [
     "KrimZen-Ninja"
   ],
-  "author": "Ryan Kotzen <ryan@krimzen.ninja> (https://github.com/KrimzenNinja)",
+  "author": "Ryan Kotzen <ryan@krimzen.ninja> (http://ryankotzen.com/)",
   "license": "MIT",
   "devDependencies": {
     "chai": "4.2.0",
@@ -52,6 +52,11 @@
     "snyk": "1.52.0"
   },
   "dependencies": {
-    "debug": "4.1.1"
+    "ajv": "6.10.0",
+    "ajv-errors": "1.0.1",
+    "better-ajv-errors": "0.6.4",
+    "debug": "4.1.1",
+    "moment": "2.24.0",
+    "mongodb": "3.2.3"
   }
 }

@@ -11,7 +11,7 @@ module.exports = class IsRequiredError extends Error {
             throw new IsRequiredError('requiredValue', 'IsRequiredError', 'constructor');
         }
         if (functionName) {
-            super(`You must provide "${requiredValue}" to the "${functionName}" ${functionType}`);
+            super(`You must provide "${requiredValue}" to the "${functionName}" ${functionType}.`);
         } else {
             super(`The "${requiredValue}" value is required`);
         }
