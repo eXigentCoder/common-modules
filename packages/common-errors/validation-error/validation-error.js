@@ -1,5 +1,5 @@
 'use strict';
-const { IsRequiredError } = require('..');
+const IsRequiredError = require('../is-required-error/is-required-error');
 module.exports = class ValidationError extends Error {
     /**
      * An error used when some value that is required was not provided
