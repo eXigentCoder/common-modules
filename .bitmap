@@ -126,5 +126,41 @@
         ],
         "exported": true
     },
+    "config": {
+        "files": [
+            {
+                "relativePath": "packages/config/config.test.js",
+                "test": true,
+                "name": "config.test.js"
+            },
+            {
+                "relativePath": "packages/config/index.js",
+                "test": false,
+                "name": "index.js"
+            }
+        ],
+        "mainFile": "packages/config/index.js",
+        "trackDir": "packages/config",
+        "origin": "AUTHORED",
+        "exported": false
+    },
+    "logging": {
+        "files": [
+            {
+                "relativePath": "packages/logging/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/logging/logging.test.js",
+                "test": true,
+                "name": "logging.test.js"
+            }
+        ],
+        "mainFile": "packages/logging/index.js",
+        "trackDir": "packages/logging",
+        "origin": "AUTHORED",
+        "exported": false
+    },
     "version": "14.1.0"
 }
