@@ -3,7 +3,7 @@ module.exports = {
     'check-coverage': true,
     statements: 70,
     branches: 75,
-    functions: 90,
+    functions: 65,
     lines: 70,
     all: true,
     include: ['packages/**'],

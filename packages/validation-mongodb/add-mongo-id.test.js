@@ -1,6 +1,6 @@
 'use strict';
 
-const addMongoId = require('./add-mongo-id');
+const { addMongoId } = require('./');
 const { createInputValidator } = require('../validation/ajv');
 const ObjectId = require('mongodb').ObjectID;
 var chai = require('chai');
