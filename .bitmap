@@ -102,7 +102,7 @@
             },
             {
                 "relativePath": "packages/validation-mongodb/add-mongo-id.test.js",
-                "test": false,
+                "test": true,
                 "name": "add-mongo-id.test.js"
             },
             {
@@ -161,6 +161,54 @@
         "trackDir": "packages/logging",
         "origin": "AUTHORED",
         "exported": true
+    },
+    "express-error-handler": {
+        "files": [
+            {
+                "relativePath": "packages/express-error-handler/boom-error-handler.js",
+                "test": false,
+                "name": "boom-error-handler.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/boom-error-handler.test.js",
+                "test": true,
+                "name": "boom-error-handler.test.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/error-handler.js",
+                "test": false,
+                "name": "error-handler.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/error-handler.test.js",
+                "test": true,
+                "name": "error-handler.test.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/express-error-handler.test.js",
+                "test": true,
+                "name": "express-error-handler.test.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/not-found.js",
+                "test": false,
+                "name": "not-found.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/not-found.test.js",
+                "test": true,
+                "name": "not-found.test.js"
+            }
+        ],
+        "mainFile": "packages/express-error-handler/index.js",
+        "trackDir": "packages/express-error-handler",
+        "origin": "AUTHORED",
+        "exported": false
     },
     "version": "14.1.0"
 }
