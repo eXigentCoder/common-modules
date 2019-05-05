@@ -1,4 +1,5 @@
 'use strict';
+const boom = require('@hapi/boom');
 const IsRequiredError = require('../is-required-error/is-required-error');
 module.exports = class ValidationError extends Error {
     /**
@@ -16,5 +17,9 @@ module.exports = class ValidationError extends Error {
         }
         this.name = this.constructor.name;
         this.code = 'ERR_KN_VALIDATION_FAILED';
+    }
+
+    toBoom() {
+        return boom.boomify(this, { statusCode: 400, decorate: { data: this.errors } });
     }
 };
