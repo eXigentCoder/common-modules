@@ -6,17 +6,14 @@ const errorHandler = require('./error-handler');
 const boomErrorHandler = require('./boom-error-handler');
 const notFound = require('./not-found');
 
-module.exports = function initialise(options) {
+module.exports = function initialise(app, options = {}) {
     debug('Initialising');
-    if (!options.name) {
-        throw new IsRequiredError('options.name', initialise.name);
-    }
-    if (!options.app) {
-        throw new IsRequiredError('options.app', initialise.name);
+    if (!app) {
+        throw new IsRequiredError('app');
     }
     options.exposeServerErrorMessages = options.exposeServerErrorMessages || false;
-    options.app.use(errorHandler());
-    options.app.use(boomErrorHandler(options));
-    options.app.use(notFound());
+    app.use(errorHandler());
+    app.use(boomErrorHandler(options));
+    app.use(notFound());
     debug('Initialised');
 };
