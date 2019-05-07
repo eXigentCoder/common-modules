@@ -111,24 +111,6 @@
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/logging@0.2.1": {
-        "files": [
-            {
-                "relativePath": "packages/logging/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/logging/logging.test.js",
-                "test": true,
-                "name": "logging.test.js"
-            }
-        ],
-        "mainFile": "packages/logging/index.js",
-        "trackDir": "packages/logging",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "exigentcoder.common-modules/validation-mongodb@0.2.1": {
         "files": [
             {
@@ -210,6 +192,24 @@
         "dependencies": [
             "exigentcoder.common-modules/common-errors@0.3.0"
         ],
+        "exported": true
+    },
+    "exigentcoder.common-modules/logging@0.5.2": {
+        "files": [
+            {
+                "relativePath": "packages/logging/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/logging/logging.test.js",
+                "test": true,
+                "name": "logging.test.js"
+            }
+        ],
+        "mainFile": "packages/logging/index.js",
+        "trackDir": "packages/logging",
+        "origin": "AUTHORED",
         "exported": true
     },
     "version": "14.1.0"
