@@ -13,8 +13,8 @@ const execute = util.promisify(exec);
                 return;
             }
         }
-        const { stdout: npmCommitOutput } = await execute('npm run bit-commit');
-        console.log(npmCommitOutput);
+        //const { stdout: npmCommitOutput } = await execute('npm run bit-commit');
+        //console.log(npmCommitOutput);
     } catch (err) {
         console.error(err);
     }
