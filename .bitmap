@@ -162,52 +162,54 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/express-error-handler@0.3.0": {
+    "exigentcoder.common-modules/express-error-handler@0.4.0": {
         "files": [
             {
+                "name": "boom-error-handler.js",
                 "relativePath": "packages/express-error-handler/boom-error-handler.js",
-                "test": false,
-                "name": "boom-error-handler.js"
+                "test": false
             },
             {
+                "name": "boom-error-handler.test.js",
                 "relativePath": "packages/express-error-handler/boom-error-handler.test.js",
-                "test": true,
-                "name": "boom-error-handler.test.js"
+                "test": true
             },
             {
+                "name": "error-handler.js",
                 "relativePath": "packages/express-error-handler/error-handler.js",
-                "test": false,
-                "name": "error-handler.js"
+                "test": false
             },
             {
+                "name": "error-handler.test.js",
                 "relativePath": "packages/express-error-handler/error-handler.test.js",
-                "test": true,
-                "name": "error-handler.test.js"
+                "test": true
             },
             {
+                "name": "express-error-handler.test.js",
                 "relativePath": "packages/express-error-handler/express-error-handler.test.js",
-                "test": true,
-                "name": "express-error-handler.test.js"
+                "test": true
             },
             {
+                "name": "index.js",
                 "relativePath": "packages/express-error-handler/index.js",
-                "test": false,
-                "name": "index.js"
+                "test": false
             },
             {
+                "name": "not-found.js",
                 "relativePath": "packages/express-error-handler/not-found.js",
-                "test": false,
-                "name": "not-found.js"
+                "test": false
             },
             {
+                "name": "not-found.test.js",
                 "relativePath": "packages/express-error-handler/not-found.test.js",
-                "test": true,
-                "name": "not-found.test.js"
+                "test": true
             }
         ],
         "mainFile": "packages/express-error-handler/index.js",
-        "trackDir": "packages/express-error-handler",
         "origin": "AUTHORED",
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.3.0"
+        ],
         "exported": true
     },
     "version": "14.1.0"

@@ -9,6 +9,11 @@
             "env": {
                 "tester": "bit.envs/testers/mocha@0.0.17"
             }
+        },
+        "exigentcoder.common-modules/express-error-handler": {
+            "env": {
+                "tester": "bit.envs/testers/mocha@0.0.17"
+            }
         }
     }
 }
