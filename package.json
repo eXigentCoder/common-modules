@@ -6,9 +6,7 @@
     "npm": ">= 6.0.0"
   },
   "description": "A collection of shared js modules used primarily on the server side.",
-  "files": [
-    "packages"
-  ],
+  "files": ["packages"],
   "scripts": {
     "coverage": "nyc mocha",
     "codecov": "codecov",
@@ -32,9 +30,7 @@
     "type": "git",
     "url": "https://github.com/eXigentCoder/common-modules.git"
   },
-  "keywords": [
-    "KrimZen-Ninja"
-  ],
+  "keywords": ["KrimZen-Ninja"],
   "author": "Ryan Kotzen <ryan@krimzen.ninja> (http://ryankotzen.com/)",
   "license": "MIT",
   "devDependencies": {

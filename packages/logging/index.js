@@ -32,9 +32,9 @@ const logger = {
  * Initialises the wrapper for the pino logger
  * @param {object} options The [pino options](https://github.com/pinojs/pino/blob/HEAD/docs/API.md#parameters) to setup the logger.
  * @param {string} options.name The name of the script/application that you would like to setup logging for
- * @param {boolean|object} options.prettyPrint (boolean|object): enables [pino.pretty](#pretty). This is intended for non-production configurations.
+ * @param {boolean|object} [options.prettyPrint] (boolean|object): enables [pino.pretty](#pretty). This is intended for non-production configurations.
  * This may be set to a configuration object as outlined in [pino.pretty](#pretty). Default when `NODE_ENV=production` `false`. Default when `NODE_ENV!=production` `true`.
- * @param {string} options.level : one of `'fatal'`, `'error'`, `'warn'`, `'info`', `'debug'`, `'trace'`;
+ * @param {string} [options.level] : one of `'fatal'`, `'error'`, `'warn'`, `'info`', `'debug'`, `'trace'`;
  * also `'silent'` is supported to disable logging. Any other value  defines a custom level and requires supplying a
  * level value via `levelVal`. Default when `NODE_ENV=production` `info`. Default when `NODE_ENV!=production` `trace`.
  * @returns {Logger}
@@ -48,7 +48,9 @@ function initialise(options) {
     }
     if (process.env.NODE_ENV !== 'production') {
         if (options.prettyPrint === undefined) {
-            options.prettyPrint = true;
+            options.prettyPrint = {
+                translateTime: 'SYS:standard',
+            };
         }
         if (options.level === undefined) {
             options.level = process.env.LEVEL || 'trace';
