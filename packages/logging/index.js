@@ -6,13 +6,13 @@ const { IsRequiredError } = require('../common-errors');
 let _pino;
 
 const consoleMap = {
-    fatal: 'fatal',
-    error: 'error',
-    warn: 'warn',
-    log: 'info',
-    info: 'info',
-    debug: 'debug',
-    trace: 'trace',
+    fatal: { name: 'fatal' },
+    error: { name: 'error' },
+    warn: { name: 'warn' },
+    log: { name: 'info' },
+    info: { name: 'info' },
+    debug: { name: 'debug' },
+    trace: { name: 'trace' },
 };
 
 /**
@@ -70,10 +70,12 @@ function initialise(options) {
  */
 function overrideConsole() {
     ensureInitialised('overrideConsole');
-    Object.keys(consoleMap).forEach(function(consoleMethod) {
-        const pinoMethod = consoleMap[consoleMethod];
-        console[consoleMethod] = function() {
-            _pino[pinoMethod].apply(_pino, arguments);
+    Object.keys(consoleMap).forEach(function(consoleMethodName) {
+        const map = consoleMap[consoleMethodName];
+        const pinoMethodName = map.name;
+        map.oldFn = console[consoleMethodName];
+        console[consoleMethodName] = function() {
+            _pino[pinoMethodName].apply(_pino, arguments);
         };
     });
     return logger;
@@ -106,6 +108,12 @@ function pino() {
 }
 
 function reset() {
+    Object.keys(consoleMap).forEach(function(consoleMethodName) {
+        const map = consoleMap[consoleMethodName];
+        if (map.oldFn) {
+            console[consoleMethodName] = map.oldFn;
+        }
+    });
     _pino = undefined;
     return logger;
 }

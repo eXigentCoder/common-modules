@@ -10,6 +10,9 @@ beforeEach(function() {
     process.env.NODE_ENV = 'test';
     delete process.env.LEVEL;
 });
+afterEach(() => {
+    logger.reset();
+});
 
 describe('logger', () => {
     describe('initialise', function() {
@@ -32,7 +35,7 @@ describe('logger', () => {
             it('should default prettyPrint to true for non production', function() {
                 let opts = { name: 'krimzen-ninja-logging' };
                 logger.initialise(opts);
-                expect(opts.prettyPrint).to.equal(true);
+                expect(opts.prettyPrint).to.be.ok;
             });
             it('should allow you to set prettyPrint to false for non production', function() {
                 let opts = { name: 'krimzen-ninja-logging', prettyPrint: false };
