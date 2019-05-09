@@ -194,7 +194,7 @@
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/logging@0.5.3": {
+    "exigentcoder.common-modules/logging@0.6.0": {
         "files": [
             {
                 "relativePath": "packages/logging/index.js",
