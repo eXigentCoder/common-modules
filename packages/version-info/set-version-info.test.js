@@ -5,6 +5,13 @@ const setVersionInfo = manager();
 var chai = require('chai');
 var expect = chai.expect;
 describe('setVersionInfo', () => {
+    const validContext = {
+        requestId: '1',
+        identity: {
+            id: '1',
+        },
+        codeVersion: '0.0.1',
+    };
     describe('object', () => {
         it('should throw an error if no object provided', () => {
             // @ts-ignore
@@ -19,17 +26,9 @@ describe('setVersionInfo', () => {
                 _id: new ObjectId().toString(),
                 name: 'bob',
             };
-            const validContext = {
-                requestId: '1',
-                identity: {
-                    id: '1',
-                },
-                codeVersion: '0.0.1',
-            };
+
             // @ts-ignore
-            expect(() => setVersionInfo(object, validContext)).to.throw(
-                'Object had the "_id" property, indicating that it already exists in the db but no "versionInfo" property was provided, this would cause the creation info to be incorrect and has been prevented.'
-            );
+            expect(() => setVersionInfo(object, validContext)).to.throw();
         });
     });
     describe('context', () => {
@@ -94,5 +93,15 @@ describe('setVersionInfo', () => {
                 ).to.throw();
             });
         });
+    });
+
+    it('should be able to add version info to a new object', () => {
+        setVersionInfo({}, validContext);
+    });
+
+    it('should be able to add version info to an existing object with versionInfo', () => {
+        const existingObject = {};
+        setVersionInfo(existingObject, validContext);
+        setVersionInfo(existingObject, validContext);
     });
 });
