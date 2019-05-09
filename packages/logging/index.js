@@ -37,9 +37,10 @@ const logger = {
  * @param {string} [options.level] : one of `'fatal'`, `'error'`, `'warn'`, `'info`', `'debug'`, `'trace'`;
  * also `'silent'` is supported to disable logging. Any other value  defines a custom level and requires supplying a
  * level value via `levelVal`. Default when `NODE_ENV=production` `info`. Default when `NODE_ENV!=production` `trace`.
+ * @param {NodeJS.WritableStream} [stream] a stream to write to, defaults to stdout.
  * @returns {Logger}
  */
-function initialise(options) {
+function initialise(options, stream) {
     if (!options) {
         throw new IsRequiredError('options', initialise.name);
     }
@@ -60,7 +61,7 @@ function initialise(options) {
             options.level = process.env.LEVEL || 'info';
         }
     }
-    _pino = createPino(options);
+    _pino = createPino(options, stream);
     return logger;
 }
 
