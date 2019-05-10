@@ -17,28 +17,30 @@ const consoleMap = {
 
 /**
  * @type Logger
- * @typedef {{initialise: initialise, consoleMap: {fatal: string, error: string, warn: string, log: string, info: string, debug: string, trace: string}, overrideConsole: overrideConsole, child: child, pino: pino, reset: reset}} Logger
+ * @typedef {{name:string,oldFn?:Function}} ConsoleMapValue
+ * @typedef {{fatal: ConsoleMapValue, error: ConsoleMapValue, warn: ConsoleMapValue, log: ConsoleMapValue, info: ConsoleMapValue, debug: ConsoleMapValue, trace: ConsoleMapValue}} ConsoleMap
+ * @typedef {(options:import('pino').LoggerOptions & {name:string},stream?:import('pino').DestinationStream)=>Logger} Initilaise
+ * @typedef {()=>Logger} OverrideConsole
+ * @typedef {{ level?: import('pino').Level | string; serializers?: { [key: string]: import('pino').SerializerFn }; [key: string]: any; }} Bindings
+ * @typedef {(bindings:Bindings)=>import('pino').Logger} Child
+ * @typedef {()=>import('pino').Logger} Pino
+ * @typedef {()=>Logger} Reset Clears the old pino logger and unoverrides the console if applicable
+ * @typedef {import('pino').Logger & {initilaise: Initilaise, consoleMap: ConsoleMap, overrideConsole: OverrideConsole, child: Child, pino: Pino, reset: Reset}} Logger
  */
 const logger = {
+    //@ts-ignore
     initialise,
     consoleMap,
     overrideConsole,
     child,
+    //@ts-ignore
     pino,
     reset,
 };
 
 /**
  * Initialises the wrapper for the pino logger
- * @param {object} options The [pino options](https://github.com/pinojs/pino/blob/HEAD/docs/API.md#parameters) to setup the logger.
- * @param {string} options.name The name of the script/application that you would like to setup logging for
- * @param {boolean|object} [options.prettyPrint] (boolean|object): enables [pino.pretty](#pretty). This is intended for non-production configurations.
- * This may be set to a configuration object as outlined in [pino.pretty](#pretty). Default when `NODE_ENV=production` `false`. Default when `NODE_ENV!=production` `true`.
- * @param {string} [options.level] : one of `'fatal'`, `'error'`, `'warn'`, `'info`', `'debug'`, `'trace'`;
- * also `'silent'` is supported to disable logging. Any other value  defines a custom level and requires supplying a
- * level value via `levelVal`. Default when `NODE_ENV=production` `info`. Default when `NODE_ENV!=production` `trace`.
- * @param {NodeJS.WritableStream} [stream] a stream to write to, defaults to stdout.
- * @returns {Logger}
+ * @type {Initilaise}
  */
 function initialise(options, stream) {
     if (!options) {
@@ -67,7 +69,7 @@ function initialise(options, stream) {
 
 /**
  * Uses monkey-patching to override the console methods and map them to the pino methods
- * @returns {Logger}
+ * @type {OverrideConsole}
  */
 function overrideConsole() {
     ensureInitialised('overrideConsole');
@@ -92,7 +94,7 @@ function ensureInitialised(methodName) {
  * Creates a [child logger](https://github.com/pinojs/pino/blob/HEAD/docs/API.md#child),
  * setting all key-value pairs in `bindings` as properties
  * in the log lines. All serializers will be applied to the given pair.
- * @returns {*}
+ * @type {Child}
  */
 function child() {
     ensureInitialised('child');
@@ -101,13 +103,17 @@ function child() {
 
 /**
  * Returns the underlying [pino logger](https://github.com/pinojs/pino)
- * @returns {*}
+ * @type {Pino}
  */
 function pino() {
     ensureInitialised('pino');
     return _pino;
 }
 
+/**
+ *
+ * @type {Reset}
+ */
 function reset() {
     Object.keys(consoleMap).forEach(function(consoleMethodName) {
         const map = consoleMap[consoleMethodName];
