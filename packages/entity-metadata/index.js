@@ -24,7 +24,7 @@ function generateDomainMetadata(metadata, inputValidator, outputValidator) {
     setAOrAn(metadata);
     setIdentifierInfo(metadata);
     if (!metadata.schemas.core.$id) {
-        //todo RK maybe there needs to be a service metadata and app metadata?
+        //todo RK maybe there needs to be a service metadata and app metadata for the baseUrl?
         metadata.schemas.core.$id = generateId(metadata.baseUrl, metadata.collectionName);
     }
     Object.keys(metadata.schemas).forEach(function(key) {

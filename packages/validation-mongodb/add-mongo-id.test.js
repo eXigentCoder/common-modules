@@ -3,8 +3,6 @@
 const { addMongoId } = require('./');
 const { createInputValidator } = require('../validation/ajv');
 const ObjectId = require('mongodb').ObjectID;
-var chai = require('chai');
-var expect = chai.expect;
 describe('JSON Schemas - MongoDB', () => {
     it('Should convert mongodb ids to the correct type', () => {
         const simpleSchema = {

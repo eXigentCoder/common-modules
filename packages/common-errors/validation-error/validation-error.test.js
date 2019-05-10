@@ -2,8 +2,6 @@
 
 const ValidationError = require('./validation-error');
 const { IsRequiredError } = require('..');
-var chai = require('chai');
-var expect = chai.expect;
 
 describe('ValidationError', () => {
     it('should throw an error if no arguments provided', () => {

@@ -1,6 +1,5 @@
 'use strict';
-var chai = require('chai');
-var expect = chai.expect;
+
 const initialise = require('.');
 const { IsRequiredError } = require('../common-errors');
 const express = require('express');

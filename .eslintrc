@@ -33,6 +33,12 @@
             },
             "rules": {
                 "node/no-unpublished-require": ["off"]
+            },
+            "globals": {
+                "chai": true,
+                "expect": true,
+                "assert": true,
+                "should": true
             }
         }
     ]

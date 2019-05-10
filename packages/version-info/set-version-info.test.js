@@ -2,8 +2,6 @@
 const ObjectId = require('mongodb').ObjectId;
 const manager = require('./set-version-info');
 const setVersionInfo = manager();
-var chai = require('chai');
-var expect = chai.expect;
 describe('setVersionInfo', () => {
     const validContext = {
         requestId: '1',

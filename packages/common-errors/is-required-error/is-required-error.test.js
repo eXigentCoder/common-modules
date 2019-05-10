@@ -1,7 +1,5 @@
 'use strict';
 const IsRequiredError = require('./is-required-error');
-var chai = require('chai');
-var expect = chai.expect;
 
 describe('IsRequiredError', () => {
     it('should throw an error if no arguments provided', () => {

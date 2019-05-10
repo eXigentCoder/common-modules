@@ -1,8 +1,6 @@
 'use strict';
 
 const { createOutputValidator, createValidator } = require('./ajv');
-var chai = require('chai');
-var expect = chai.expect;
 const { ValidationError } = require('../common-errors');
 describe('Ajv', () => {
     describe('Custom keywords in constructor', () => {

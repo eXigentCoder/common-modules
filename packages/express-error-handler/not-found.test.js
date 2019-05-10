@@ -1,6 +1,5 @@
 'use strict';
-var chai = require('chai');
-var expect = chai.expect;
+
 const notFound = require('./not-found');
 
 describe('notFound', () => {

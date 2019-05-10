@@ -5,8 +5,6 @@ const { createInputValidator } = require('../validation/ajv');
 const addMongoId = require('./add-mongo-id');
 const mongodb = require('mongodb');
 const schemaId = __filename;
-var chai = require('chai');
-var expect = chai.expect;
 
 describe('JSON Schemas - ObjectId', function() {
     const schema = {

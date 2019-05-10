@@ -1,8 +1,6 @@
 'use strict';
 
 const setAndValidateId = require('./set-and-validate-id');
-var chai = require('chai');
-var expect = chai.expect;
 
 const operation = 'Test';
 

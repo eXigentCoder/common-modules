@@ -1,8 +1,7 @@
 'use strict';
 
 const setAndValidateName = require('./set-and-validate-name');
-var chai = require('chai');
-var expect = chai.expect;
+
 const operation = 'Test';
 const direction = 'Output';
 

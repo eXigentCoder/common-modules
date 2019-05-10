@@ -1,6 +1,4 @@
 'use strict';
-var chai = require('chai');
-var expect = chai.expect;
 
 describe('config', () => {
     process.env.NODE_ENV = 'test';

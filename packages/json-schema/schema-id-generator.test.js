@@ -1,9 +1,8 @@
 'use strict';
 
 const { createGenerator, generateId } = require('./schema-id-generator');
-var chai = require('chai');
-var expect = chai.expect;
 const validBaseUrl = 'https://asd.com';
+
 describe('Schema id validator', () => {
     describe('createGenerator', () => {
         it('should throw an error if no baseurl is provided', () => {

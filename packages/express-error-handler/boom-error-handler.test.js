@@ -1,6 +1,5 @@
 'use strict';
-var chai = require('chai');
-var expect = chai.expect;
+
 const boomErrorHandler = require('./boom-error-handler');
 const httpMocks = require('node-mocks-http');
 const boom = require('@hapi/boom');

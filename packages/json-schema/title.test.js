@@ -2,8 +2,6 @@
 
 const commonSchemas = require('./');
 const { createInputValidator } = require('../validation/ajv');
-var chai = require('chai');
-var expect = chai.expect;
 
 describe('JSON Schemas - title', function() {
     const schema = commonSchemas.title;

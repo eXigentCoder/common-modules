@@ -1,9 +1,9 @@
 'use strict';
-var chai = require('chai');
-var expect = chai.expect;
+
 const errorHandler = require('./error-handler');
 const boom = require('@hapi/boom');
 const { ValidationError } = require('../common-errors');
+
 describe('ErrorHandler', () => {
     const handle = errorHandler();
     it('should pass through boom errors', () => {
