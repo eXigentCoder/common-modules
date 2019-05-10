@@ -69,6 +69,7 @@
     "pluralize": "7.0.0",
     "uuid": "3.3.2",
     "v8n": "1.2.3",
-    "@bit/bit.envs.testers.mocha": "file:./packages/testers/mocha"
+    "@bit/bit.envs.testers.mocha": "file:./packages/testers/mocha",
+    "@bit/exigentcoder.common-modules.testers.mocha": "5.0.3"
   }
 }
