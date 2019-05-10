@@ -1,19 +1,8 @@
 {
     "env": {
-        "tester": "bit.envs/testers/mocha@0.0.17"
+        "tester": "exigentcoder.common-modules/testers/mocha"
     },
     "componentsDefaultDirectory": "packages/{name}",
     "packageManager": "npm",
-    "overrides": {
-        "exigentcoder.common-modules/json-schema": {
-            "env": {
-                "tester": "bit.envs/testers/mocha@0.0.17"
-            }
-        },
-        "exigentcoder.common-modules/express-error-handler": {
-            "env": {
-                "tester": "bit.envs/testers/mocha@0.0.17"
-            }
-        }
-    }
+    "overrides": {}
 }
