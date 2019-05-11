@@ -73,37 +73,53 @@
     "exigentcoder.common-modules/json-schema@0.7.0": {
         "files": [
             {
-                "name": "date-time.test.js",
+                "relativePath": "packages/json-schema/common-module-schema-id-generator.js",
+                "test": false,
+                "name": "common-module-schema-id-generator.js"
+            },
+            {
                 "relativePath": "packages/json-schema/date-time.test.js",
-                "test": true
+                "test": true,
+                "name": "date-time.test.js"
             },
             {
-                "name": "description.test.js",
                 "relativePath": "packages/json-schema/description.test.js",
-                "test": true
+                "test": true,
+                "name": "description.test.js"
             },
             {
-                "name": "email.test.js",
                 "relativePath": "packages/json-schema/email.test.js",
-                "test": true
+                "test": true,
+                "name": "email.test.js"
             },
             {
-                "name": "index.js",
                 "relativePath": "packages/json-schema/index.js",
-                "test": false
+                "test": false,
+                "name": "index.js"
             },
             {
-                "name": "name.test.js",
                 "relativePath": "packages/json-schema/name.test.js",
-                "test": true
+                "test": true,
+                "name": "name.test.js"
             },
             {
-                "name": "title.test.js",
+                "relativePath": "packages/json-schema/schema-id-generator.js",
+                "test": false,
+                "name": "schema-id-generator.js"
+            },
+            {
+                "relativePath": "packages/json-schema/schema-id-generator.test.js",
+                "test": true,
+                "name": "schema-id-generator.test.js"
+            },
+            {
                 "relativePath": "packages/json-schema/title.test.js",
-                "test": true
+                "test": true,
+                "name": "title.test.js"
             }
         ],
         "mainFile": "packages/json-schema/index.js",
+        "trackDir": "packages/json-schema",
         "origin": "AUTHORED",
         "dependencies": [
             "exigentcoder.common-modules/common-errors@0.7.0",
@@ -211,6 +227,122 @@
         "trackDir": "packages/logging",
         "origin": "AUTHORED",
         "exported": true
+    },
+    "entity-metadata": {
+        "files": [
+            {
+                "relativePath": "packages/entity-metadata/ensure-schema-set.js",
+                "test": false,
+                "name": "ensure-schema-set.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/ensure-schema-set.test.js",
+                "test": true,
+                "name": "ensure-schema-set.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/entity-metadata.test.js",
+                "test": true,
+                "name": "entity-metadata.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/filter-properties-for-creation.js",
+                "test": false,
+                "name": "filter-properties-for-creation.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/filter-properties-for-output.js",
+                "test": false,
+                "name": "filter-properties-for-output.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/filter-properties-for-update.js",
+                "test": false,
+                "name": "filter-properties-for-update.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/hydrate-schema.js",
+                "test": false,
+                "name": "hydrate-schema.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/infer-names.js",
+                "test": false,
+                "name": "infer-names.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/remove-from-array-if-exists.js",
+                "test": false,
+                "name": "remove-from-array-if-exists.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-id.js",
+                "test": false,
+                "name": "set-and-validate-id.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-id.test.js",
+                "test": true,
+                "name": "set-and-validate-id.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-name.js",
+                "test": false,
+                "name": "set-and-validate-name.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-name.test.js",
+                "test": true,
+                "name": "set-and-validate-name.test.js"
+            }
+        ],
+        "mainFile": "packages/entity-metadata/index.js",
+        "trackDir": "packages/entity-metadata",
+        "origin": "AUTHORED",
+        "exported": false
+    },
+    "version-info": {
+        "files": [
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.js",
+                "test": false,
+                "name": "create-version-info-setter.js"
+            },
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.test.js",
+                "test": true,
+                "name": "create-version-info-setter.test.js"
+            },
+            {
+                "relativePath": "packages/version-info/execution-context-schema.js",
+                "test": false,
+                "name": "execution-context-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/identity-schema.js",
+                "test": false,
+                "name": "identity-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/version-info/version-info-schema.js",
+                "test": false,
+                "name": "version-info-schema.js"
+            }
+        ],
+        "mainFile": "packages/version-info/index.js",
+        "trackDir": "packages/version-info",
+        "origin": "AUTHORED",
+        "exported": false
     },
     "version": "14.1.0"
 }
