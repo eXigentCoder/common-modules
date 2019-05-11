@@ -319,6 +319,11 @@
                 "name": "infer-names.js"
             },
             {
+                "relativePath": "packages/entity-metadata/init.test.js",
+                "test": true,
+                "name": "init.test.js"
+            },
+            {
                 "relativePath": "packages/entity-metadata/metadata-schema.js",
                 "test": false,
                 "name": "metadata-schema.js"
