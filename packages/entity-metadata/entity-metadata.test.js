@@ -10,10 +10,10 @@ describe('Generate Entity Metadata', () => {
             schemas: {
                 core: {
                     name: 'user',
-                    identifierName: '_id',
-                    collectionName: 'users',
                 },
             },
+            identifierName: '_id',
+            collectionName: 'users',
             baseUrl: 'https://ryankotzen.com',
         };
         const inputValidator = createInputValidator();

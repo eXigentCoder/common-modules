@@ -12,7 +12,7 @@ const { generateId } = require('../json-schema/schema-id-generator');
 module.exports = generateDomainMetadata;
 /**
  *
- * @typedef {{name:string,description?:string,type:string, additionalProperties?:boolean, properties?:{[key: string]: { prop: Schema }}, required?:string[], $id?:string, identifierName?:string}} Schema
+ * @typedef {{name:string,description?:string,type:string, additionalProperties?:boolean, properties?:{[key: string]: { prop: Schema }}, required?:string[], $id?:string}} Schema
  * @typedef {{schemas:{core:Schema, output?:Schema, create?:Schema, replace?:Schema}, name?:string, namePlural?:string, title?:string, titlePlural?:string, aOrAn?:string, identifierName?:string, collectionName?:string, trackHistory:boolean, indexes?:object[]}} DomainMetadata
  * @param {DomainMetadata | object} metadata
  * @returns {DomainMetadata}
@@ -74,7 +74,6 @@ function setAOrAn(metadata) {
 
 /** @param {DomainMetadata} metadata */
 function setIdentifierInfo(metadata) {
-    metadata.identifierName = metadata.identifierName || metadata.schemas.core.identifierName;
     if (!metadata.identifierName) {
         throw new Error('metadata.identifierName must be set');
     }
