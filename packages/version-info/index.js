@@ -1,3 +1,6 @@
 'use strict';
 
-module.exports = require('./create-version-info-setter');
+module.exports = {
+    createVersionInfoSetter: require('./create-version-info-setter'),
+    withVersionInfo: require('./with-version-info'),
+};

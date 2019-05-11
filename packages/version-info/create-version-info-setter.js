@@ -5,7 +5,6 @@ const moment = require('moment');
 const { IsRequiredError } = require('../common-errors');
 const defaultExecutionContextSchema = require('./execution-context-schema');
 const { createInputValidator } = require('../validation/ajv');
-const versionInfoSchema = require('./version-info-schema');
 const v8n = require('v8n');
 /**
  * @typedef {{ id:string }} Identity The entity which made the change
@@ -13,7 +12,7 @@ const v8n = require('v8n');
  * @typedef {{ requestId:string, identity:Identity, codeVersion:string, sourceIp: string }} ExecutionContext
  * @typedef {{ versionInfo:VersionInfo }} VersionedObject
  * @typedef {(object:object,context: ExecutionContext)=>VersionedObject} SetVersionInfo
- * @typedef {()=>Object} WithVersionInfo
+
  */
 
 /**
@@ -22,7 +21,7 @@ const v8n = require('v8n');
  * @param {object} [options={}]
  * @param {import('ajv').Ajv} [options.validator] The Ajv validator used to validate the execution context
  * @param {object} [options.executionContextSchema] The schema for the execution context
- * @returns {{setVersionInfo:SetVersionInfo, withVersionInfo:WithVersionInfo}}
+ * @returns {SetVersionInfo}
  */
 module.exports = function createVersionInfoSetter(options = {}) {
     options.validator = options.validator || createInputValidator();
@@ -33,28 +32,16 @@ module.exports = function createVersionInfoSetter(options = {}) {
         .minLength(1)
         .check(options.executionContextSchema.$id);
     options.validator.addSchema(options.executionContextSchema);
-    return { setVersionInfo, withVersionInfo };
     /**
      * @type {SetVersionInfo}
      */
-    function setVersionInfo(object, context) {
+    return function setVersionInfo(object, context) {
         validateParams(object, context, options);
         if (object.versionInfo) {
             return updateVersionInfoOnObject(object, context);
         }
         return addVersionInfoToObject(object, context);
-    }
-    /**
-     * @type {WithVersionInfo}
-     */
-    function withVersionInfo() {
-        return {
-            properties: {
-                versionInfo: versionInfoSchema,
-            },
-            required: ['versionInfo'],
-        };
-    }
+    };
 };
 
 /**

@@ -1,11 +1,12 @@
 'use strict';
 
 const removeFromArrayIfExists = require('./remove-from-array-if-exists');
-const withVersionInfo = require('../version-info/with-version-info');
 const _ = require('lodash');
+const withVersionInfo = require('../version-info/with-version-info');
+
 module.exports = function filterPropertiesForOutput(schema) {
     clearProperties(schema);
-    _.merge(schema, withVersionInfo);
+    _.merge(schema, withVersionInfo());
     if (schema.definitions) {
         Object.keys(schema.definitions).forEach(function(definitionName) {
             clearProperties(schema.definitions[definitionName]);

@@ -1,18 +1,19 @@
 'use strict';
 //todo maybe validate the arguments using v8n
-const _ = require('lodash');
+const isNil = require('lodash/isNil');
+const endsWith = require('lodash/endsWith');
 
 module.exports = function setAndValidateId(schema, coreSchema, operation) {
-    if (_.isNil(schema)) {
+    if (isNil(schema)) {
         throw new Error('schema is required');
     }
-    if (_.isNil(coreSchema)) {
+    if (isNil(coreSchema)) {
         throw new Error('coreSchema is required');
     }
-    if (_.isNil(operation)) {
+    if (isNil(operation)) {
         throw new Error('operation is required');
     }
-    if (_.isNil(coreSchema.$id)) {
+    if (isNil(coreSchema.$id)) {
         throw new Error('coreSchema must have a $id');
     }
     if (!coreSchema.$id.trim()) {
@@ -21,7 +22,7 @@ module.exports = function setAndValidateId(schema, coreSchema, operation) {
     if (schema.$id !== coreSchema.$id) {
         return;
     }
-    if (_.endsWith(schema.$id, '/')) {
+    if (endsWith(schema.$id, '/')) {
         schema.$id += operation;
     } else {
         schema.$id += '/' + operation;

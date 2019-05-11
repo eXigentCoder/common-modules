@@ -337,6 +337,11 @@
                 "relativePath": "packages/version-info/version-info-schema.js",
                 "test": false,
                 "name": "version-info-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/with-version-info.js",
+                "test": false,
+                "name": "with-version-info.js"
             }
         ],
         "mainFile": "packages/version-info/index.js",

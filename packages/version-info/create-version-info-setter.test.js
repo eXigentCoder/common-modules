@@ -1,7 +1,7 @@
 'use strict';
 const ObjectId = require('mongodb').ObjectId;
-const manager = require('./create-version-info-setter');
-const setVersionInfo = manager();
+const createVersionInfoSetter = require('./create-version-info-setter');
+const setVersionInfo = createVersionInfoSetter();
 describe('setVersionInfo', () => {
     const validContext = {
         requestId: '1',
