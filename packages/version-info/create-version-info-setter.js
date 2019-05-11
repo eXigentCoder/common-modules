@@ -3,32 +3,58 @@
 const uuid = require('uuid');
 const moment = require('moment');
 const { IsRequiredError } = require('../common-errors');
-const executionContextSchema = require('./execution-context-schema');
+const defaultExecutionContextSchema = require('./execution-context-schema');
 const { createInputValidator } = require('../validation/ajv');
-
+const versionInfoSchema = require('./version-info-schema');
+const v8n = require('v8n');
 /**
  * @typedef {{ id:string }} Identity The entity which made the change
  * @typedef {{ dateCreated:Date, versionTag: string, dateUpdated:Date, createdBy:Identity, lastUpdatedBy:Identity, updatedByRequestId:string }} VersionInfo
  * @typedef {{ requestId:string, identity:Identity, codeVersion:string, sourceIp: string }} ExecutionContext
  * @typedef {{ versionInfo:VersionInfo }} VersionedObject
+ * @typedef {(object:object,context: ExecutionContext)=>VersionedObject} SetVersionInfo
+ * @typedef {()=>Object} WithVersionInfo
  */
 
-// @ts-ignore
-module.exports = function({ inputValidator } = {}) {
-    inputValidator = inputValidator || createInputValidator();
-    inputValidator.addSchema(executionContextSchema);
+/**
+ * Creates an instance of the Version Info Setter
+ *
+ * @param {object} [options={}]
+ * @param {import('ajv').Ajv} [options.validator] The Ajv validator used to validate the execution context
+ * @param {object} [options.executionContextSchema] The schema for the execution context
+ * @returns {{setVersionInfo:SetVersionInfo, withVersionInfo:WithVersionInfo}}
+ */
+module.exports = function createVersionInfoSetter(options = {}) {
+    options.validator = options.validator || createInputValidator();
+    options.executionContextSchema =
+        options.executionContextSchema || defaultExecutionContextSchema;
+    v8n()
+        .string()
+        .minLength(1)
+        .check(options.executionContextSchema.$id);
+    options.validator.addSchema(options.executionContextSchema);
+    return { setVersionInfo, withVersionInfo };
     /**
-     * @param {object} object
-     * @param {ExecutionContext} context
-     * @returns {VersionedObject}
+     * @type {SetVersionInfo}
      */
-    return function setVersionInfo(object, context) {
-        validateParams(object, context, inputValidator);
+    function setVersionInfo(object, context) {
+        validateParams(object, context, options);
         if (object.versionInfo) {
             return updateVersionInfoOnObject(object, context);
         }
         return addVersionInfoToObject(object, context);
-    };
+    }
+    /**
+     * @type {WithVersionInfo}
+     */
+    function withVersionInfo() {
+        return {
+            properties: {
+                versionInfo: versionInfoSchema,
+            },
+            required: ['versionInfo'],
+        };
+    }
 };
 
 /**
@@ -69,11 +95,11 @@ function updateVersionInfoOnObject(object, context) {
  * @param {ExecutionContext} context
  * @returns {void}
  */
-function validateParams(object, context, inputValidator) {
+function validateParams(object, context, options) {
     if (!object) {
         throw new IsRequiredError('object', 'setVersionInfo');
     }
-    inputValidator.ensureValid(executionContextSchema.$id, context);
+    options.validator.ensureValid(options.executionContextSchema.$id, context);
     //todo RK What if the ID property is not _id but id or ID or identity, maybe need this from metadata?
     if (object._id && !object.versionInfo) {
         throw new Error(
