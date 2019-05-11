@@ -80,7 +80,7 @@ describe('logger', () => {
                 'You must call initialise before calling'
             );
         });
-        Object.keys(logger.consoleMap).forEach(function(consoleMethod) {
+        Object.getOwnPropertyNames(logger.consoleMap).forEach(function(consoleMethod) {
             it('should not throw an error for ' + consoleMethod, () => {
                 logger.initialise({ name: 'krimzen-ninja-logging' });
                 logger.overrideConsole();

@@ -73,7 +73,7 @@ function initialise(options, stream) {
  */
 function overrideConsole() {
     ensureInitialised('overrideConsole');
-    Object.keys(consoleMap).forEach(function(consoleMethodName) {
+    Object.getOwnPropertyNames(consoleMap).forEach(function(consoleMethodName) {
         const map = consoleMap[consoleMethodName];
         const pinoMethodName = map.name;
         map.oldFn = console[consoleMethodName];
@@ -115,7 +115,7 @@ function pino() {
  * @type {Reset}
  */
 function reset() {
-    Object.keys(consoleMap).forEach(function(consoleMethodName) {
+    Object.getOwnPropertyNames(consoleMap).forEach(function(consoleMethodName) {
         const map = consoleMap[consoleMethodName];
         if (map.oldFn) {
             console[consoleMethodName] = map.oldFn;
@@ -125,7 +125,7 @@ function reset() {
     return logger;
 }
 
-Object.keys(consoleMap).forEach(logLevel => {
+Object.getOwnPropertyNames(consoleMap).forEach(logLevel => {
     logger[logLevel] = function() {
         ensureInitialised(logLevel);
         _pino[logLevel].apply(_pino, arguments);

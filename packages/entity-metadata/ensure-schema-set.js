@@ -17,8 +17,8 @@ module.exports = function ensureSchemaSet(
 ) {
     let schema = metadata.schemas[operation];
     if (!schema) {
-        metadata.schemas[operation] = JSON.parse(JSON.stringify(metadata.schemas.core));
-        schema = metadata.schemas[operation];
+        schema = JSON.parse(JSON.stringify(metadata.schemas.core));
+        metadata.schemas[operation] = schema;
     }
     setAndValidateId(schema, metadata.schemas.core, operation);
     setAndValidateName(schema, metadata.schemas.core, operation, direction);

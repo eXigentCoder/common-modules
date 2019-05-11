@@ -12,7 +12,7 @@ const identifier = {
     description: 'A human readable string identifier used to refer to an entitiy',
     type: 'string',
     minLength: 1,
-    pattern: convertRegexToAjvString(/^[a-zA-Z0-9-]+$/),
+    pattern: convertRegexToAjvString(/^[a-zA-Z0-9-_]+$/),
 };
 
 // the name of the entity as displayed to a human

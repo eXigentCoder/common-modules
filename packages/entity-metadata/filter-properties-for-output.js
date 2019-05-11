@@ -8,14 +8,14 @@ module.exports = function filterPropertiesForOutput(schema) {
     clearProperties(schema);
     _.merge(schema, withVersionInfo());
     if (schema.definitions) {
-        Object.keys(schema.definitions).forEach(function(definitionName) {
+        Object.getOwnPropertyNames(schema.definitions).forEach(function(definitionName) {
             clearProperties(schema.definitions[definitionName]);
         });
     }
 };
 
 function clearProperties(schema) {
-    Object.keys(schema.properties).forEach(function(propertyName) {
+    Object.getOwnPropertyNames(schema.properties).forEach(function(propertyName) {
         const property = schema.properties[propertyName];
         if (property.excludeOnOutput === true) {
             delete schema.properties[propertyName];

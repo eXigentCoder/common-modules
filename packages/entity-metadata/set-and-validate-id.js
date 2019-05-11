@@ -19,6 +19,7 @@ module.exports = function setAndValidateId(schema, coreSchema, operation) {
     if (!coreSchema.$id.trim()) {
         throw new Error('coreSchema.$id cannot be blank');
     }
+    schema.$id = schema.$id || coreSchema.$id;
     if (schema.$id !== coreSchema.$id) {
         return;
     }

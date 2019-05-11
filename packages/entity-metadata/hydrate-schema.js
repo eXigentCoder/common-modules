@@ -1,20 +1,19 @@
 'use strict';
-const commonSchemas = require('../json-schema');
-
-module.exports = function hydrateSchema(schema) {
+module.exports = function hydrateSchema(schema, metadata) {
     schema.properties = schema.properties || {};
     schema.required = schema.required || [];
-    add_id(schema);
+    add_id(schema, metadata);
     // addStatusInfo(schema);
     // addOwnerInfo(schema);
 };
 
-function add_id(schema) {
-    if (schema.properties._id) {
+function add_id(schema, metadata) {
+    const identifier = metadata.identifier;
+    if (schema.properties[identifier.name]) {
         return;
     }
-    schema.properties._id = Object.assign({}, commonSchemas.objectId);
-    schema.required.push('_id');
+    schema.properties[identifier.name] = Object.assign({}, identifier.schema);
+    schema.required.push(identifier.name);
 }
 
 // function addStatusInfo(schema) {
