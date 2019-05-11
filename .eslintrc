@@ -27,7 +27,7 @@
     },
     "overrides": [
         {
-            "files": ["**/*.test.js"],
+            "files": ["**/*.test.js", "**/test-init.js"],
             "env": {
                 "mocha": true
             },
