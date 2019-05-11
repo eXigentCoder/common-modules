@@ -32,9 +32,9 @@ function generateDomainMetadata(metadata, inputValidator, outputValidator) {
     ensureSchemaSet(metadata, 'output', 'Output', outputValidator, inputValidator);
     filterPropertiesForOutput(metadata.schemas.output);
     ensureSchemaSet(metadata, 'create', 'Input', outputValidator, inputValidator);
-    filterPropertiesForCreation(metadata.schemas.create);
+    filterPropertiesForCreation(metadata.schemas.create, metadata);
     ensureSchemaSet(metadata, 'replace', 'Input', outputValidator, inputValidator);
-    filterPropertiesForReplace(metadata.schemas.replace);
+    filterPropertiesForReplace(metadata.schemas.replace, metadata);
     return metadata;
 }
 

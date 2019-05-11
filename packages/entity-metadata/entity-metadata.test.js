@@ -21,7 +21,7 @@ describe('Generate Entity Metadata', () => {
                     },
                 },
             },
-            identifier: { name: '_id', schema: jsonSchemas.objectId },
+            identifier: { name: 'id', schema: { type: 'string' } },
             collectionName: 'users',
             baseUrl: 'https://ryankotzen.com',
         };
@@ -105,5 +105,22 @@ describe('Generate Entity Metadata', () => {
         const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
         expect(metadata).to.be.ok;
         expect(metadata.schemas.create.$id).to.be.ok;
+    });
+    it('Create schemas should not containe the identifier', () => {
+        const inputMetadata = validMetaData();
+        inputMetadata.schemas.create = {
+            name: 'user',
+            properties: {
+                username: {
+                    type: 'string',
+                },
+            },
+        };
+        const inputValidator = createInputValidator(addMongoId);
+        const outputValidator = createOutputValidator(addMongoId);
+        const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
+        expect(metadata).to.be.ok;
+        expect(metadata.schemas.create.properties[inputMetadata.identifier.name]).to.not.be.ok;
+        expect(metadata.schemas.create.required).to.not.include(inputMetadata.identifier.name);
     });
 });
