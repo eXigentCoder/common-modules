@@ -70,63 +70,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/json-schema@0.7.0": {
-        "files": [
-            {
-                "relativePath": "packages/json-schema/common-module-schema-id-generator.js",
-                "test": false,
-                "name": "common-module-schema-id-generator.js"
-            },
-            {
-                "relativePath": "packages/json-schema/date-time.test.js",
-                "test": true,
-                "name": "date-time.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/description.test.js",
-                "test": true,
-                "name": "description.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/email.test.js",
-                "test": true,
-                "name": "email.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/json-schema/name.test.js",
-                "test": true,
-                "name": "name.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/schema-id-generator.js",
-                "test": false,
-                "name": "schema-id-generator.js"
-            },
-            {
-                "relativePath": "packages/json-schema/schema-id-generator.test.js",
-                "test": true,
-                "name": "schema-id-generator.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/title.test.js",
-                "test": true,
-                "name": "title.test.js"
-            }
-        ],
-        "mainFile": "packages/json-schema/index.js",
-        "trackDir": "packages/json-schema",
-        "origin": "AUTHORED",
-        "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.7.0",
-            "exigentcoder.common-modules/validation@0.7.0"
-        ],
-        "exported": true
-    },
     "exigentcoder.common-modules/validation-mongodb@0.7.0": {
         "files": [
             {
@@ -228,7 +171,64 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "entity-metadata": {
+    "exigentcoder.common-modules/json-schema@0.8.0": {
+        "files": [
+            {
+                "relativePath": "packages/json-schema/common-module-schema-id-generator.js",
+                "test": false,
+                "name": "common-module-schema-id-generator.js"
+            },
+            {
+                "relativePath": "packages/json-schema/date-time.test.js",
+                "test": true,
+                "name": "date-time.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/description.test.js",
+                "test": true,
+                "name": "description.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/email.test.js",
+                "test": true,
+                "name": "email.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/json-schema/name.test.js",
+                "test": true,
+                "name": "name.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/schema-id-generator.js",
+                "test": false,
+                "name": "schema-id-generator.js"
+            },
+            {
+                "relativePath": "packages/json-schema/schema-id-generator.test.js",
+                "test": true,
+                "name": "schema-id-generator.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/title.test.js",
+                "test": true,
+                "name": "title.test.js"
+            }
+        ],
+        "mainFile": "packages/json-schema/index.js",
+        "trackDir": "packages/json-schema",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.7.0",
+            "exigentcoder.common-modules/validation@0.7.0"
+        ],
+        "exported": true
+    },
+    "exigentcoder.common-modules/entity-metadata@0.8.0": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
@@ -304,9 +304,9 @@
         "mainFile": "packages/entity-metadata/index.js",
         "trackDir": "packages/entity-metadata",
         "origin": "AUTHORED",
-        "exported": false
+        "exported": true
     },
-    "version-info": {
+    "exigentcoder.common-modules/version-info@0.8.0": {
         "files": [
             {
                 "relativePath": "packages/version-info/create-version-info-setter.js",
@@ -347,7 +347,7 @@
         "mainFile": "packages/version-info/index.js",
         "trackDir": "packages/version-info",
         "origin": "AUTHORED",
-        "exported": false
+        "exported": true
     },
     "version": "14.1.0"
 }
