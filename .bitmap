@@ -228,7 +228,50 @@
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.8.0": {
+    "exigentcoder.common-modules/version-info@0.8.0": {
+        "files": [
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.js",
+                "test": false,
+                "name": "create-version-info-setter.js"
+            },
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.test.js",
+                "test": true,
+                "name": "create-version-info-setter.test.js"
+            },
+            {
+                "relativePath": "packages/version-info/execution-context-schema.js",
+                "test": false,
+                "name": "execution-context-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/identity-schema.js",
+                "test": false,
+                "name": "identity-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/version-info/version-info-schema.js",
+                "test": false,
+                "name": "version-info-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/with-version-info.js",
+                "test": false,
+                "name": "with-version-info.js"
+            }
+        ],
+        "mainFile": "packages/version-info/index.js",
+        "trackDir": "packages/version-info",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/entity-metadata@0.9.0": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
@@ -303,49 +346,6 @@
         ],
         "mainFile": "packages/entity-metadata/index.js",
         "trackDir": "packages/entity-metadata",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/version-info@0.8.0": {
-        "files": [
-            {
-                "relativePath": "packages/version-info/create-version-info-setter.js",
-                "test": false,
-                "name": "create-version-info-setter.js"
-            },
-            {
-                "relativePath": "packages/version-info/create-version-info-setter.test.js",
-                "test": true,
-                "name": "create-version-info-setter.test.js"
-            },
-            {
-                "relativePath": "packages/version-info/execution-context-schema.js",
-                "test": false,
-                "name": "execution-context-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/identity-schema.js",
-                "test": false,
-                "name": "identity-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/version-info/version-info-schema.js",
-                "test": false,
-                "name": "version-info-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/with-version-info.js",
-                "test": false,
-                "name": "with-version-info.js"
-            }
-        ],
-        "mainFile": "packages/version-info/index.js",
-        "trackDir": "packages/version-info",
         "origin": "AUTHORED",
         "exported": true
     },
