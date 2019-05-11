@@ -1,5 +1,5 @@
 'use strict';
-require('./init.test');
+require('./test-init');
 //todo rename all the stuff in there to be Entity instead of domain.
 const generateEntityMetadata = require('./index');
 const { createInputValidator, createOutputValidator } = require('../validation/ajv');

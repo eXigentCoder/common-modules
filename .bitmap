@@ -32,7 +32,8 @@
                 "name": "is-required-error.js"
             },
             {
-                "relativePath": "packages/common-errors/is-required-error/is-required-error.test.js",
+                "relativePath":
+                    "packages/common-errors/is-required-error/is-required-error.test.js",
                 "test": true,
                 "name": "is-required-error.test.js"
             },
@@ -148,9 +149,7 @@
         ],
         "mainFile": "packages/express-error-handler/index.js",
         "origin": "AUTHORED",
-        "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.7.0"
-        ],
+        "dependencies": ["exigentcoder.common-modules/common-errors@0.7.0"],
         "exported": true
     },
     "exigentcoder.common-modules/logging@0.7.1": {
@@ -319,11 +318,6 @@
                 "name": "infer-names.js"
             },
             {
-                "relativePath": "packages/entity-metadata/init.test.js",
-                "test": false,
-                "name": "init.test.js"
-            },
-            {
                 "relativePath": "packages/entity-metadata/metadata-schema.js",
                 "test": false,
                 "name": "metadata-schema.js"
@@ -352,6 +346,11 @@
                 "relativePath": "packages/entity-metadata/set-and-validate-name.test.js",
                 "test": true,
                 "name": "set-and-validate-name.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/test-init.js",
+                "test": false,
+                "name": "test-init.js"
             }
         ],
         "mainFile": "packages/entity-metadata/index.js",
