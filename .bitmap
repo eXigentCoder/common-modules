@@ -319,6 +319,11 @@
                 "name": "infer-names.js"
             },
             {
+                "relativePath": "packages/entity-metadata/metadata-schema.js",
+                "test": false,
+                "name": "metadata-schema.js"
+            },
+            {
                 "relativePath": "packages/entity-metadata/remove-from-array-if-exists.js",
                 "test": false,
                 "name": "remove-from-array-if-exists.js"
