@@ -271,7 +271,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.10.5": {
+    "exigentcoder.common-modules/entity-metadata@0.10.6": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
