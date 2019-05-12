@@ -49,14 +49,14 @@ function generateDomainMetadata(metadata, inputValidator, outputValidator) {
     setAOrAn(metadata);
     metadata.schemas.core.$id =
         metadata.schemas.core.$id || generateId(metadata.baseUrl, metadata.collectionName);
+    ensureSchemaSet(metadata, 'output', 'Output', outputValidator, inputValidator);
+    ensureSchemaSet(metadata, 'create', 'Input', outputValidator, inputValidator);
+    ensureSchemaSet(metadata, 'replace', 'Input', outputValidator, inputValidator);
     Object.getOwnPropertyNames(metadata.schemas).forEach(function(key) {
         hydrateSchema(metadata.schemas[key], metadata);
     });
-    ensureSchemaSet(metadata, 'output', 'Output', outputValidator, inputValidator);
     filterPropertiesForOutput(metadata.schemas.output);
-    ensureSchemaSet(metadata, 'create', 'Input', outputValidator, inputValidator);
     filterPropertiesForCreation(metadata.schemas.create, metadata);
-    ensureSchemaSet(metadata, 'replace', 'Input', outputValidator, inputValidator);
     filterPropertiesForReplace(metadata.schemas.replace, metadata);
     return metadata;
 }
