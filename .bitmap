@@ -32,8 +32,7 @@
                 "name": "is-required-error.js"
             },
             {
-                "relativePath":
-                    "packages/common-errors/is-required-error/is-required-error.test.js",
+                "relativePath": "packages/common-errors/is-required-error/is-required-error.test.js",
                 "test": true,
                 "name": "is-required-error.test.js"
             },
@@ -149,10 +148,12 @@
         ],
         "mainFile": "packages/express-error-handler/index.js",
         "origin": "AUTHORED",
-        "dependencies": ["exigentcoder.common-modules/common-errors@0.7.0"],
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.7.0"
+        ],
         "exported": true
     },
-    "exigentcoder.common-modules/logging@0.7.1": {
+    "exigentcoder.common-modules/logging@0.10.3": {
         "files": [
             {
                 "relativePath": "packages/logging/index.js",
@@ -170,7 +171,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/json-schema@0.8.0": {
+    "exigentcoder.common-modules/json-schema@0.10.3": {
         "files": [
             {
                 "relativePath": "packages/json-schema/common-module-schema-id-generator.js",
@@ -227,7 +228,7 @@
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/version-info@0.8.0": {
+    "exigentcoder.common-modules/version-info@0.10.3": {
         "files": [
             {
                 "relativePath": "packages/version-info/create-version-info-setter.js",
@@ -270,7 +271,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.10.2": {
+    "exigentcoder.common-modules/entity-metadata@0.10.3": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
