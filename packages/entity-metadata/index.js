@@ -24,14 +24,14 @@ module.exports = generateDomainMetadata;
  * @typedef {Object} DomainMetadata
  * @property {Object} schemas
  * @property {Schema} schemas.core
- * @property {Schema} schemas.output
- * @property {Schema} schemas.create
- * @property {Schema} schemas.replace
+ * @property {Schema} [schemas.output]
+ * @property {Schema} [schemas.create]
+ * @property {Schema} [schemas.replace]
  * @property {string} name
- * @property {string} namePlural
- * @property {string} title
- * @property {string} titlePlural
- * @property {string} aOrAn
+ * @property {string} [namePlural]
+ * @property {string} [title]
+ * @property {string} [titlePlural]
+ * @property {string} [aOrAn]
  * @property {Object} identifier
  * @property {string} identifier.name
  * @property {Object} identifier.schema

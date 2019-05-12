@@ -2,20 +2,33 @@
 const ObjectId = require('mongodb').ObjectId;
 const createVersionInfoSetter = require('./create-version-info-setter');
 const { jsonSchemas } = require('../validation-mongodb');
+/**@type {import('../entity-metadata').DomainMetadata} */
 const metadata = {
-    identity: {
+    name: 'bob',
+    collectionName: 'bobs',
+    identifier: {
         name: '_id',
         schema: jsonSchemas.objectId,
+    },
+    schemas: {
+        core: {
+            name: 'asd',
+            $id: '',
+            properties: {},
+            type: 'object',
+        },
     },
 };
 const setVersionInfo = createVersionInfoSetter({ metadata });
 describe('setVersionInfo', () => {
+    /**@type {import('./create-version-info-setter').ExecutionContext} */
     const validContext = {
         requestId: '1',
         identity: {
             id: '1',
         },
         codeVersion: '0.0.1',
+        sourceIp: '127.0.0.1',
     };
     describe('object', () => {
         it('should throw an error if no object provided', () => {

@@ -347,11 +347,6 @@
                 "relativePath": "packages/entity-metadata/set-and-validate-name.test.js",
                 "test": true,
                 "name": "set-and-validate-name.test.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/test-init.js",
-                "test": false,
-                "name": "test-init.js"
             }
         ],
         "mainFile": "packages/entity-metadata/index.js",
