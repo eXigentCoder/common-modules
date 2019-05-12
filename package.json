@@ -8,7 +8,7 @@
   "description": "A collection of shared js modules used primarily on the server side.",
   "files": ["packages"],
   "scripts": {
-    "coverage": "nyc mocha",
+    "coverage": "nyc --require ./test-init.js mocha",
     "codecov": "codecov",
     "lint-ci": "eslint \"packages/**/*.js\"",
     "lint": "npm run lint-ci -- --fix",
