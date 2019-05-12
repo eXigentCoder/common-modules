@@ -1,4 +1,7 @@
 {
     "mocha.files.glob": "./packages/**/*.test.js",
-    "mocha.requires": ["./test-init.js"]
+    "mocha.requires": ["./test-init.js"],
+    "mocha.options": {
+        "exit": true
+    }
 }
