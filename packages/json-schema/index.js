@@ -69,11 +69,14 @@ const oneOrMoreEmailAddresses = {
 const dateTime = {
     type: 'string',
     format: 'date-time',
+    firebaseTimestamp: true,
 };
+
 const date = {
     type: 'string',
     format: 'date',
 };
+
 const time = {
     type: 'string',
     format: 'time',
