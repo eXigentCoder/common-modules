@@ -3,12 +3,11 @@ require('./test-init');
 //todo rename all the stuff in there to be Entity instead of domain.
 const generateEntityMetadata = require('./index');
 const { createInputValidator, createOutputValidator } = require('../validation/ajv');
-const { addMongoId, jsonSchemas } = require('../validation-mongodb/index');
 const { ValidationError } = require('../common-errors');
 
 describe('Generate Entity Metadata', () => {
-    const inputValidator = createInputValidator(addMongoId);
-    const outputValidator = createOutputValidator(addMongoId);
+    const inputValidator = createInputValidator();
+    const outputValidator = createOutputValidator();
     function validMetaData() {
         return {
             schemas: {
@@ -100,8 +99,8 @@ describe('Generate Entity Metadata', () => {
                 },
             },
         };
-        const inputValidator = createInputValidator(addMongoId);
-        const outputValidator = createOutputValidator(addMongoId);
+        const inputValidator = createInputValidator();
+        const outputValidator = createOutputValidator();
         const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
         expect(metadata).to.be.ok;
         expect(metadata.schemas.create.$id).to.be.ok;
@@ -116,8 +115,8 @@ describe('Generate Entity Metadata', () => {
                 },
             },
         };
-        const inputValidator = createInputValidator(addMongoId);
-        const outputValidator = createOutputValidator(addMongoId);
+        const inputValidator = createInputValidator();
+        const outputValidator = createOutputValidator();
         const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
         expect(metadata).to.be.ok;
         expect(metadata.schemas.create.properties[inputMetadata.identifier.name]).to.not.be.ok;
