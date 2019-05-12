@@ -12,9 +12,32 @@ const getMetadataSchema = require('./metadata-schema');
 module.exports = generateDomainMetadata;
 /**
  *
- * @typedef {{name:string,description?:string,type:string, additionalProperties?:boolean, properties?:{[key: string]: { prop: Schema }}, required?:string[], $id?:string}} Schema
- * @typedef {{schemas:{core:Schema, output?:Schema, create?:Schema, replace?:Schema}, name?:string, namePlural?:string, title?:string, titlePlural?:string, aOrAn?:string, identifierName?:string, collectionName?:string, trackHistory:boolean, indexes?:object[]}} DomainMetadata
- * @param {DomainMetadata | object} metadata
+ * @typedef {Object} Schema
+ * @property {string} $id
+ * @property {string} name
+ * @property {string} [description]
+ * @property {string|string[]} type
+ * @property {boolean} [additionalProperties]
+ * @property {{[key: string]: { prop: Schema }}} properties
+ * @property {string[]} [required]
+ *
+ * @typedef {Object} DomainMetadata
+ * @property {Object} schemas
+ * @property {Schema} schemas.core
+ * @property {Schema} schemas.output
+ * @property {Schema} schemas.create
+ * @property {Schema} schemas.replace
+ * @property {string} name
+ * @property {string} namePlural
+ * @property {string} title
+ * @property {string} titlePlural
+ * @property {string} aOrAn
+ * @property {Object} identifier
+ * @property {string} identifier.name
+ * @property {Object} identifier.schema
+ * @property {string} collectionName
+ *
+ * @param {DomainMetadata|Object} metadata
  * @param {import('../validation/ajv').Validator} inputValidator
  * @param {import('../validation/ajv').Validator} outputValidator
  * @returns {DomainMetadata}
