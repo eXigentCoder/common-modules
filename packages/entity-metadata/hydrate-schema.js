@@ -2,12 +2,12 @@
 module.exports = function hydrateSchema(schema, metadata) {
     schema.properties = schema.properties || {};
     schema.required = schema.required || [];
-    add_id(schema, metadata);
+    addIdentifier(schema, metadata);
     // addStatusInfo(schema);
     // addOwnerInfo(schema);
 };
 
-function add_id(schema, metadata) {
+function addIdentifier(schema, metadata) {
     const identifier = metadata.identifier;
     if (schema.properties[identifier.name]) {
         return;

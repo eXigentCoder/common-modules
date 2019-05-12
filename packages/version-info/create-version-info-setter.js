@@ -19,14 +19,19 @@ const v8n = require('v8n');
  * Creates an instance of the Version Info Setter
  *
  * @param {object} [options={}]
+ * @param {import('../entity-metadata/index').DomainMetadata} options.metadata
  * @param {import('ajv').Ajv} [options.validator] The Ajv validator used to validate the execution context
  * @param {object} [options.executionContextSchema] The schema for the execution context
  * @returns {SetVersionInfo}
  */
+// @ts-ignore
 module.exports = function createVersionInfoSetter(options = {}) {
     options.validator = options.validator || createInputValidator();
     options.executionContextSchema =
         options.executionContextSchema || defaultExecutionContextSchema;
+    if (!options.metadata) {
+        throw new IsRequiredError('options.metadata', 'createVersionInfoSetter');
+    }
     v8n()
         .string()
         .minLength(1)
@@ -88,9 +93,11 @@ function validateParams(object, context, options) {
     }
     options.validator.ensureValid(options.executionContextSchema.$id, context);
     //todo RK What if the ID property is not _id but id or ID or identity, maybe need this from metadata?
-    if (object._id && !object.versionInfo) {
+    if (object[options.metadata.identity.name] && !object.versionInfo) {
         throw new Error(
-            'Object had the "_id" property, indicating that it already exists in the db but no "versionInfo" property was provided, this would cause the creation info to be incorrect and has been prevented.'
+            `Object had the "${
+                options.metadata.identity.name
+            }" property, indicating that it already exists in the db but no "versionInfo" property was provided, this would cause the creation info to be incorrect and has been prevented.`
         );
     }
 }

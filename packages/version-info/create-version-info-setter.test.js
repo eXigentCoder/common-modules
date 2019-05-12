@@ -1,7 +1,14 @@
 'use strict';
 const ObjectId = require('mongodb').ObjectId;
 const createVersionInfoSetter = require('./create-version-info-setter');
-const setVersionInfo = createVersionInfoSetter();
+const { jsonSchemas } = require('../validation-mongodb');
+const metadata = {
+    identity: {
+        name: '_id',
+        schema: jsonSchemas.objectId,
+    },
+};
+const setVersionInfo = createVersionInfoSetter({ metadata });
 describe('setVersionInfo', () => {
     const validContext = {
         requestId: '1',
