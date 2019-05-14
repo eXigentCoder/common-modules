@@ -2,6 +2,7 @@
     "mocha.files.glob": "./packages/**/*.test.js",
     "mocha.requires": ["./test-init.js"],
     "mocha.options": {
-        "exit": true
+        "exit": true,
+        "timeout": 50000
     }
 }

@@ -12,6 +12,15 @@ describe('Mongodb', () => {
             const db = await getDb(urlConfig);
             expect(db).to.be.ok;
         });
+        it('should return the same db object if called twice', async () => {
+            const urlConfig = {
+                server: 'localhost',
+                dbName: 'test-common',
+            };
+            const db = await getDb(urlConfig);
+            const db2 = await getDb(urlConfig);
+            expect(db).to.eql(db2);
+        });
     });
     describe('getClient', () => {
         it('should return the created client object', async () => {
