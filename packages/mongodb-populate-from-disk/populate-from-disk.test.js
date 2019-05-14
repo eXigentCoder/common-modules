@@ -1,6 +1,6 @@
 'use strict';
 
-const { getDb, getClient } = require('../mongodb/mongodb');
+const { getDb, getClient } = require('../mongodb/connection');
 const populateFromDisk = require('./');
 const path = require('path');
 describe('Mongodb', () => {

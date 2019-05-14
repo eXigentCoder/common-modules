@@ -8,4 +8,4 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 global.chai = chai;
 global.expect = chai.expect;
 global.assert = chai.assert;
-global.should = chai.should();
+//global.should = chai.should();

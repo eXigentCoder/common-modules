@@ -1,6 +1,6 @@
 'use strict';
 
-const { getDb, getClient } = require('./mongodb');
+const { getDb, getClient } = require('./connection');
 const createIndexes = require('./create-indexes');
 
 describe('Mongodb', () => {
