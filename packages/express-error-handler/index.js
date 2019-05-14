@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('krimzen-ninja-express-error-handling');
+const debug = require('debug')('@exigentcoder/common-modules.express-error-handling');
 const { IsRequiredError } = require('../common-errors');
 const errorHandler = require('./error-handler');
 const boomErrorHandler = require('./boom-error-handler');

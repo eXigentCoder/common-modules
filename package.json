@@ -58,6 +58,7 @@
     "@hapi/boom": "7.4.2",
     "ajv": "6.10.0",
     "ajv-errors": "1.0.1",
+    "api-query-params": "4.10.1",
     "better-ajv-errors": "0.6.4",
     "debug": "4.1.1",
     "express": "4.16.4",
