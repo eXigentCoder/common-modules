@@ -103,7 +103,7 @@ module.exports = function createQueryStringMapper(schema, options = defaultOptio
     };
 };
 
-function setCastParamsFromSchema(agpOptions, properties) {
+function setCastParamsFromSchema(agpOptions, properties, prefix = '') {
     Object.getOwnPropertyNames(properties).forEach(function(propertyName) {
         const propertyValue = properties[propertyName];
         if (!propertyValue.type) {
@@ -112,23 +112,24 @@ function setCastParamsFromSchema(agpOptions, properties) {
         if (Array.isArray(propertyValue.type)) {
             const types = propertyValue.type.filter(type => type.toLowerCase() !== 'null');
             if (types.length === 1) {
-                agpOptions.castParams[propertyName] = types[0];
+                agpOptions.castParams[`${prefix + propertyName}`] = types[0];
                 return;
             }
-            console.warn(`Multiple types (${types}) found for property ${propertyName}`);
+            console.warn(`Multiple types (${types}) found for property ${prefix + propertyName}`);
             return;
         }
         if (propertyValue.type.toLowerCase() === 'object') {
-            /**
-             * todo  Add support for nested properties filter
-             * agpOptions.castParams['propertyName.subprop.subsub'] = 'string'
-             */
+            setCastParamsFromSchema(
+                agpOptions,
+                propertyValue.properties,
+                `${prefix + propertyName}.`
+            );
             return;
         }
-        if (agpOptions.castParams[propertyName]) {
+        if (agpOptions.castParams[`${prefix + propertyName}`]) {
             return; //don't override
         }
-        agpOptions.castParams[propertyName] = propertyValue.type;
+        agpOptions.castParams[`${prefix + propertyName}`] = propertyValue.type;
     });
     return agpOptions;
 }

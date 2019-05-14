@@ -249,7 +249,7 @@ describe('Mongodb', () => {
         });
 
         it.skip('Should allow for regex conversions', () => {
-            //todo rk need to decide how this should happen
+            //todo rk need to decide if and how this could happen, one approach would be to wrap it as a string with a caster in the QS
             const mapper = createQueryStringMapper(schema);
             const qsObj = {
                 filter: {
@@ -282,5 +282,35 @@ describe('Mongodb', () => {
             expect(result.filter.value1).to.eql(1);
             expect(result.filter.value2).to.eql('2');
         });
+
+        it('Should cast based on a nested property in a schema', () => {
+            const multiType = {
+                name: 'users',
+                properties: {
+                    sub: {
+                        type: 'object',
+                        properties: {
+                            sub: {
+                                type: 'object',
+                                properties: {
+                                    value: {
+                                        type: ['string'],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+            const mapper = createQueryStringMapper(multiType);
+            const qs = 'sub.sub.value=1';
+            const result = mapper(qs);
+            expect(result).to.be.ok;
+            expect(result.filter['sub.sub.value']).to.eql('1');
+        });
+
+        // todo add some more casters, RegExp Integer, Number? Boolean,
+        // string and date are built in
+        // todo need to check the casting logic doesn't die with anyof oneof etc
     });
 });
