@@ -309,8 +309,26 @@ describe('Mongodb', () => {
             expect(result.filter['sub.sub.value']).to.eql('1');
         });
 
-        // todo add some more casters, RegExp Integer, Number? Boolean,
-        // string and date are built in
+        it('Should support casting to boolean', () => {
+            const castTypeSchema = {
+                name: 'users',
+                properties: {
+                    value: {
+                        type: 'boolean',
+                    },
+                },
+            };
+            const mapper = createQueryStringMapper(castTypeSchema);
+            //const qs = 'value1=true';
+            const qs = {
+                filter: {
+                    value: true,
+                },
+            };
+            const result = mapper(qs);
+            expect(result).to.be.ok;
+            expect(result.filter.value).to.eql(true);
+        });
         // todo need to check the casting logic doesn't die with anyof oneof etc
     });
 });
