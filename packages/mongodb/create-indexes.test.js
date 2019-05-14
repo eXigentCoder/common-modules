@@ -1,15 +1,15 @@
 'use strict';
 
-const { getDb } = require('./mongodb');
+const { getDb, getClient } = require('./mongodb');
 const createIndexes = require('./create-indexes');
 
 describe('Mongodb', () => {
+    const urlConfig = {
+        server: 'localhost',
+        dbName: 'test-common',
+    };
     describe('create indexes', () => {
         it('should return the created db object', async () => {
-            const urlConfig = {
-                server: 'localhost',
-                dbName: 'test-common',
-            };
             const db = await getDb(urlConfig);
             const collectionName = 'users';
             const indexes = [
@@ -25,5 +25,9 @@ describe('Mongodb', () => {
             ];
             await createIndexes(db, collectionName, indexes);
         });
+    });
+    afterEach(async () => {
+        const client = await getClient(urlConfig);
+        client.close();
     });
 });

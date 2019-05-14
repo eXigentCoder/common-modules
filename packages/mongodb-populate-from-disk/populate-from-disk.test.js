@@ -1,14 +1,14 @@
 'use strict';
 
-const { getDb } = require('../mongodb/mongodb');
+const { getDb, getClient } = require('../mongodb/mongodb');
 const populateFromDisk = require('./');
 const path = require('path');
 describe('Mongodb', () => {
+    const urlConfig = {
+        server: 'localhost',
+        dbName: 'test-common',
+    };
     describe('populate from disk', () => {
-        const urlConfig = {
-            server: 'localhost',
-            dbName: 'test-common',
-        };
         it('should throw an error if no working directory provided', async () => {
             const db = await getDb(urlConfig);
             // @ts-ignore
@@ -24,5 +24,9 @@ describe('Mongodb', () => {
             };
             await populateFromDisk(db, options);
         });
+    });
+    afterEach(async () => {
+        const client = await getClient(urlConfig);
+        client.close();
     });
 });
