@@ -103,56 +103,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/express-error-handler@0.7.1": {
-        "files": [
-            {
-                "name": "boom-error-handler.js",
-                "relativePath": "packages/express-error-handler/boom-error-handler.js",
-                "test": false
-            },
-            {
-                "name": "boom-error-handler.test.js",
-                "relativePath": "packages/express-error-handler/boom-error-handler.test.js",
-                "test": true
-            },
-            {
-                "name": "error-handler.js",
-                "relativePath": "packages/express-error-handler/error-handler.js",
-                "test": false
-            },
-            {
-                "name": "error-handler.test.js",
-                "relativePath": "packages/express-error-handler/error-handler.test.js",
-                "test": true
-            },
-            {
-                "name": "express-error-handler.test.js",
-                "relativePath": "packages/express-error-handler/express-error-handler.test.js",
-                "test": true
-            },
-            {
-                "name": "index.js",
-                "relativePath": "packages/express-error-handler/index.js",
-                "test": false
-            },
-            {
-                "name": "not-found.js",
-                "relativePath": "packages/express-error-handler/not-found.js",
-                "test": false
-            },
-            {
-                "name": "not-found.test.js",
-                "relativePath": "packages/express-error-handler/not-found.test.js",
-                "test": true
-            }
-        ],
-        "mainFile": "packages/express-error-handler/index.js",
-        "origin": "AUTHORED",
-        "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.10.4"
-        ],
-        "exported": true
-    },
     "exigentcoder.common-modules/logging@0.10.4": {
         "files": [
             {
@@ -354,7 +304,95 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "mongodb": {
+    "exigentcoder.common-modules/testers/mocha@5.0.4": {
+        "files": [
+            {
+                "name": "baseReporter.js",
+                "relativePath": "baseReporter.js",
+                "test": false
+            },
+            {
+                "name": "index.js",
+                "relativePath": "index.js",
+                "test": false
+            },
+            {
+                "name": "jsonReporter.js",
+                "relativePath": "jsonReporter.js",
+                "test": false
+            },
+            {
+                "name": "mochaHooksNames.js",
+                "relativePath": "mochaHooksNames.js",
+                "test": false
+            },
+            {
+                "name": "readme.md",
+                "relativePath": "readme.md",
+                "test": false
+            },
+            {
+                "name": "resultsAdapter.js",
+                "relativePath": "resultsAdapter.js",
+                "test": false
+            }
+        ],
+        "mainFile": "index.js",
+        "rootDir": "packages/testers/mocha",
+        "origin": "IMPORTED",
+        "originallySharedDir": "src/testers/mocha"
+    },
+    "exigentcoder.common-modules/express-error-handler@0.11.0": {
+        "files": [
+            {
+                "name": "boom-error-handler.js",
+                "relativePath": "packages/express-error-handler/boom-error-handler.js",
+                "test": false
+            },
+            {
+                "name": "boom-error-handler.test.js",
+                "relativePath": "packages/express-error-handler/boom-error-handler.test.js",
+                "test": true
+            },
+            {
+                "name": "error-handler.js",
+                "relativePath": "packages/express-error-handler/error-handler.js",
+                "test": false
+            },
+            {
+                "name": "error-handler.test.js",
+                "relativePath": "packages/express-error-handler/error-handler.test.js",
+                "test": true
+            },
+            {
+                "name": "express-error-handler.test.js",
+                "relativePath": "packages/express-error-handler/express-error-handler.test.js",
+                "test": true
+            },
+            {
+                "name": "index.js",
+                "relativePath": "packages/express-error-handler/index.js",
+                "test": false
+            },
+            {
+                "name": "not-found.js",
+                "relativePath": "packages/express-error-handler/not-found.js",
+                "test": false
+            },
+            {
+                "name": "not-found.test.js",
+                "relativePath": "packages/express-error-handler/not-found.test.js",
+                "test": true
+            }
+        ],
+        "mainFile": "packages/express-error-handler/index.js",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.10.4"
+        ],
+        "exported": true
+    },
+    "exigentcoder.common-modules/mongodb@0.11.0": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -395,9 +433,9 @@
         "mainFile": "packages/mongodb/index.js",
         "trackDir": "packages/mongodb",
         "origin": "AUTHORED",
-        "exported": false
+        "exported": true
     },
-    "mongodb-populate-from-disk": {
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.11.0": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
@@ -463,45 +501,7 @@
         "mainFile": "packages/mongodb-populate-from-disk/index.js",
         "trackDir": "packages/mongodb-populate-from-disk",
         "origin": "AUTHORED",
-        "exported": false
-    },
-    "exigentcoder.common-modules/testers/mocha@5.0.4": {
-        "files": [
-            {
-                "name": "baseReporter.js",
-                "relativePath": "baseReporter.js",
-                "test": false
-            },
-            {
-                "name": "index.js",
-                "relativePath": "index.js",
-                "test": false
-            },
-            {
-                "name": "jsonReporter.js",
-                "relativePath": "jsonReporter.js",
-                "test": false
-            },
-            {
-                "name": "mochaHooksNames.js",
-                "relativePath": "mochaHooksNames.js",
-                "test": false
-            },
-            {
-                "name": "readme.md",
-                "relativePath": "readme.md",
-                "test": false
-            },
-            {
-                "name": "resultsAdapter.js",
-                "relativePath": "resultsAdapter.js",
-                "test": false
-            }
-        ],
-        "mainFile": "index.js",
-        "rootDir": "packages/testers/mocha",
-        "origin": "IMPORTED",
-        "originallySharedDir": "src/testers/mocha"
+        "exported": true
     },
     "version": "14.1.0"
 }
