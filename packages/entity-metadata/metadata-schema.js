@@ -41,6 +41,20 @@ module.exports = function() {
                 },
                 required: ['name', 'schema'],
             },
+            stringIdentifier: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                    name: commonSchemas.identifier,
+                    schema: {
+                        type: 'object',
+                    },
+                    source: {
+                        type: 'string',
+                    },
+                },
+                required: ['name', 'schema', 'source'],
+            },
             collectionName: commonSchemas.identifier,
             baseUrl: commonSchemas.url,
             aOrAn: {

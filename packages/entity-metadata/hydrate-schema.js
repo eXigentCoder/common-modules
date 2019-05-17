@@ -3,17 +3,31 @@ module.exports = function hydrateSchema(schema, metadata) {
     schema.properties = schema.properties || {};
     schema.required = schema.required || [];
     addIdentifier(schema, metadata);
+    addStringIdentifier(schema, metadata);
     // addStatusInfo(schema);
     // addOwnerInfo(schema);
 };
 
 function addIdentifier(schema, metadata) {
-    const identifier = metadata.identifier;
+    addAnIdentifer(schema, metadata.identifier);
+}
+
+function addStringIdentifier(schema, metadata) {
+    const identifier = metadata.stringIdentifier;
+    if (!identifier) {
+        return;
+    }
+    addAnIdentifer(schema, identifier, false);
+}
+
+function addAnIdentifer(schema, identifier, required = true) {
     if (schema.properties[identifier.name]) {
         return;
     }
     schema.properties[identifier.name] = Object.assign({}, identifier.schema);
-    schema.required.push(identifier.name);
+    if (required) {
+        schema.required.push(identifier.name);
+    }
 }
 
 // function addStatusInfo(schema) {

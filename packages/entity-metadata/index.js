@@ -35,6 +35,10 @@ module.exports = generateDomainMetadata;
  * @property {Object} identifier
  * @property {string} identifier.name
  * @property {Object} identifier.schema
+ * @property {Object} [stringIdentifier]
+ * @property {string} [stringIdentifier.name]
+ * @property {Object} [stringIdentifier.schema]
+ * @property {Object} [stringIdentifier.source]
  * @property {string} collectionName
  *
  * @param {DomainMetadata|Object} metadata
