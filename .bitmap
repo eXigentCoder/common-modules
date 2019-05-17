@@ -221,89 +221,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.10.6": {
-        "files": [
-            {
-                "relativePath": "packages/entity-metadata/ensure-schema-set.js",
-                "test": false,
-                "name": "ensure-schema-set.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/ensure-schema-set.test.js",
-                "test": true,
-                "name": "ensure-schema-set.test.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/entity-metadata.test.js",
-                "test": true,
-                "name": "entity-metadata.test.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/filter-properties-for-creation.js",
-                "test": false,
-                "name": "filter-properties-for-creation.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/filter-properties-for-output.js",
-                "test": false,
-                "name": "filter-properties-for-output.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/filter-properties-for-update.js",
-                "test": false,
-                "name": "filter-properties-for-update.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/hydrate-schema.js",
-                "test": false,
-                "name": "hydrate-schema.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/infer-names.js",
-                "test": false,
-                "name": "infer-names.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/metadata-schema.js",
-                "test": false,
-                "name": "metadata-schema.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/remove-from-array-if-exists.js",
-                "test": false,
-                "name": "remove-from-array-if-exists.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/set-and-validate-id.js",
-                "test": false,
-                "name": "set-and-validate-id.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/set-and-validate-id.test.js",
-                "test": true,
-                "name": "set-and-validate-id.test.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/set-and-validate-name.js",
-                "test": false,
-                "name": "set-and-validate-name.js"
-            },
-            {
-                "relativePath": "packages/entity-metadata/set-and-validate-name.test.js",
-                "test": true,
-                "name": "set-and-validate-name.test.js"
-            }
-        ],
-        "mainFile": "packages/entity-metadata/index.js",
-        "trackDir": "packages/entity-metadata",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "exigentcoder.common-modules/testers/mocha@5.0.4": {
         "files": [
             {
@@ -500,6 +417,89 @@
         ],
         "mainFile": "packages/mongodb-populate-from-disk/index.js",
         "trackDir": "packages/mongodb-populate-from-disk",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/entity-metadata@0.12.0": {
+        "files": [
+            {
+                "relativePath": "packages/entity-metadata/ensure-schema-set.js",
+                "test": false,
+                "name": "ensure-schema-set.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/ensure-schema-set.test.js",
+                "test": true,
+                "name": "ensure-schema-set.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/entity-metadata.test.js",
+                "test": true,
+                "name": "entity-metadata.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/filter-properties-for-creation.js",
+                "test": false,
+                "name": "filter-properties-for-creation.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/filter-properties-for-output.js",
+                "test": false,
+                "name": "filter-properties-for-output.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/filter-properties-for-update.js",
+                "test": false,
+                "name": "filter-properties-for-update.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/hydrate-schema.js",
+                "test": false,
+                "name": "hydrate-schema.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/infer-names.js",
+                "test": false,
+                "name": "infer-names.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/metadata-schema.js",
+                "test": false,
+                "name": "metadata-schema.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/remove-from-array-if-exists.js",
+                "test": false,
+                "name": "remove-from-array-if-exists.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-id.js",
+                "test": false,
+                "name": "set-and-validate-id.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-id.test.js",
+                "test": true,
+                "name": "set-and-validate-id.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-name.js",
+                "test": false,
+                "name": "set-and-validate-name.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/set-and-validate-name.test.js",
+                "test": true,
+                "name": "set-and-validate-name.test.js"
+            }
+        ],
+        "mainFile": "packages/entity-metadata/index.js",
+        "trackDir": "packages/entity-metadata",
         "origin": "AUTHORED",
         "exported": true
     },
