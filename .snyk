@@ -6,4 +6,9 @@ ignore:
     - mocha > js-yaml:
         reason: No solution provided
         expires: '2019-05-18T16:01:32.221Z'
+      '@bit/exigentcoder.common-modules.tester-mocha > mocha > js-yaml':
+        reason: >-
+          No upgrade/solution available and this is in the tests so not on
+          production
+        expires: '2019-06-20T11:33:23.603Z'
 patch: {}
