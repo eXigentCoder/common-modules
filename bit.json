@@ -1,8 +1,7 @@
 {
     "env": {
-        "tester": "exigentcoder.common-modules/testers/mocha"
+        "tester": "exigentcoder.common-modules/testers/mocha@5.0.8"
     },
     "componentsDefaultDirectory": "packages/{name}",
-    "packageManager": "npm",
-    "overrides": {}
+    "packageManager": "npm"
 }

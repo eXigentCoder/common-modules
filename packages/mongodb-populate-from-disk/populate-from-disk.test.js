@@ -27,6 +27,6 @@ describe('Mongodb', () => {
     });
     afterEach(async () => {
         const client = await getClient(urlConfig);
-        client.close();
+        await client.close();
     });
 });
