@@ -2,7 +2,7 @@
 var qs = require('qs');
 const createQueryStringMapper = require('./query-string-to-mongo-query');
 
-describe('Mongodb', () => {
+describe('MongoDB', () => {
     describe('Query String Mapper', () => {
         const schema = {
             name: 'users',

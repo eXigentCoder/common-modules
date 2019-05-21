@@ -1,6 +1,6 @@
 'use strict';
 
-describe('config', () => {
+describe('Config', () => {
     process.env.NODE_ENV = 'test';
     it('should merge in the values based on the NODE_ENV value', () => {
         const config = require('.');

@@ -2,7 +2,7 @@
 
 const { getDb, getClient } = require('./connection');
 
-describe('Mongodb', () => {
+describe('MongoDB', () => {
     const urlConfig = {
         server: 'localhost',
         dbName: 'test-common',

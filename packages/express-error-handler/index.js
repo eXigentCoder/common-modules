@@ -4,7 +4,7 @@ const debug = require('debug')('@exigentcoder/common-modules.express-error-handl
 const { IsRequiredError } = require('../common-errors');
 const errorHandler = require('./error-handler');
 const boomErrorHandler = require('./boom-error-handler');
-const notFound = require('./not-found');
+const notFound = require('./not-found-route');
 
 module.exports = function initialise(app, options = {}) {
     debug('Initialising');

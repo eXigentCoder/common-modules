@@ -12,7 +12,7 @@ afterEach(() => {
     logger.reset();
 });
 
-describe('logger', () => {
+describe('Logging', () => {
     describe('initialise', function() {
         it('should throw an error if no options are provided', function() {
             expect(() => logger.initialise()).to.throw(IsRequiredError);

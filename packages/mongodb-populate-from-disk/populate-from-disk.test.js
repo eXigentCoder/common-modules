@@ -3,7 +3,7 @@
 const { getDb, getClient } = require('../mongodb/connection');
 const populateFromDisk = require('.');
 const path = require('path');
-describe('Mongodb', () => {
+describe('MongoDB Populate From Disk', () => {
     const urlConfig = {
         server: 'localhost',
         dbName: 'test-common',
