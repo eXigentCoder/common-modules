@@ -2,7 +2,7 @@
 
 const { createOutputValidator, createValidator } = require('./ajv');
 const { ValidationError } = require('../common-errors');
-describe('Ajv', () => {
+describe('Validation', () => {
     describe('Custom keywords in constructor', () => {
         it('should allow you to pass in custom keyword functions to the constructor', () => {
             const validator = createValidator({ allErrors: true }, someKeywordFn);
