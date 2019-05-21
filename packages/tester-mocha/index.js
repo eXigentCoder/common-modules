@@ -19,7 +19,8 @@ global.chai = chai;
 global.expect = chai.expect;
 global.assert = chai.assert;
 
-const run = specFile => {
+function run(specFile) {
+    console.log(specFile);
     return new Promise(resolve => {
         const mocha = new Mocha({
             reporter: JSONReporter,
@@ -38,7 +39,7 @@ const run = specFile => {
                 return resolve(convertMochaFormatToBitFormat(this.testResults));
             });
     });
-};
+}
 
 module.exports = {
     run,

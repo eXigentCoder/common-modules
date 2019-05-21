@@ -24,7 +24,7 @@ const errorJSON = err => {
     return res;
 };
 
-const JSONReporter = runner => {
+module.exports = function JSONReporter(runner) {
     const results = baseReporter(runner);
 
     let tests = [];
@@ -66,5 +66,3 @@ const JSONReporter = runner => {
         runner.testResults = obj;
     });
 };
-
-module.exports = JSONReporter;

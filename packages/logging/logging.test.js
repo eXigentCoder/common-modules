@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('./');
+const logger = require('.');
 const { IsRequiredError } = require('../common-errors');
 
 beforeEach(function() {

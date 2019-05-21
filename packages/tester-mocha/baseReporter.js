@@ -3,7 +3,7 @@
 const startsWithOneOf = require('@bit/bit.utils.string.starts-with-one-of');
 const mochaHooksNames = require('./mochaHooksNames');
 
-const baseReporter = runner => {
+module.exports = function baseReporter(runner) {
     const results = {};
     var stats = (results.stats = {
         suites: 0,
@@ -71,5 +71,3 @@ const baseReporter = runner => {
 
     return results;
 };
-
-module.exports = baseReporter;

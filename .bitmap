@@ -513,7 +513,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/tester-mocha@0.12.2": {
+    "exigentcoder.common-modules/tester-mocha@0.12.3": {
         "files": [
             {
                 "relativePath": "packages/tester-mocha/baseReporter.js",

@@ -1,5 +1,5 @@
 'use strict';
-const commonSchemas = require('./');
+const commonSchemas = require('.');
 
 const { createInputValidator } = require('../validation/ajv');
 describe('JSON Schemas - dates and times', function() {

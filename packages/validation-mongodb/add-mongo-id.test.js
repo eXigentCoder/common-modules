@@ -1,6 +1,6 @@
 'use strict';
 
-const { addMongoId } = require('./');
+const { addMongoId } = require('.');
 const { createInputValidator } = require('../validation/ajv');
 const ObjectId = require('mongodb').ObjectID;
 describe('JSON Schemas - MongoDB', () => {
