@@ -1,5 +1,5 @@
 'use strict';
-//todo maybe validate the arguments using v8n
+
 const isNil = require('lodash/isNil');
 const endsWith = require('lodash/endsWith');
 

@@ -209,13 +209,11 @@ function getSearch({ collection, mapOutput }) {
 
 module.exports = { getUtils, getCrud };
 
-//todo maybe these need to move out? :
 /**
- * @param {EntityMetadata} metadata
- * @returns {SetStringIdentifier}
+ * @param {EntityMetadata} metadata The entity metadata containing the rules for the string identifier
+ * @returns {SetStringIdentifier} The function to set the string identifier on an object
  */
 function createStringIdentifierSetter(metadata) {
-    /** @type {SetStringIdentifier} */
     return function setStringIdentifier(item) {
         if (!metadata.stringIdentifier) {
             return;
@@ -227,12 +225,11 @@ function createStringIdentifierSetter(metadata) {
 }
 
 /**
- * @param {EntityMetadata} metadata
- * @returns {GetIdentifierQuery}
+ * @param {EntityMetadata} metadata The entity metadata containing the rules for identifiers
+ * @returns {GetIdentifierQuery} The function to set the get the right mongodb query based on the type of supplied identifier
  */
 function createGetIdentifierQuery(metadata) {
     const { stringIdentifier, identifier: identifierName } = metadata;
-    /** @type {GetIdentifierQuery} */
     return function getIdentifierQuery(identifierValue) {
         if (identifierValue === null || identifierValue === undefined) {
             throw badRequest(

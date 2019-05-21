@@ -249,7 +249,6 @@ describe('MongoDB', () => {
         });
 
         it.skip('Should allow for regex conversions', () => {
-            //todo rk need to decide if and how this could happen, one approach would be to wrap it as a string with a caster in the QS
             const mapper = createQueryStringMapper(schema);
             const qsObj = {
                 filter: {
@@ -329,6 +328,5 @@ describe('MongoDB', () => {
             expect(result).to.be.ok;
             expect(result.filter.value).to.eql(true);
         });
-        // todo need to check the casting logic doesn't die with anyof oneof etc
     });
 });

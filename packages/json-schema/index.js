@@ -1,7 +1,5 @@
 'use strict';
 
-//TODO RK These should be functions that take in a description and set it on the resultant object. Maybe a merge?
-
 // a v4 unique identifier
 const uuid = {
     type: 'string',

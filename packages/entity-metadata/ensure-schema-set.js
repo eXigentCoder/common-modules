@@ -1,12 +1,16 @@
 'use strict';
 
-//TODO RK these don't exist in a lib version, meed to be passed in
-//const { inputValidator, outputValidator } = require('../validation/ajv');
 const setAndValidateId = require('./set-and-validate-id');
 const setAndValidateName = require('./set-and-validate-name');
 
 /**
+ * @typedef {import('../validation/ajv').Validator} Validator
+ *
  * @param {import('./index').EntityMetadata } metadata
+ * @param {string} operation The operation to be performed [output, create, replace]
+ * @param {string} direction The data flow direction [Output, Input]
+ * @param {Validator} outputValidator The validator for transforming entities to output
+ * @param {Validator} inputValidator The validator for ensuring entitie passed in are valid
  */
 module.exports = function ensureSchemaSet(
     metadata,
