@@ -6,7 +6,7 @@ const setAndValidateId = require('./set-and-validate-id');
 const setAndValidateName = require('./set-and-validate-name');
 
 /**
- * @param {import('./index').DomainMetadata } metadata
+ * @param {import('./index').EntityMetadata } metadata
  */
 module.exports = function ensureSchemaSet(
     metadata,

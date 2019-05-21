@@ -9,7 +9,8 @@ const filterPropertiesForCreation = require('./filter-properties-for-creation');
 const filterPropertiesForReplace = require('./filter-properties-for-update');
 const { generateId } = require('../json-schema/schema-id-generator');
 const getMetadataSchema = require('./metadata-schema');
-module.exports = generateDomainMetadata;
+const defaultTitleToStringIdentifierFn = require('./title-to-string-identifier');
+module.exports = generateEntityMetadata;
 /**
  *
  * @typedef {Object} Schema
@@ -21,7 +22,7 @@ module.exports = generateDomainMetadata;
  * @property {{[key: string]: { prop: Schema }}} properties
  * @property {string[]} [required]
  *
- * @typedef {Object} DomainMetadata
+ * @typedef {Object} EntityMetadata
  * @property {Object} schemas
  * @property {Schema} schemas.core
  * @property {Schema} [schemas.output]
@@ -40,14 +41,17 @@ module.exports = generateDomainMetadata;
  * @property {Object} [stringIdentifier.schema]
  * @property {Object} [stringIdentifier.source]
  * @property {string} collectionName
+ * @property {(title:string)=>string} [titleToStringIdentifier]
  *
- * @param {DomainMetadata|Object} metadata
+ * @param {EntityMetadata|Object} metadata
  * @param {import('../validation/ajv').Validator} inputValidator
  * @param {import('../validation/ajv').Validator} outputValidator
- * @returns {DomainMetadata}
+ * @returns {EntityMetadata}
  */
-function generateDomainMetadata(metadata, inputValidator, outputValidator) {
+function generateEntityMetadata(metadata, inputValidator, outputValidator) {
     validate(metadata, inputValidator);
+    metadata.titleToStringIdentifier =
+        metadata.titleToStringIdentifier || defaultTitleToStringIdentifierFn;
     metadata.schemas = JSON.parse(JSON.stringify(metadata.schemas));
     inferNames(metadata);
     setAOrAn(metadata);
@@ -66,7 +70,7 @@ function generateDomainMetadata(metadata, inputValidator, outputValidator) {
 }
 
 /**
- * @param {DomainMetadata} metadata
+ * @param {EntityMetadata} metadata
  * @param {import('../validation/ajv').Validator} validator
  */
 function validate(metadata, validator) {
@@ -77,7 +81,7 @@ function validate(metadata, validator) {
     validator.ensureValid(metadataSchema.$id, metadata);
 }
 
-/** @param {DomainMetadata} metadata */
+/** @param {EntityMetadata} metadata */
 function setAOrAn(metadata) {
     metadata.aOrAn = 'A';
     if (vowels.indexOf(metadata.name[0]) >= 0) {

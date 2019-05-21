@@ -4,7 +4,7 @@ const removeFromArrayIfExists = require('./remove-from-array-if-exists');
 
 /**
  * @param {Object} schema
- * @param {import('.').DomainMetadata} metadata
+ * @param {import('.').EntityMetadata} metadata
  */
 module.exports = function filterPropertiesForCreation(schema, metadata) {
     if (!schema) {

@@ -14,7 +14,7 @@ const v8n = require('v8n');
  * @typedef {(object:object,context: ExecutionContext)=>VersionedObject} SetVersionInfo
  *
  * @typedef {Object} CreateVersionInfoSetterOptions The options used to construct the versionInfoSetter instance
- * @property {import('../entity-metadata/index').DomainMetadata} options.metadata
+ * @property {import('../entity-metadata/index').EntityMetadata} options.metadata
  * @property {import('../validation/ajv').Validator} [options.validator] The Ajv validator used to validate the execution context
  * @property {object} [options.executionContextSchema] The schema for the execution context, will default to the built in one
  */

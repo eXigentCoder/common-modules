@@ -2,7 +2,7 @@
 const ObjectId = require('mongodb').ObjectId;
 const createVersionInfoSetter = require('./create-version-info-setter');
 const { jsonSchemas } = require('../validation-mongodb');
-/**@type {import('../entity-metadata').DomainMetadata} */
+/**@type {import('../entity-metadata').EntityMetadata} */
 const metadata = {
     name: 'bob',
     collectionName: 'bobs',
