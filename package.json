@@ -6,7 +6,9 @@
     "npm": ">= 6.0.0"
   },
   "description": "A collection of shared js modules used primarily on the server side.",
-  "files": ["packages"],
+  "files": [
+    "packages"
+  ],
   "scripts": {
     "coverage": "nyc --require ./test-init.js mocha --exit",
     "codecov": "codecov",
@@ -30,7 +32,9 @@
     "type": "git",
     "url": "https://github.com/eXigentCoder/common-modules.git"
   },
-  "keywords": ["KrimZen-Ninja"],
+  "keywords": [
+    "KrimZen-Ninja"
+  ],
   "author": "Ryan Kotzen <ryan@krimzen.ninja> (http://ryankotzen.com/)",
   "license": "MIT",
   "devDependencies": {
@@ -54,6 +58,8 @@
     "yargs": "13.2.2"
   },
   "dependencies": {
+    "@bit/bit.utils.string.starts-with-one-of": "1.0.0",
+    "@bit/bit.utils.validation.empty": "1.0.0",
     "@hapi/boom": "7.4.2",
     "ajv": "6.10.0",
     "ajv-errors": "1.0.1",
@@ -62,6 +68,8 @@
     "debug": "4.1.1",
     "express": "4.16.4",
     "glob": "7.1.4",
+    "ignore-styles": "5.0.1",
+    "jsdom": "15.1.0",
     "json-schema-faker": "0.5.0-rc16",
     "lodash": "4.17.11",
     "moment": "2.24.0",
