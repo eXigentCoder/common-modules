@@ -7,7 +7,7 @@ const execute = util.promisify(exec);
     console.log(`Setting version number to ${version}`);
     try {
         const { stdout: bitTagOutput } = await execute(
-            `bit tag --all ${version} --force --skip-tests`
+            `bit tag --all ${version} --force` //--skip-tests
         );
         if (bitTagOutput) {
             console.log(bitTagOutput);
