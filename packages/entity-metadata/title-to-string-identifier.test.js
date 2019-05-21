@@ -23,7 +23,7 @@ describe('Entity Metadata', () => {
             expect(() => titleToStringIdentifier({})).to.throw();
         });
         it('should kebab case a string', () => {
-            expect(titleToStringIdentifier('\r\n\tZOMG asd pew_pew-K\r\n\t')).to.equal(
+            expect(titleToStringIdentifier(' \r\n\tZOMG asd pew_pew-K\r\n\t ')).to.equal(
                 'zomg-asd-pew-pew-k'
             );
         });
