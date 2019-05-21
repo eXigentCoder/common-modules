@@ -1,7 +1,7 @@
 'use strict';
 
 const { getDb, getClient } = require('../mongodb/connection');
-const populateFromDisk = require('./');
+const populateFromDisk = require('.');
 const path = require('path');
 describe('Mongodb', () => {
     const urlConfig = {
@@ -17,7 +17,7 @@ describe('Mongodb', () => {
 
         it('should successfully load and populate the data', async () => {
             const db = await getDb(urlConfig);
-            /**@type {import('./').Options} */
+            /**@type {import('.').Options} */
             const options = {
                 dropExistingData: true,
                 workingDirectory: path.join(__dirname, 'test-data'),

@@ -63,9 +63,19 @@
                 "relativePath": "packages/validation/ajv.test.js",
                 "test": true,
                 "name": "ajv.test.js"
+            },
+            {
+                "relativePath": "packages/validation/create-output-mapper.js",
+                "test": false,
+                "name": "create-output-mapper.js"
+            },
+            {
+                "relativePath": "packages/validation/index.js",
+                "test": false,
+                "name": "index.js"
             }
         ],
-        "mainFile": "packages/validation/ajv.js",
+        "mainFile": "packages/validation/index.js",
         "trackDir": "packages/validation",
         "origin": "AUTHORED",
         "exported": true
