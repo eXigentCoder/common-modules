@@ -373,7 +373,7 @@
             },
             {
                 "relativePath": "packages/mongodb/connection.test.js",
-                "test": false,
+                "test": true,
                 "name": "connection.test.js"
             },
             {
@@ -383,7 +383,7 @@
             },
             {
                 "relativePath": "packages/mongodb/create-indexes.test.js",
-                "test": false,
+                "test": true,
                 "name": "create-indexes.test.js"
             },
             {
@@ -426,7 +426,7 @@
             },
             {
                 "relativePath": "packages/mongodb-populate-from-disk/populate-from-disk.test.js",
-                "test": false,
+                "test": true,
                 "name": "populate-from-disk.test.js"
             },
             {
@@ -512,6 +512,39 @@
         "rootDir": "packages/testers/mocha",
         "origin": "IMPORTED",
         "originallySharedDir": "src/testers/mocha"
+    },
+    "tester-mocha": {
+        "files": [
+            {
+                "relativePath": "packages/tester-mocha/baseReporter.js",
+                "test": false,
+                "name": "baseReporter.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/jsonReporter.js",
+                "test": false,
+                "name": "jsonReporter.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/mochaHooksNames.js",
+                "test": false,
+                "name": "mochaHooksNames.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/resultsAdapter.js",
+                "test": false,
+                "name": "resultsAdapter.js"
+            }
+        ],
+        "mainFile": "packages/tester-mocha/index.js",
+        "trackDir": "packages/tester-mocha",
+        "origin": "AUTHORED",
+        "exported": false
     },
     "version": "14.1.0"
 }
