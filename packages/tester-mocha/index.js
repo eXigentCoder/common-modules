@@ -25,7 +25,7 @@ function run(specFile) {
         const mocha = new Mocha({
             reporter: JSONReporter,
             retries: 0,
-            timeout: 5000,
+            timeout: 1000,
             bail: true,
             inlineDiffs: false,
         });
@@ -35,7 +35,6 @@ function run(specFile) {
                 process.exitCode = failures ? 1 : 0; // exit with non-zero status if there were failures
             })
             .on('end', function() {
-                // eslint-disable-line
                 return resolve(convertMochaFormatToBitFormat(this.testResults));
             });
     });
@@ -50,3 +49,5 @@ module.exports = {
         should: chai.should(),
     },
 };
+// For testing (Can't use mocha to kick off mocha...) :
+//testRunner.run('./packages/tester-mocha/simple.test.js');

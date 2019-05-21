@@ -7,6 +7,6 @@ module.exports = {
     lines: 70,
     all: true,
     include: ['packages/**'],
-    exclude: ['packages/**/*.test.js'],
+    exclude: ['packages/**/*.test.js', 'packages/tester-mocha/**'],
     reporter: ['html', 'lcov', 'cobertura', 'text-summary'],
 };
