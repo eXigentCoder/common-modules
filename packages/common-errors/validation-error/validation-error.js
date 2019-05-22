@@ -26,7 +26,7 @@ module.exports = class ValidationError extends KrimZenNinjaBaseError {
             name: 'ValidationError',
             codeSuffix: 'VALIDATION_FAILED',
             httpStatusCode: 400,
-            decorate: { ...errors, ...decorate },
+            decorate: { ...decorate, errors },
             innerError,
             safeToShowToUsers,
         });

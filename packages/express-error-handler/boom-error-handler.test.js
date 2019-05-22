@@ -101,7 +101,7 @@ describe('Express error handler', () => {
                     expect(data.message).to.equal('An internal server error occurred');
                     expect(data.error).to.equal('Internal Server Error');
                     expect(data.statusCode).to.equal(500);
-                    expect(data.errMessage).to.equal('Naughty!');
+                    expect(data.serverErrorMessage).to.equal('Naughty!');
                     done();
                 });
 
@@ -128,7 +128,7 @@ describe('Express error handler', () => {
                     expect(data.message).to.equal('An internal server error occurred');
                     expect(data.error).to.equal('Internal Server Error');
                     expect(data.statusCode).to.equal(500);
-                    expect(data.errMessage).to.equal('Naughty!');
+                    expect(data.serverErrorMessage).to.equal('Naughty!');
                     expect(data.data).to.eql(error.data);
                     done();
                 });

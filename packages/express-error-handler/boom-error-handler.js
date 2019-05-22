@@ -17,15 +17,17 @@ module.exports = function boomErrorHandler(options) {
             req.log.warn('Client Error :', util.inspect(err));
         }
         if ((options.exposeServerErrorMessages && err.isServer) || !err.isServer) {
-            const messageToLog = err.output.payload;
+            const payload = err.output.payload;
             if (err.data) {
-                messageToLog.data = err.data;
+                payload.data = err.data;
             }
-            messageToLog.errMessage = err.message;
+            if (err.message !== payload.message) {
+                payload.serverErrorMessage = err.message;
+            }
             res
                 .status(err.output.statusCode)
                 .set(err.output.headers)
-                .json(messageToLog);
+                .json(payload);
             return;
         }
         res
