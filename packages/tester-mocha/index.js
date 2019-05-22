@@ -6,8 +6,8 @@ const Mocha = require('mocha');
 const JSONReporter = require('./jsonReporter');
 require('ignore-styles');
 const chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
+chai.use(require('chai-as-promised'));
+chai.use(require('chai-string'));
 const { document } = new JSDOM('<!doctype html><html><body></body></html>').window;
 
 global.window = document.defaultView;

@@ -2,9 +2,9 @@
 // NB: If you change this file, remember to change the tester bit package and republish it
 
 const chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
+chai.use(require('chai-as-promised'));
+chai.use(require('chai-string'));
 
-chai.use(chaiAsPromised);
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
 global.chai = chai;

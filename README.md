@@ -16,11 +16,16 @@ git+https://github.com/KrimZen Ninja/krimzen-ninja-common-errors.git
 
 bit remove exigentcoder.shared-components --remote
 
+
 ## modifying the test environment:
 
 https://discourse.bit.dev/t/can-i-modify-a-build-test-environments/28
 
+> bit tag exigentcoder.common-modules/tester-mocha --patch
+> bit export exigentcoder.common-modules tester-mocha
+> bit import exigentcoder.common-modules/testers/mocha --tester
+
 # Semver
 
 This project follows [Semver](https://semver.org/) guidelines for version numbering
-
+#
