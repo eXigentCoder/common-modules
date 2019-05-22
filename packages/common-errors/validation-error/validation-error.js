@@ -5,7 +5,7 @@ const KrimZenNinjaBaseError = require('../krimzen-ninja-base-error');
 
 module.exports = class ValidationError extends KrimZenNinjaBaseError {
     /**
-     * An error used when some value that is required was not provided
+     * An error used when some input value is not valid
      * @param {string} message The name of the required value
      * @param {Object} [errors] The error object containing extra information
      * @param {import('../krimzen-ninja-base-error').ErrorParameters} errorOptions
@@ -30,8 +30,5 @@ module.exports = class ValidationError extends KrimZenNinjaBaseError {
             innerError,
             safeToShowToUsers,
         });
-        if (errors) {
-            this.errors = errors;
-        }
     }
 };

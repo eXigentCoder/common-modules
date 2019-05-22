@@ -53,7 +53,7 @@ module.exports = function() {
                         type: 'string',
                     },
                 },
-                required: ['name', 'schema', 'source'],
+                required: ['name', 'schema'],
             },
             collectionName: commonSchemas.identifier,
             baseUrl: commonSchemas.url,

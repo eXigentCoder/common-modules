@@ -14,13 +14,22 @@ module.exports = generateEntityMetadata;
 /**
  *
  * @typedef {Object} Schema
- * @property {string} $id
+ * @property {string} [$id]
  * @property {string} name
  * @property {string} [description]
  * @property {string|string[]} type
  * @property {boolean} [additionalProperties]
- * @property {{[key: string]: { prop: Schema }}} properties
+ * @property {{[key: string]: Schema|SubSchema}} properties
  * @property {string[]} [required]
+ *
+ * @typedef {Object} SubSchema
+ * @property {string} [name]
+ * @property {string} [description]
+ * @property {string|string[]} type
+ * @property {boolean} [additionalProperties]
+ * @property {{[key: string]: SubSchema}} [properties]
+ * @property {string[]} [required]
+ *
  *
  * @typedef {Object} EntityMetadata
  * @property {Object} schemas
@@ -28,7 +37,7 @@ module.exports = generateEntityMetadata;
  * @property {Schema} [schemas.output]
  * @property {Schema} [schemas.create]
  * @property {Schema} [schemas.replace]
- * @property {string} name
+ * @property {string} [name] Either set or comes from the core schema
  * @property {string} [namePlural]
  * @property {string} [title]
  * @property {string} [titlePlural]
@@ -37,10 +46,11 @@ module.exports = generateEntityMetadata;
  * @property {string} identifier.name
  * @property {Object} identifier.schema
  * @property {Object} [stringIdentifier]
- * @property {string} [stringIdentifier.name]
- * @property {Object} [stringIdentifier.schema]
+ * @property {string} stringIdentifier.name
+ * @property {Object} stringIdentifier.schema
  * @property {Object} [stringIdentifier.source]
  * @property {string} collectionName
+ * @property {string} baseUrl
  * @property {(title:string)=>string} [titleToStringIdentifier]
  *
  * @param {EntityMetadata|Object} metadata

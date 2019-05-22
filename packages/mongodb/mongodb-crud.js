@@ -1,12 +1,9 @@
 'use strict';
 const { createOutputMapper } = require('../validation');
 const { createVersionInfoSetter } = require('../version-info');
-const ObjectId = require('mongodb').ObjectID;
-// TODO : Remove direct boom reference
-const { badRequest } = require('@hapi/boom');
-const util = require('util');
 const get = require('lodash/get');
 const { EntityNotFoundError } = require('../common-errors');
+const createGetIdentifierQuery = require('./create-identifier-query');
 
 // TODO : Add an audit writer (Mongodb/pub/sub/Firebase etc)
 // TODO : Go over old CRUD and see that I haven't missed anything
@@ -23,6 +20,7 @@ const { EntityNotFoundError } = require('../common-errors');
  * @typedef {import('../validation/create-output-mapper').MapOutput} MapOutput
  * @typedef {import('mongodb').Db} Db
  * @typedef {import('mongodb').Collection} Collection
+ * @typedef {import('./create-identifier-query').GetIdentifierQuery} GetIdentifierQuery
  *
  * @typedef {Object} Utilities
  * @property {SetVersionInfo} setVersionInfo
@@ -36,7 +34,7 @@ const { EntityNotFoundError } = require('../common-errors');
  * @property {Validator} outputValidator
  *
  * @typedef {(item:Object)=>void} SetStringIdentifier
- * @typedef {(identifier:string)=>Object} GetIdentifierQuery
+ *
  * @typedef {(entity:Object,context:ExecutionContext)=>Promise<Object>} Create
  * @typedef {(id:String)=>Promise<Object>} GetById
  * @typedef {(id:String,context:ExecutionContext)=>void} DeleteById
@@ -217,45 +215,9 @@ function createStringIdentifierSetter(metadata) {
         if (!metadata.stringIdentifier) {
             return;
         }
-        item[metadata.stringIdentifier.name] = metadata.titleToStringIdentifier(
-            get(item, metadata.stringIdentifier.source)
-        );
-    };
-}
-
-/**
- * @param {EntityMetadata} metadata The entity metadata containing the rules for identifiers
- * @returns {GetIdentifierQuery} The function to set the get the right mongodb query based on the type of supplied identifier
- */
-function createGetIdentifierQuery(metadata) {
-    const { stringIdentifier, identifier: identifierName } = metadata;
-    return function getIdentifierQuery(identifierValue) {
-        if (identifierValue === null || identifierValue === undefined) {
-            throw badRequest(
-                `"${stringIdentifier.name}" or ${
-                    identifierName
-                } is required as an identifier to refer to a ${metadata.title}`
-            );
-        }
-        if (ObjectId.isValid(identifierValue)) {
-            return { _id: new ObjectId(identifierValue) };
-        }
-
-        if (typeof identifierValue === 'object') {
-            throw badRequest(
-                `Invalid ObjectId: "${util.inspect(identifierValue)}" when trying to refer to a ${
-                    metadata.title
-                }`
-            );
-        } else if (typeof identifierValue === 'string') {
-            const identifierQuery = {};
-            identifierQuery[stringIdentifier.name] = identifierValue;
-            return identifierQuery;
-        } else {
-            throw badRequest(
-                `Invalid type of identifier "${typeof identifierValue}", value: "${util.inspect(
-                    identifierValue
-                )}" when trying to refer to a ${metadata.title}, must be a string or ObjectId`
+        if (metadata.stringIdentifier.source) {
+            item[metadata.stringIdentifier.name] = metadata.titleToStringIdentifier(
+                get(item, metadata.stringIdentifier.source)
             );
         }
     };
