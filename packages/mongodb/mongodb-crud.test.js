@@ -5,6 +5,7 @@ const generateEntityMetadata = require('../entity-metadata');
 const { createInputValidator, createOutputValidator } = require('../validation');
 const { jsonSchemas, addMongoId } = require('../validation-mongodb');
 const crypto = require('crypto');
+const ObjectId = require('mongodb').ObjectId;
 
 describe('MongoDB', () => {
     describe('CRUD', () => {
@@ -28,6 +29,10 @@ describe('MongoDB', () => {
                 const created = await create(entity, createContext());
                 await deleteById(created._id, createContext());
                 await expect(getById(created._id)).to.be.rejected;
+            });
+            it("Should throw an error if the entity to delete doesn't exist", async () => {
+                const { deleteById, getById } = await getPopulatedCrud();
+                await expect(deleteById(new ObjectId().toString(), createContext())).to.be.rejected;
             });
         });
         describe('Get By Id', () => {

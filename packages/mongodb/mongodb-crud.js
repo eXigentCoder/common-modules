@@ -4,6 +4,8 @@ const { createVersionInfoSetter } = require('../version-info');
 const get = require('lodash/get');
 const { EntityNotFoundError } = require('../common-errors');
 const createGetIdentifierQuery = require('./create-identifier-query');
+const createMongoDbAuditors = require('./create-mongodb-auditors');
+const ObjectId = require('mongodb').ObjectId;
 
 // TODO : Add an audit writer (Mongodb/pub/sub/Firebase etc)
 // TODO : Go over old CRUD and see that I haven't missed anything
@@ -32,6 +34,7 @@ const createGetIdentifierQuery = require('./create-identifier-query');
  * @property {GetIdentifierQuery} getIdentifierQuery
  * @property {Validator} inputValidator
  * @property {Validator} outputValidator
+ * @property {Auditors} auditors
  *
  * @typedef {(item:Object)=>void} SetStringIdentifier
  *
@@ -53,18 +56,20 @@ const createGetIdentifierQuery = require('./create-identifier-query');
  * @property {Validator} inputValidator
  * @property {Validator} outputValidator
  * @property {Db} db
+ * @property {Auditors} [auditors]
  */
 
 /**
  * @param {CreateUtilityParams} params Parameters used to create the utilities
  * @returns {Promise<Utilities>} A promise which resolves to the utilties
  */
-async function getUtils({ metadata, inputValidator, outputValidator, db }) {
+async function getUtils({ metadata, inputValidator, outputValidator, db, auditors }) {
     const setVersionInfo = createVersionInfoSetter({ metadata, validator: inputValidator });
     const collection = db.collection(metadata.collectionName);
     const mapOutput = createOutputMapper(metadata.schemas.output.$id, outputValidator);
     const setStringIdentifier = createStringIdentifierSetter(metadata);
     const getIdentifierQuery = createGetIdentifierQuery(metadata);
+    auditors = auditors || (await createMongoDbAuditors(metadata, db));
     return {
         setVersionInfo,
         db,
@@ -75,6 +80,7 @@ async function getUtils({ metadata, inputValidator, outputValidator, db }) {
         getIdentifierQuery,
         inputValidator,
         outputValidator,
+        auditors,
     };
 }
 
@@ -109,6 +115,7 @@ function getCreate({
     metadata,
     setStringIdentifier,
     inputValidator,
+    auditors,
 }) {
     return async function create(_entity, context) {
         const entity = JSON.parse(JSON.stringify(_entity));
@@ -116,6 +123,7 @@ function getCreate({
         setStringIdentifier(entity);
         setVersionInfo(entity, context);
         await collection.insertOne(entity);
+        auditors.writeCreation(entity, context);
         mapOutput(entity);
         return entity;
     };
@@ -141,11 +149,14 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {DeleteById} A function to delete entities by their identifier
  */
-function getDeleteById({ collection, getIdentifierQuery }) {
+function getDeleteById({ collection, getIdentifierQuery, metadata, auditors }) {
     return async function deleteById(id, context) {
-        //todo audit deletion using context
         const query = getIdentifierQuery(id);
-        await collection.findOneAndDelete(query);
+        const result = await collection.findOneAndDelete(query);
+        if (!result.value) {
+            throw new EntityNotFoundError(metadata.title, id);
+        }
+        auditors.writeDeletion(result.value, context);
         return;
     };
 }
@@ -160,28 +171,28 @@ function getReplaceById({
     metadata,
     getIdentifierQuery,
     inputValidator,
+    auditors,
 }) {
     return async function replaceById(_entity, context) {
         const entity = JSON.parse(JSON.stringify(_entity));
         // comes from outside, can't be trusted
         delete entity.versionInfo;
-        const id = entity[metadata.identifier.name];
-        delete entity[metadata.identifier.name];
+        const _id = entity._id;
+        delete entity._id;
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
-        const query = getIdentifierQuery(id);
+        const query = { _id: new ObjectId(_id) };
         const existing = await collection.findOne(query);
         if (!existing) {
-            throw new EntityNotFoundError(metadata.title, id);
+            throw new EntityNotFoundError(metadata.title, _id);
         }
         entity.versionInfo = existing.versionInfo;
         // todo Unique key constratints should take care of changing the identifier, but need to return a nice error message if it fails. is the id just a nice URL slug? should it stay the same forever?
         setVersionInfo(entity, context);
-        const replaceResult = await collection.findOneAndReplace(query, entity, {
-            returnOriginal: false,
-        });
-        const updatedEntity = replaceResult.value;
-        mapOutput(updatedEntity);
-        return updatedEntity;
+        const replaceResult = await collection.findOneAndReplace(query, entity);
+        entity._id = _id;
+        auditors.writeReplacement(replaceResult.value, entity, context);
+        mapOutput(entity);
+        return entity;
     };
 }
 

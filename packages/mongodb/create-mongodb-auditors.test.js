@@ -23,6 +23,13 @@ describe('MongoDB', () => {
                 await writeCreation(entity, context);
             });
         });
+        describe('Delete', () => {
+            it('should succeed for ObjectId object', async () => {
+                const { writeDeletion } = await getAuditors();
+                const context = createContext();
+                await writeDeletion(new ObjectId(), context);
+            });
+        });
     });
 });
 
