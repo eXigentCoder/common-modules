@@ -25,8 +25,10 @@ describe('MongoDB Populate From Disk', () => {
             await populateFromDisk(db, options);
         });
     });
-    afterEach(async () => {
-        const client = await getClient(urlConfig);
+});
+after(async () => {
+    const client = await getClient();
+    if (client) {
         await client.close();
-    });
+    }
 });

@@ -24,16 +24,14 @@ describe('MongoDB', () => {
     });
     describe('getClient', () => {
         it('should return the created client object', async () => {
-            const urlConfig = {
-                server: 'localhost',
-                dbName: 'test-common',
-            };
-            const client = await getClient(urlConfig);
+            const client = await getClient();
             expect(client).to.be.ok;
         });
     });
-    afterEach(async () => {
-        const client = await getClient(urlConfig);
+});
+after(async () => {
+    const client = await getClient();
+    if (client) {
         await client.close();
-    });
+    }
 });

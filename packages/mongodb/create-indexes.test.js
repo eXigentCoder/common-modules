@@ -26,8 +26,10 @@ describe('MongoDB', () => {
             await createIndexes(db, collectionName, indexes);
         });
     });
-    afterEach(async () => {
-        const client = await getClient(urlConfig);
+});
+after(async () => {
+    const client = await getClient();
+    if (client) {
         await client.close();
-    });
+    }
 });

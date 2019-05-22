@@ -31,17 +31,14 @@ async function getDb(urlConfig, options) {
 }
 
 /**
- * @param {UrlConfig} urlConfig Config object used to build up the url.
- * @param {import('mongodb').MongoClientOptions} [options] Config object for connecting to mongodb
  * @returns {Promise<import('mongodb').MongoClient>}  The mongo client with connections
  */
-async function getClient(urlConfig, options) {
+async function getClient() {
     if (_db && _client && _db.serverConfig.isConnected()) {
         debug('Using cached database instance');
         return _client;
     }
-    await connect(urlConfig, options);
-    return _client;
+    return null;
 }
 
 /**

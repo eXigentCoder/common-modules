@@ -65,14 +65,12 @@ describe('MongoDB', () => {
             });
         });
     });
-    afterEach(async () => {
-        const urlConfig = {
-            server: 'localhost',
-            dbName: 'test-common',
-        };
-        const client = await getClient(urlConfig);
+});
+after(async () => {
+    const client = await getClient();
+    if (client) {
         await client.close();
-    });
+    }
 });
 
 async function getPopulatedCrud() {
