@@ -56,6 +56,8 @@ module.exports = function() {
                 required: ['name', 'schema'],
             },
             collectionName: commonSchemas.identifier,
+            auditCollectionName: commonSchemas.identifier,
+            auditChanges: commonSchemas.boolean,
             baseUrl: commonSchemas.url,
             aOrAn: {
                 type: 'string',

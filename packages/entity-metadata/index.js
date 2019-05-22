@@ -50,6 +50,8 @@ module.exports = generateEntityMetadata;
  * @property {Object} stringIdentifier.schema
  * @property {Object} [stringIdentifier.source]
  * @property {string} collectionName
+ * @property {string} [auditCollectionName]
+ * @property {boolean} [auditChanges]
  * @property {string} baseUrl
  * @property {(title:string)=>string} [titleToStringIdentifier]
  *
@@ -67,6 +69,11 @@ function generateEntityMetadata(metadata, inputValidator, outputValidator) {
     setAOrAn(metadata);
     metadata.schemas.core.$id =
         metadata.schemas.core.$id || generateId(metadata.baseUrl, metadata.collectionName);
+    metadata.auditCollectionName =
+        metadata.auditCollectionName || metadata.collectionName + '-audit';
+    if (metadata.auditChanges === undefined || metadata.auditChanges === null) {
+        metadata.auditChanges = false;
+    }
     ensureSchemaSet(metadata, 'output', 'Output', outputValidator, inputValidator);
     ensureSchemaSet(metadata, 'create', 'Input', outputValidator, inputValidator);
     ensureSchemaSet(metadata, 'replace', 'Input', outputValidator, inputValidator);

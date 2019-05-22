@@ -30,7 +30,7 @@ describe('Common Errors', () => {
         });
         it('should allow you to specify the extra errors', function() {
             const error = new ValidationError('test', [{ error: 'lol1' }, { error: 'lol2' }]);
-            expect(error.errors).to.be.ok;
+            expect(error.decorate.errors).to.be.ok;
         });
     });
 });
