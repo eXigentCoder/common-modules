@@ -1,25 +1,37 @@
 'use strict';
-const boom = require('@hapi/boom');
+
 const IsRequiredError = require('../is-required-error/is-required-error');
-module.exports = class ValidationError extends Error {
+const KrimZenNinjaBaseError = require('../krimzen-ninja-base-error');
+
+module.exports = class ValidationError extends KrimZenNinjaBaseError {
     /**
      * An error used when some value that is required was not provided
-     * @param {string} errorMessage The name of the required value
+     * @param {string} message The name of the required value
      * @param {Object} [errors] The error object containing extra information
+     * @param {import('../krimzen-ninja-base-error').ErrorParameters} errorOptions
      */
-    constructor(errorMessage, errors) {
-        if (!errorMessage) {
+    constructor(
+        message,
+        errors,
+        { innerError, decorate = {}, safeToShowToUsers = true } = {
+            decorate: {},
+            safeToShowToUsers: true,
+        }
+    ) {
+        if (!message) {
             throw new IsRequiredError('errorMessage', 'ValidationError', 'constructor');
         }
-        super(errorMessage);
+        super({
+            message,
+            name: 'ValidationError',
+            codeSuffix: 'VALIDATION_FAILED',
+            httpStatusCode: 400,
+            decorate: { ...errors, ...decorate },
+            innerError,
+            safeToShowToUsers,
+        });
         if (errors) {
             this.errors = errors;
         }
-        this.name = this.constructor.name;
-        this.code = 'ERR_KN_VALIDATION_FAILED';
-    }
-
-    toBoom() {
-        return boom.boomify(this, { statusCode: 400, decorate: { data: this.errors } });
     }
 };

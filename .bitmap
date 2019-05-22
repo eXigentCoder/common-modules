@@ -60,6 +60,16 @@
     "exigentcoder.common-modules/common-errors@0.12.2": {
         "files": [
             {
+                "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.js",
+                "test": false,
+                "name": "entity-not-found-error.js"
+            },
+            {
+                "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.test.js",
+                "test": false,
+                "name": "entity-not-found-error.test.js"
+            },
+            {
                 "relativePath": "packages/common-errors/index.js",
                 "test": false,
                 "name": "index.js"
@@ -73,6 +83,16 @@
                 "relativePath": "packages/common-errors/is-required-error/is-required-error.test.js",
                 "test": true,
                 "name": "is-required-error.test.js"
+            },
+            {
+                "relativePath": "packages/common-errors/krimzen-ninja-base-error.js",
+                "test": false,
+                "name": "krimzen-ninja-base-error.js"
+            },
+            {
+                "relativePath": "packages/common-errors/krimzen-ninja-base-error.test.js",
+                "test": false,
+                "name": "krimzen-ninja-base-error.test.js"
             },
             {
                 "relativePath": "packages/common-errors/validation-error/validation-error.js",
@@ -106,6 +126,11 @@
                 "relativePath": "packages/validation/create-output-mapper.js",
                 "test": false,
                 "name": "create-output-mapper.js"
+            },
+            {
+                "relativePath": "packages/validation/create-output-mapper.test.js",
+                "test": false,
+                "name": "create-output-mapper.test.js"
             },
             {
                 "relativePath": "packages/validation/index.js",
@@ -192,14 +217,14 @@
                 "name": "email.test.js"
             },
             {
+                "relativePath": "packages/json-schema/identifier.test.js",
+                "test": false,
+                "name": "identifier.test.js"
+            },
+            {
                 "relativePath": "packages/json-schema/index.js",
                 "test": false,
                 "name": "index.js"
-            },
-            {
-                "relativePath": "packages/json-schema/name.test.js",
-                "test": true,
-                "name": "name.test.js"
             },
             {
                 "relativePath": "packages/json-schema/schema-id-generator.js",
@@ -300,16 +325,6 @@
                 "name": "index.js",
                 "relativePath": "packages/express-error-handler/index.js",
                 "test": false
-            },
-            {
-                "name": "not-found.js",
-                "relativePath": "packages/express-error-handler/not-found.js",
-                "test": false
-            },
-            {
-                "name": "not-found.test.js",
-                "relativePath": "packages/express-error-handler/not-found.test.js",
-                "test": true
             }
         ],
         "mainFile": "packages/express-error-handler/index.js",
@@ -395,6 +410,16 @@
                 "relativePath": "packages/entity-metadata/set-and-validate-name.test.js",
                 "test": true,
                 "name": "set-and-validate-name.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/title-to-string-identifier.js",
+                "test": false,
+                "name": "title-to-string-identifier.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/title-to-string-identifier.test.js",
+                "test": false,
+                "name": "title-to-string-identifier.test.js"
             }
         ],
         "mainFile": "packages/entity-metadata/index.js",
@@ -428,6 +453,21 @@
                 "relativePath": "packages/mongodb/index.js",
                 "test": false,
                 "name": "index.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-auditor.js",
+                "test": false,
+                "name": "mongodb-auditor.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-crud.js",
+                "test": false,
+                "name": "mongodb-crud.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-crud.test.js",
+                "test": false,
+                "name": "mongodb-crud.test.js"
             },
             {
                 "relativePath": "packages/mongodb/query-string-to-mongo-query.js",
@@ -513,7 +553,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/tester-mocha@0.12.3": {
+    "exigentcoder.common-modules/tester-mocha@0.12.4": {
         "files": [
             {
                 "relativePath": "packages/tester-mocha/baseReporter.js",
@@ -539,6 +579,11 @@
                 "relativePath": "packages/tester-mocha/resultsAdapter.js",
                 "test": false,
                 "name": "resultsAdapter.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/simple.test.js",
+                "test": false,
+                "name": "simple.test.js"
             }
         ],
         "mainFile": "packages/tester-mocha/index.js",

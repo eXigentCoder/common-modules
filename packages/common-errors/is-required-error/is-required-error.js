@@ -1,21 +1,40 @@
 'use strict';
 
-module.exports = class IsRequiredError extends Error {
+const KrimZenNinjaBaseError = require('../krimzen-ninja-base-error');
+
+module.exports = class IsRequiredError extends KrimZenNinjaBaseError {
     /**
      * An error used when some value that is required was not provided
      * @param {string} requiredValue The name of the required value
      * @param {string} [functionName] The name of the function where the required value was supposed to be provided too
+     * @param {string} [functionType] Specifies if the function was a function or constructor
+     * @param {import('../krimzen-ninja-base-error').ErrorParameters} errorOptions
      */
-    constructor(requiredValue, functionName, functionType = 'function') {
+    constructor(
+        requiredValue,
+        functionName,
+        functionType = 'function',
+        { innerError, decorate, safeToShowToUsers = false } = { safeToShowToUsers: false }
+    ) {
         if (!requiredValue) {
             throw new IsRequiredError('requiredValue', 'IsRequiredError', 'constructor');
         }
+        let message;
         if (functionName) {
-            super(`You must provide "${requiredValue}" to the "${functionName}" ${functionType}.`);
+            message = `You must provide "${requiredValue}" to the "${functionName}" ${
+                functionType
+            }.`;
         } else {
-            super(`The "${requiredValue}" value is required`);
+            message = `The "${requiredValue}" value is required`;
         }
-        this.name = this.constructor.name;
-        this.code = 'ERR_KN_IS_REQUIRED';
+        super({
+            message,
+            name: 'IsRequiredError',
+            codeSuffix: 'IS_REQUIRED',
+            decorate,
+            innerError,
+            httpStatusCode: 500,
+            safeToShowToUsers,
+        });
     }
 };
