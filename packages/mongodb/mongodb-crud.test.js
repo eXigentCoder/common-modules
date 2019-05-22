@@ -1,6 +1,6 @@
 'use strict';
 
-const { getDb, getCrud, createQueryStringMapper } = require('.');
+const { getClient, getDb, getCrud, createQueryStringMapper } = require('.');
 const generateEntityMetadata = require('../entity-metadata');
 const { createInputValidator, createOutputValidator } = require('../validation');
 const { jsonSchemas, addMongoId } = require('../validation-mongodb');
@@ -64,6 +64,14 @@ describe('MongoDB', () => {
                 expect(results[0]).to.eql(created);
             });
         });
+    });
+    afterEach(async () => {
+        const urlConfig = {
+            server: 'localhost',
+            dbName: 'test-common',
+        };
+        const client = await getClient(urlConfig);
+        await client.close();
     });
 });
 
