@@ -6,6 +6,7 @@ const ObjectId = require('mongodb').ObjectID;
 const { badRequest } = require('@hapi/boom');
 const util = require('util');
 const get = require('lodash/get');
+const { EntityNotFoundError } = require('../common-errors');
 
 // TODO : Add an audit writer (Mongodb/pub/sub/Firebase etc)
 // TODO : Go over old CRUD and see that I haven't missed anything
@@ -126,13 +127,12 @@ function getCreate({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {GetById} A function to get entities by their identifiers
  */
-function getGetById({ collection, mapOutput, getIdentifierQuery }) {
+function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
     return async function getById(id) {
         const query = getIdentifierQuery(id);
         const item = await collection.findOne(query);
         if (!item) {
-            //todo create not found error
-            throw new Error(`Item with id ${id} does not exist`);
+            throw new EntityNotFoundError(metadata.title, id);
         }
         mapOutput(item);
         return item;
@@ -173,8 +173,7 @@ function getReplaceById({
         const query = getIdentifierQuery(id);
         const existing = await collection.findOne(query);
         if (!existing) {
-            //todo create not found error
-            throw new Error(`Item with id ${id} does not exist`);
+            throw new EntityNotFoundError(metadata.title, id);
         }
         entity.versionInfo = existing.versionInfo;
         // todo Unique key constratints should take care of changing the identifier, but need to return a nice error message if it fails. is the id just a nice URL slug? should it stay the same forever?
