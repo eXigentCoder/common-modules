@@ -45,15 +45,15 @@ describe('Express error handler', () => {
                 expect(err.data).to.equal(error);
             }
         });
-        it('should use the provided toBoom method on an error if exists', () => {
-            const errors = { '1': 'some error', '2': 'some other error' };
-            const error = new ValidationError('validation failed', errors);
-            expect(boom.isBoom(error)).to.equal(false);
-            handle(error, null, null, next);
-            function next(err) {
-                expect(boom.isBoom(err)).to.equal(true);
-                expect(err.isServer).to.equal(false);
-            }
-        });
+        // it('should correctly convert a KrimZenNinjaBaseError to a boom error', () => {
+        //     const errors = { '1': 'some error', '2': 'some other error' };
+        //     const error = new ValidationError('validation failed', errors);
+        //     expect(boom.isBoom(error)).to.equal(false);
+        //     handle(error, null, null, next);
+        //     function next(err) {
+        //         expect(boom.isBoom(err)).to.equal(true);
+        //         expect(err.isServer).to.equal(false);
+        //     }
+        // });
     });
 });
