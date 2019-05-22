@@ -1,4 +1,5 @@
 'use strict';
+
 const crypto = require('crypto');
 const { getClient, getDb, createAuditors } = require('.');
 const { createInputValidator, createOutputValidator } = require('../validation');
@@ -6,6 +7,8 @@ const { jsonSchemas, addMongoId } = require('../validation-mongodb');
 const generateEntityMetadata = require('../entity-metadata');
 const ObjectId = require('mongodb').ObjectId;
 const { createVersionInfoSetter } = require('../version-info');
+const cloneDeep = require('lodash/cloneDeep');
+
 describe('MongoDB', () => {
     describe('Auditors', () => {
         describe('Create', () => {
@@ -25,9 +28,22 @@ describe('MongoDB', () => {
         });
         describe('Delete', () => {
             it('should succeed for ObjectId object', async () => {
-                const { writeDeletion } = await getAuditors();
+                const { writeDeletion, setVersionInfo } = await getAuditors();
                 const context = createContext();
-                await writeDeletion(new ObjectId(), context);
+                const entity = setVersionInfo(validCreatedEntity(), context);
+                entity._id = new ObjectId();
+                await writeDeletion(entity, context);
+            });
+        });
+        describe('replace', () => {
+            it('should succeed for ObjectId object', async () => {
+                const { writeReplacement, setVersionInfo } = await getAuditors();
+                const context = createContext();
+                const entityBefore = setVersionInfo(validCreatedEntity(), context);
+                entityBefore._id = new ObjectId();
+                const entityAfter = cloneDeep(entityBefore);
+                setVersionInfo(entityAfter, createContext());
+                await writeReplacement(entityBefore, entityAfter, context);
             });
         });
     });

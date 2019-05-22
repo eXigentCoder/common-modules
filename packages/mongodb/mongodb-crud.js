@@ -24,6 +24,11 @@ const ObjectId = require('mongodb').ObjectId;
  * @typedef {import('mongodb').Collection} Collection
  * @typedef {import('./create-identifier-query').GetIdentifierQuery} GetIdentifierQuery
  *
+ * @typedef {Object} Auditors
+ * @property {(entityAfterCreation:Object,context:ExecutionContext)=>Promise<void>} writeCreation
+ * @property {(deletedObject:Object,context:ExecutionContext)=>Promise<void>} writeDeletion
+ * @property {(oldEntity:Object,newEntity:Object,context:ExecutionContext)=>Promise<void>} writeReplacement
+ *
  * @typedef {Object} Utilities
  * @property {SetVersionInfo} setVersionInfo
  * @property {Db} db
@@ -169,7 +174,6 @@ function getReplaceById({
     collection,
     mapOutput,
     metadata,
-    getIdentifierQuery,
     inputValidator,
     auditors,
 }) {

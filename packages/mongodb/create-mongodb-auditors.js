@@ -3,8 +3,7 @@
 const ObjectId = require('mongodb').ObjectId;
 const cloneDeep = require('lodash/cloneDeep');
 const { IsRequiredError } = require('../common-errors');
-
-//TODO RK What if using the mongodb auditor for an entity that doesn't have _id, need to use the metadata.identifier!
+const moment = require('moment');
 
 /**
  * @param {import('../entity-metadata').EntityMetadata} metadata
@@ -15,55 +14,42 @@ module.exports = async function createMongoDbAuditors(metadata, db) {
     const auditCollection = db.collection(metadata.auditCollectionName);
 
     async function writeCreation(entityAfterCreation, context) {
-        if (metadata.auditChanges !== true) {
-            return;
-        }
-        if (!entityAfterCreation._id) {
-            throw new IsRequiredError('_id', 'MongoDB Audit - writeCreation');
-        }
-        const auditEntry = cloneDeep(entityAfterCreation);
-        auditEntry._audit = {
-            _id: new ObjectId(entityAfterCreation._id),
-            action: 'create',
-            date: new Date(),
-        };
-        delete auditEntry._id;
-        Object.assign(auditEntry._audit, context);
-        await auditCollection.insertOne(auditEntry);
+        await writeAuditEntry(entityAfterCreation, context, 'replace');
     }
 
     async function writeDeletion(deletedObject, context) {
-        if (metadata.auditChanges !== true) {
-            return;
-        }
-        // const auditEntry = {
-        //     _audit: {
-        //         _id: new ObjectId(entityAfterCreation._id),
-        //         action: 'create',
-        //         date: new Date(),
-        //     },
-        // };
-        // delete auditEntry._id;
-        // Object.assign(auditEntry._audit, context);
-        // await auditCollection.insertOne(auditEntry);
+        await writeAuditEntry(deletedObject, context, 'replace');
     }
 
     async function writeReplacement(oldEntity, newEntity, context) {
-        if (metadata.auditChanges !== true) {
-            return;
-        }
+        await writeAuditEntry(newEntity, context, 'replace');
     }
 
-    async function writeUpdate(deletedEntityId, context) {
+    async function writeAuditEntry(currentEntitState, context, action) {
         if (metadata.auditChanges !== true) {
             return;
         }
+        let id = currentEntitState[metadata.identifier.name];
+        if (!id) {
+            throw new IsRequiredError(metadata.identifier.name, `MongoDB Audit - write ${action}`);
+        }
+        const auditEntry = cloneDeep(currentEntitState);
+        if (ObjectId.isValid(id)) {
+            id = new ObjectId(id);
+        }
+        auditEntry._audit = {
+            [metadata.identifier.name]: id,
+            action,
+            date: moment.utc().toDate(),
+        };
+        delete auditEntry[metadata.identifier.name];
+        Object.assign(auditEntry._audit, context);
+        await auditCollection.insertOne(auditEntry);
     }
 
     return {
         writeCreation,
         writeDeletion,
         writeReplacement,
-        writeUpdate,
     };
 };
