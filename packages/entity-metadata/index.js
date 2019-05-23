@@ -55,7 +55,7 @@ module.exports = generateEntityMetadata;
  * @property {string} baseUrl
  * @property {(title:string)=>string} [titleToStringIdentifier]
  *
- * @param {EntityMetadata|Object} metadata
+ * @param {EntityMetadata} metadata
  * @param {import('../validation/ajv').Validator} inputValidator
  * @param {import('../validation/ajv').Validator} outputValidator
  * @returns {EntityMetadata}

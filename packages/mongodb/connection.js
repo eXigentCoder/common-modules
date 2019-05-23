@@ -5,10 +5,10 @@ const debug = require('debug')('@exigentcoder/common-modules.mongodb');
 /**
  * @typedef {import('mongodb').Db & { client: import('mongodb').MongoClient}} CachedDb
  * @typedef {object} UrlConfig Config object used to build up the url.
- * @property {string} [urlConfig.username]
- * @property {string} [urlConfig.password]
- * @property {string} urlConfig.server
- * @property {string} urlConfig.dbName
+ * @property {string} [username]
+ * @property {string} [password]
+ * @property {string} server
+ * @property {string} dbName
  */
 
 /** @type {import('mongodb').Db} */
@@ -31,9 +31,9 @@ async function getDb(urlConfig, options) {
 }
 
 /**
- * @returns {Promise<import('mongodb').MongoClient>}  The mongo client with connections
+ * @returns {import('mongodb').MongoClient}  The mongo client with connections
  */
-async function getClient() {
+function getClient() {
     if (_db && _client && _db.serverConfig.isConnected()) {
         debug('Using cached database instance');
         return _client;
