@@ -66,7 +66,7 @@
             },
             {
                 "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.test.js",
-                "test": false,
+                "test": true,
                 "name": "entity-not-found-error.test.js"
             },
             {
@@ -91,7 +91,7 @@
             },
             {
                 "relativePath": "packages/common-errors/krimzen-ninja-base-error.test.js",
-                "test": false,
+                "test": true,
                 "name": "krimzen-ninja-base-error.test.js"
             },
             {
@@ -129,7 +129,7 @@
             },
             {
                 "relativePath": "packages/validation/create-output-mapper.test.js",
-                "test": false,
+                "test": true,
                 "name": "create-output-mapper.test.js"
             },
             {
@@ -218,7 +218,7 @@
             },
             {
                 "relativePath": "packages/json-schema/identifier.test.js",
-                "test": false,
+                "test": true,
                 "name": "identifier.test.js"
             },
             {
@@ -418,7 +418,7 @@
             },
             {
                 "relativePath": "packages/entity-metadata/title-to-string-identifier.test.js",
-                "test": false,
+                "test": true,
                 "name": "title-to-string-identifier.test.js"
             }
         ],
@@ -440,6 +440,16 @@
                 "name": "connection.test.js"
             },
             {
+                "relativePath": "packages/mongodb/create-identifier-query.js",
+                "test": false,
+                "name": "create-identifier-query.js"
+            },
+            {
+                "relativePath": "packages/mongodb/create-identifier-query.test.js",
+                "test": true,
+                "name": "create-identifier-query.test.js"
+            },
+            {
                 "relativePath": "packages/mongodb/create-indexes.js",
                 "test": false,
                 "name": "create-indexes.js"
@@ -448,6 +458,16 @@
                 "relativePath": "packages/mongodb/create-indexes.test.js",
                 "test": true,
                 "name": "create-indexes.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/create-mongodb-auditors.js",
+                "test": false,
+                "name": "create-mongodb-auditors.js"
+            },
+            {
+                "relativePath": "packages/mongodb/create-mongodb-auditors.test.js",
+                "test": true,
+                "name": "create-mongodb-auditors.test.js"
             },
             {
                 "relativePath": "packages/mongodb/index.js",
@@ -466,7 +486,7 @@
             },
             {
                 "relativePath": "packages/mongodb/mongodb-crud.test.js",
-                "test": false,
+                "test": true,
                 "name": "mongodb-crud.test.js"
             },
             {
@@ -582,7 +602,7 @@
             },
             {
                 "relativePath": "packages/tester-mocha/simple.test.js",
-                "test": false,
+                "test": true,
                 "name": "simple.test.js"
             }
         ],
@@ -590,6 +610,24 @@
         "trackDir": "packages/tester-mocha",
         "origin": "AUTHORED",
         "exported": true
+    },
+    "packages/express-error-handler": {
+        "files": [
+            {
+                "relativePath": "packages/express-error-handler/not-found-route.js",
+                "test": false,
+                "name": "not-found-route.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/not-found-route.test.js",
+                "test": true,
+                "name": "not-found-route.test.js"
+            }
+        ],
+        "mainFile": "packages/express-error-handler/not-found-route.js",
+        "trackDir": "packages/express-error-handler",
+        "origin": "AUTHORED",
+        "exported": false
     },
     "version": "14.1.0"
 }
