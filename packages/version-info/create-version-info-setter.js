@@ -25,19 +25,19 @@ const v8n = require('v8n');
  * @returns {SetVersionInfo} A function to set version info on an object based on a context
  */
 // @ts-ignore
-module.exports = function createVersionInfoSetter(options = {}) {
-    let { validator, executionContextSchema, metadata } = options;
-    validator = validator || createInputValidator();
-    executionContextSchema = executionContextSchema || defaultExecutionContextSchema;
-    if (!metadata) {
+module.exports = function createVersionInfoSetter(options) {
+    options.validator = options.validator || createInputValidator();
+    options.executionContextSchema =
+        options.executionContextSchema || defaultExecutionContextSchema;
+    if (!options.metadata) {
         throw new IsRequiredError('options.metadata', 'createVersionInfoSetter');
     }
     v8n()
         .string()
         .minLength(1)
-        .check(executionContextSchema.$id);
-    if (!validator.getSchema(executionContextSchema.$id)) {
-        validator.addSchema(executionContextSchema);
+        .check(options.executionContextSchema.$id);
+    if (!options.validator.getSchema(options.executionContextSchema.$id)) {
+        options.validator.addSchema(options.executionContextSchema);
     }
     // eslint-disable-next-line jsdoc/require-param,jsdoc/require-returns
     /** @type {SetVersionInfo} */
