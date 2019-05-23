@@ -15,19 +15,20 @@ module.exports = generateEntityMetadata;
  *
  * @typedef {Object} Schema
  * @property {string} [$id]
- * @property {string} name
- * @property {string} [description]
- * @property {string|string[]} type
- * @property {boolean} [additionalProperties]
- * @property {{[key: string]: Schema|SubSchema}} properties
- * @property {string[]} [required]
- *
- * @typedef {Object} SubSchema
  * @property {string} [name]
+ * @property {string} [title]
  * @property {string} [description]
+ * @property {any} [default]
+ * @property {any} [examples]
+ * @property {string} [$comment]
  * @property {string|string[]} type
  * @property {boolean} [additionalProperties]
- * @property {{[key: string]: SubSchema}} [properties]
+ * @property {{[key: string]: Schema}} [properties]
+ * @property {Object} [allOf]
+ * @property {Object} [anyOf]
+ * @property {Object} [oneOf]
+ * @property {Object} [not]
+ * @property {Object} [anyOf]
  * @property {string[]} [required]
  *
  *
