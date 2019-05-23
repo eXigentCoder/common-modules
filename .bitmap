@@ -251,49 +251,6 @@
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/version-info@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/version-info/create-version-info-setter.js",
-                "test": false,
-                "name": "create-version-info-setter.js"
-            },
-            {
-                "relativePath": "packages/version-info/create-version-info-setter.test.js",
-                "test": true,
-                "name": "create-version-info-setter.test.js"
-            },
-            {
-                "relativePath": "packages/version-info/execution-context-schema.js",
-                "test": false,
-                "name": "execution-context-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/identity-schema.js",
-                "test": false,
-                "name": "identity-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/version-info/version-info-schema.js",
-                "test": false,
-                "name": "version-info-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/with-version-info.js",
-                "test": false,
-                "name": "with-version-info.js"
-            }
-        ],
-        "mainFile": "packages/version-info/index.js",
-        "trackDir": "packages/version-info",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "exigentcoder.common-modules/express-error-handler@0.13.1": {
         "files": [
             {
@@ -390,7 +347,50 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.13.3": {
+    "exigentcoder.common-modules/version-info@0.13.6": {
+        "files": [
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.js",
+                "test": false,
+                "name": "create-version-info-setter.js"
+            },
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.test.js",
+                "test": true,
+                "name": "create-version-info-setter.test.js"
+            },
+            {
+                "relativePath": "packages/version-info/execution-context-schema.js",
+                "test": false,
+                "name": "execution-context-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/identity-schema.js",
+                "test": false,
+                "name": "identity-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/version-info/version-info-schema.js",
+                "test": false,
+                "name": "version-info-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/with-version-info.js",
+                "test": false,
+                "name": "with-version-info.js"
+            }
+        ],
+        "mainFile": "packages/version-info/index.js",
+        "trackDir": "packages/version-info",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/entity-metadata@0.13.4": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
@@ -483,7 +483,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.13.4": {
+    "exigentcoder.common-modules/mongodb@0.13.5": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -556,7 +556,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.5": {
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.6": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
