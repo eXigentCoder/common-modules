@@ -334,7 +334,63 @@
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.13.1": {
+    "exigentcoder.common-modules/tester-mocha@0.13.1": {
+        "files": [
+            {
+                "relativePath": "packages/tester-mocha/baseReporter.js",
+                "test": false,
+                "name": "baseReporter.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/jsonReporter.js",
+                "test": false,
+                "name": "jsonReporter.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/mochaHooksNames.js",
+                "test": false,
+                "name": "mochaHooksNames.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/resultsAdapter.js",
+                "test": false,
+                "name": "resultsAdapter.js"
+            },
+            {
+                "relativePath": "packages/tester-mocha/simple.test.js",
+                "test": true,
+                "name": "simple.test.js"
+            }
+        ],
+        "mainFile": "packages/tester-mocha/index.js",
+        "trackDir": "packages/tester-mocha",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/packages/express-error-handler@0.13.1": {
+        "files": [
+            {
+                "relativePath": "packages/express-error-handler/not-found-route.js",
+                "test": false,
+                "name": "not-found-route.js"
+            },
+            {
+                "relativePath": "packages/express-error-handler/not-found-route.test.js",
+                "test": true,
+                "name": "not-found-route.test.js"
+            }
+        ],
+        "mainFile": "packages/express-error-handler/not-found-route.js",
+        "trackDir": "packages/express-error-handler",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/entity-metadata@0.13.2": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
@@ -427,7 +483,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.13.1": {
+    "exigentcoder.common-modules/mongodb@0.13.2": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -500,7 +556,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.1": {
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.2": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
@@ -565,62 +621,6 @@
         ],
         "mainFile": "packages/mongodb-populate-from-disk/index.js",
         "trackDir": "packages/mongodb-populate-from-disk",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/tester-mocha@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/tester-mocha/baseReporter.js",
-                "test": false,
-                "name": "baseReporter.js"
-            },
-            {
-                "relativePath": "packages/tester-mocha/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/tester-mocha/jsonReporter.js",
-                "test": false,
-                "name": "jsonReporter.js"
-            },
-            {
-                "relativePath": "packages/tester-mocha/mochaHooksNames.js",
-                "test": false,
-                "name": "mochaHooksNames.js"
-            },
-            {
-                "relativePath": "packages/tester-mocha/resultsAdapter.js",
-                "test": false,
-                "name": "resultsAdapter.js"
-            },
-            {
-                "relativePath": "packages/tester-mocha/simple.test.js",
-                "test": true,
-                "name": "simple.test.js"
-            }
-        ],
-        "mainFile": "packages/tester-mocha/index.js",
-        "trackDir": "packages/tester-mocha",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/packages/express-error-handler@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/express-error-handler/not-found-route.js",
-                "test": false,
-                "name": "not-found-route.js"
-            },
-            {
-                "relativePath": "packages/express-error-handler/not-found-route.test.js",
-                "test": true,
-                "name": "not-found-route.test.js"
-            }
-        ],
-        "mainFile": "packages/express-error-handler/not-found-route.js",
-        "trackDir": "packages/express-error-handler",
         "origin": "AUTHORED",
         "exported": true
     },
