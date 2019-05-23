@@ -51,7 +51,8 @@ async function findDataForCollection(collection, db, directory) {
 }
 
 async function loadTestFileData(result) {
-    let fileData = require(result);
+    const relativeFilePath = './' + path.relative(__dirname, result).replace(/\\/g, '/');
+    let fileData = require(relativeFilePath);
     if (_.isFunction(fileData)) {
         fileData = await fileData();
     }
