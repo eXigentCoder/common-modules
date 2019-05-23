@@ -49,6 +49,7 @@ const ObjectId = require('mongodb').ObjectId;
  * @property {DeleteById} deleteById
  * @property {ReplaceById} replaceById
  * @property {Search} search
+ * @property {Utilities} utils
  *
  * @typedef {Object} CreateUtilityParams
  * @property {EntityMetadata} metadata
@@ -100,6 +101,7 @@ async function getCrud({ metadata, inputValidator, outputValidator, db }) {
         deleteById: getDeleteById(utils),
         replaceById: getReplaceById(utils),
         search: getSearch(utils),
+        utils,
     };
 }
 
