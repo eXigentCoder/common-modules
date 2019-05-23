@@ -57,10 +57,8 @@ describe('Common Errors', () => {
         describe('toString', () => {
             const params = minValidParams();
             const secondLevelInnerErr = new KrimZenNinjaBaseError(minValidParams());
-            const innerError = new KrimZenNinjaBaseError({
-                ...minValidParams(),
-                innerError: secondLevelInnerErr,
-            });
+            params.innerError = secondLevelInnerErr;
+            const innerError = new KrimZenNinjaBaseError(params);
             params.innerError = innerError;
             params.decorate = { someValue: true, aNumber: 42 };
             params.safeToShowToUsers = true;

@@ -68,10 +68,8 @@ async function getAuditors() {
     const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
     const setVersionInfo = createVersionInfoSetter({ metadata, validator: inputValidator });
     const auditors = await createAuditors(metadata, db);
-    return {
-        ...auditors,
-        setVersionInfo,
-    };
+    auditors.setVersionInfo = setVersionInfo;
+    return auditors;
 }
 
 /** @returns {import('../entity-metadata').EntityMetadata} */

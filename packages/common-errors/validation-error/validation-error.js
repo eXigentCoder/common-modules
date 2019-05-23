@@ -21,12 +21,13 @@ module.exports = class ValidationError extends KrimZenNinjaBaseError {
         if (!message) {
             throw new IsRequiredError('errorMessage', 'ValidationError', 'constructor');
         }
+        decorate.errors = errors;
         super({
             message,
             name: 'ValidationError',
             codeSuffix: 'VALIDATION_FAILED',
             httpStatusCode: 400,
-            decorate: { ...decorate, errors },
+            decorate,
             innerError,
             safeToShowToUsers,
         });

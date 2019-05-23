@@ -31,7 +31,7 @@ describe('MongoDB', () => {
                 await expect(getById(created._id)).to.be.rejected;
             });
             it("Should throw an error if the entity to delete doesn't exist", async () => {
-                const { deleteById, getById } = await getPopulatedCrud();
+                const { deleteById } = await getPopulatedCrud();
                 await expect(deleteById(new ObjectId().toString(), createContext())).to.be.rejected;
             });
         });
@@ -95,10 +95,8 @@ async function getPopulatedCrud() {
         metadata,
         outputValidator,
     });
-    return {
-        ...crud,
-        queryMapper,
-    };
+    crud.queryMapper = queryMapper;
+    return crud;
 }
 
 function validMetaData() {
