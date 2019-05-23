@@ -21,7 +21,7 @@ module.exports = generateEntityMetadata;
  * @property {any} [default]
  * @property {any} [examples]
  * @property {string} [$comment]
- * @property {string|string[]} type
+ * @property {string|string[]} [type]
  * @property {boolean} [additionalProperties]
  * @property {{[key: string]: Schema}} [properties]
  * @property {Object} [allOf]
@@ -29,7 +29,10 @@ module.exports = generateEntityMetadata;
  * @property {Object} [oneOf]
  * @property {Object} [not]
  * @property {Object} [anyOf]
+ * @property {Array<Object>} [enum]
+ * @property {Object} [const]
  * @property {string[]} [required]
+ * @property {Object} [errorMessage]
  *
  *
  * @typedef {Object} EntityMetadata
