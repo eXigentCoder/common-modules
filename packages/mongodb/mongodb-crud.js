@@ -7,12 +7,6 @@ const createGetIdentifierQuery = require('./create-identifier-query');
 const createMongoDbAuditors = require('./create-mongodb-auditors');
 const ObjectId = require('mongodb').ObjectId;
 
-// TODO : Add an audit writer (Mongodb/pub/sub/Firebase etc)
-// TODO : Go over old CRUD and see that I haven't missed anything
-// TODO : Need to look at auth so can do:
-//        * User/group/role based access
-//        * Ownership
-// TODO : Ability to store statuses (and associated mini workflow/rules?) on the object/metadata
 /**
  * @typedef {import('../version-info/create-version-info-setter').ExecutionContext} ExecutionContext
  * @typedef {import('./query-string-to-mongo-query').Query} Query
@@ -190,7 +184,6 @@ function getReplaceById({
             throw new EntityNotFoundError(metadata.title, _id);
         }
         entity.versionInfo = existing.versionInfo;
-        // todo Unique key constratints should take care of changing the identifier, but need to return a nice error message if it fails. is the id just a nice URL slug? should it stay the same forever?
         setVersionInfo(entity, context);
         const replaceResult = await collection.findOneAndReplace(query, entity);
         entity._id = _id;
