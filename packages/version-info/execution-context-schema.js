@@ -9,10 +9,11 @@ module.exports = {
     name: 'The execution context that will be used to alter the object and stored in versionInfo',
     description: 'context about the function that was called',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         requestId: commonSchemas.nonEmptyString,
         identity: identitySchema,
+        source: commonSchemas.description,
         sourceIp: commonSchemas.ipV4,
         codeVersion: commonSchemas.nonEmptyString,
     },

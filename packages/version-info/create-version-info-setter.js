@@ -9,7 +9,7 @@ const v8n = require('v8n');
 /**
  * @typedef {{ id:string }} Identity The entity which made the change
  * @typedef {{ dateCreated:Date, versionTag: string, dateUpdated:Date, createdBy:Identity, lastUpdatedBy:Identity, updatedByRequestId:string }} VersionInfo
- * @typedef {{ requestId:string, identity:Identity, codeVersion:string, sourceIp: string }} ExecutionContext
+ * @typedef {{ requestId:string, identity:Identity, codeVersion:string, sourceIp?: string, source?:string }} ExecutionContext
  * @typedef {{ versionInfo:VersionInfo }} VersionedObject
  * @typedef {(object:object,context: ExecutionContext)=>VersionedObject} SetVersionInfo
  *

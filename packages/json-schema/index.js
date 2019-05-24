@@ -121,7 +121,6 @@ const nonEmptyAlpha = {
 };
 const ipV4 = {
     type: 'string',
-    minLength: 1,
     format: 'ipv4',
 };
 

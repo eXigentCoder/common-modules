@@ -30,6 +30,7 @@ describe('Version Info', () => {
             },
             codeVersion: '0.0.1',
             sourceIp: '127.0.0.1',
+            source: 'tests',
         };
         describe('object', () => {
             it('should throw an error if no object provided', () => {

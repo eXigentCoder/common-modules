@@ -113,6 +113,7 @@ function createContext() {
         },
         codeVersion: '0.0.1',
         sourceIp: '127.0.0.1',
+        source: 'tests',
     };
 }
 function randomString() {
