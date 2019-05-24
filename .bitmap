@@ -143,39 +143,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/validation-mongodb@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/validation-mongodb/add-mongo-id.js",
-                "test": false,
-                "name": "add-mongo-id.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/add-mongo-id.test.js",
-                "test": true,
-                "name": "add-mongo-id.test.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/json-schema.js",
-                "test": false,
-                "name": "json-schema.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/objectId.test.js",
-                "test": true,
-                "name": "objectId.test.js"
-            }
-        ],
-        "mainFile": "packages/validation-mongodb/index.js",
-        "trackDir": "packages/validation-mongodb",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "exigentcoder.common-modules/logging@0.13.1": {
         "files": [
             {
@@ -347,7 +314,40 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/version-info@0.13.6": {
+    "exigentcoder.common-modules/validation-mongodb@0.13.8": {
+        "files": [
+            {
+                "relativePath": "packages/validation-mongodb/add-mongo-id.js",
+                "test": false,
+                "name": "add-mongo-id.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/add-mongo-id.test.js",
+                "test": true,
+                "name": "add-mongo-id.test.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/json-schema.js",
+                "test": false,
+                "name": "json-schema.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/objectId.test.js",
+                "test": true,
+                "name": "objectId.test.js"
+            }
+        ],
+        "mainFile": "packages/validation-mongodb/index.js",
+        "trackDir": "packages/validation-mongodb",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/version-info@0.13.7": {
         "files": [
             {
                 "relativePath": "packages/version-info/create-version-info-setter.js",
@@ -390,7 +390,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.13.4": {
+    "exigentcoder.common-modules/entity-metadata@0.13.5": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
@@ -483,7 +483,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.13.7": {
+    "exigentcoder.common-modules/mongodb@0.13.8": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -556,7 +556,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.7": {
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.8": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
@@ -624,7 +624,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "json-schema-faker": {
+    "exigentcoder.common-modules/json-schema-faker@0.13.8": {
         "files": [
             {
                 "relativePath": "packages/json-schema-faker/index.js",
@@ -635,7 +635,7 @@
         "mainFile": "packages/json-schema-faker/index.js",
         "trackDir": "packages/json-schema-faker",
         "origin": "AUTHORED",
-        "exported": false
+        "exported": true
     },
     "version": "14.1.0"
 }
