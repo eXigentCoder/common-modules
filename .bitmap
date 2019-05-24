@@ -624,5 +624,18 @@
         "origin": "AUTHORED",
         "exported": true
     },
+    "json-schema-faker": {
+        "files": [
+            {
+                "relativePath": "packages/json-schema-faker/index.js",
+                "test": false,
+                "name": "index.js"
+            }
+        ],
+        "mainFile": "packages/json-schema-faker/index.js",
+        "trackDir": "packages/json-schema-faker",
+        "origin": "AUTHORED",
+        "exported": false
+    },
     "version": "14.1.0"
 }
