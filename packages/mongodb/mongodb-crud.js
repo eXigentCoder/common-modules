@@ -1,4 +1,6 @@
 'use strict';
+
+const { ValidationError } = require('../common-errors');
 const { createOutputMapper } = require('../validation');
 const { createVersionInfoSetter } = require('../version-info');
 const get = require('lodash/get');
@@ -119,6 +121,7 @@ function getCreate({
     auditors,
 }) {
     return async function create(_entity, context) {
+        ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         inputValidator.ensureValid(metadata.schemas.create.$id, entity);
         setStringIdentifier(entity);
@@ -174,6 +177,7 @@ function getReplaceById({
     auditors,
 }) {
     return async function replaceById(_entity, context) {
+        ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         // comes from outside, can't be trusted
         delete entity.versionInfo;
@@ -231,4 +235,12 @@ function createStringIdentifierSetter(metadata) {
             );
         }
     };
+}
+
+function ensureEntityIsObject(entity, metadata) {
+    if (entity === null || typeof entity !== 'object') {
+        throw new ValidationError(
+            `The ${metadata.title} value provided was not an object, type was :${typeof _entity}`
+        );
+    }
 }

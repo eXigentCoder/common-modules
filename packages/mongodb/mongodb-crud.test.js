@@ -1,5 +1,6 @@
 'use strict';
 
+const { ValidationError } = require('../common-errors');
 const { getClient, getDb, getCrud, createQueryStringMapper } = require('.');
 const generateEntityMetadata = require('../entity-metadata');
 const { createInputValidator, createOutputValidator } = require('../validation');
@@ -10,6 +11,34 @@ const ObjectId = require('mongodb').ObjectId;
 describe('MongoDB', () => {
     describe('CRUD', () => {
         describe('Create', () => {
+            it('Should throw a validation error if the item is null', async () => {
+                const { create } = await getPopulatedCrud();
+                await expect(create(null, createContext())).to.be.rejectedWith(ValidationError);
+            });
+            it('Should throw a validation error if the item is undefined', async () => {
+                const { create } = await getPopulatedCrud();
+                await expect(create(undefined, createContext())).to.be.rejectedWith(
+                    ValidationError
+                );
+            });
+            it('Should throw a validation error if the item is a number', async () => {
+                const { create } = await getPopulatedCrud();
+                await expect(create(1, createContext())).to.be.rejectedWith(ValidationError);
+            });
+            it('Should throw a validation error if the item is a string', async () => {
+                const { create } = await getPopulatedCrud();
+                await expect(create('1', createContext())).to.be.rejectedWith(ValidationError);
+            });
+            it('Should throw a validation error if the item is a boolean', async () => {
+                const { create } = await getPopulatedCrud();
+                await expect(create(true, createContext())).to.be.rejectedWith(ValidationError);
+            });
+            it('Should throw a validation error if the item is a symbol', async () => {
+                const { create } = await getPopulatedCrud();
+                await expect(create(Symbol('wrong'), createContext())).to.be.rejectedWith(
+                    ValidationError
+                );
+            });
             it('Should allow you to create a valid entity', async () => {
                 const { create } = await getPopulatedCrud();
                 const entity = validEntity();
