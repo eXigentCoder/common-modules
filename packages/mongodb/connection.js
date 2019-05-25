@@ -3,7 +3,6 @@
 var MongoClient = require('mongodb').MongoClient;
 const debug = require('debug')('@exigentcoder/common-modules.mongodb');
 /**
- * @typedef {import('mongodb').Db & { client: import('mongodb').MongoClient}} CachedDb
  * @typedef {object} UrlConfig Config object used to build up the url.
  * @property {string} [username]
  * @property {string} [password]
