@@ -5,7 +5,11 @@ const generateId = require('../json-schema/common-module-schema-id-generator');
 
 const objectSchema = {
     type: 'object',
+    properties: {
+        name: commonSchemas.identifier,
+    },
     additionalProperties: true,
+    required: ['name'],
 };
 
 module.exports = function() {
