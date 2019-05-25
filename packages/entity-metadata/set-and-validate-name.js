@@ -3,6 +3,13 @@
 const isNil = require('lodash/isNil');
 const upperFirst = require('lodash/upperFirst');
 
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').JsonSchema} coreSchema
+ * @param {string} operation
+ * @param {string} direction
+ * @returns {void}
+ */
 module.exports = function setAndValidateName(schema, coreSchema, operation, direction) {
     if (isNil(schema)) {
         throw new Error('schema is required');

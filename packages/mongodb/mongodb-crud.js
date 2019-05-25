@@ -10,68 +10,13 @@ const createMongoDbAuditors = require('./create-mongodb-auditors');
 const ObjectId = require('mongodb').ObjectId;
 
 /**
- * @typedef {import('../version-info/create-version-info-setter').ExecutionContext} ExecutionContext
- * @typedef {import('./query-string-to-mongo-query').Query} Query
- * @typedef {import('../version-info/create-version-info-setter').SetVersionInfo} SetVersionInfo
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
- * @typedef {import('../validation/ajv').Validator} Validator
- * @typedef {import('../validation/create-output-mapper').MapOutput} MapOutput
- * @typedef {import('mongodb').Db} Db
- * @typedef {import('mongodb').Collection} Collection
- * @typedef {import('./create-identifier-query').GetIdentifierQuery} GetIdentifierQuery
- *
- * @typedef {Object} Auditors
- * @property {(entityAfterCreation:Object,context:ExecutionContext)=>Promise<void>} writeCreation
- * @property {(deletedObject:Object,context:ExecutionContext)=>Promise<void>} writeDeletion
- * @property {(oldEntity:Object,newEntity:Object,context:ExecutionContext)=>Promise<void>} writeReplacement
- *
- * @typedef {Object} Utilities
- * @property {SetVersionInfo} setVersionInfo
- * @property {Db} db
- * @property {Collection} collection
- * @property {MapOutput} mapOutput
- * @property {EntityMetadata} metadata
- * @property {SetStringIdentifier} setStringIdentifier
- * @property {GetIdentifierQuery} getIdentifierQuery
- * @property {Validator} inputValidator
- * @property {Validator} outputValidator
- * @property {Auditors} auditors
- * @property {PaginationDefaults} [paginationDefaults]
- *
- * @typedef {(item:Object)=>void} SetStringIdentifier
- *
- * @typedef {(entity:Object,context:ExecutionContext)=>Promise<Object>} Create
- * @typedef {(id:String)=>Promise<Object>} GetById
- * @typedef {(id:String,context:ExecutionContext)=>void} DeleteById
- * @typedef {(entity:Object,context:ExecutionContext)=>Promise<Object>} ReplaceById
- * @typedef {(query:Query)=>Promise<Object[]>} Search
- *
- * @typedef {Object} Crud
- * @property {Create} create
- * @property {GetById} getById
- * @property {DeleteById} deleteById
- * @property {ReplaceById} replaceById
- * @property {Search} search
- * @property {Utilities} utils
- *
- * @typedef {Object} CreateUtilityParams
- * @property {EntityMetadata} metadata
- * @property {Validator} inputValidator
- * @property {Validator} outputValidator
- * @property {Db} db
- * @property {Auditors} [auditors]
- * @property {PaginationDefaults} [paginationDefaults]
- *
- * @typedef {Object} PaginationDefaults
- * @typedef {number} itemsPerPage The default items in a page if not specified.
- * @typedef {object} projection The default projection to run
- * @typedef {object} sort The default sort param
+ * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
+ * @typedef {import('./types').Utilities} Utilities
+ * @typedef {import('./types').Crud<Object>} Crud
  */
 
-/**
- * @param {CreateUtilityParams} params Parameters used to create the utilities
- * @returns {Promise<Utilities>} A promise which resolves to the utilties
- */
+/** @type {import('./types').GetUtils} */
 async function getUtils({
     metadata,
     inputValidator,
@@ -106,29 +51,29 @@ async function getUtils({
 }
 
 /**
- * @param {CreateUtilityParams} utilities The input utilities to create the function
+ * @param {CreateUtilityParams} createUtilityParams The input utilities to create the function
  * @returns {Promise<Crud>} A promise which resolves to the CRUD methods
  */
 async function getCrud({ metadata, inputValidator, outputValidator, db }) {
-    const utils = await getUtils({
+    const utilities = await getUtils({
         metadata,
         inputValidator,
         outputValidator,
         db,
     });
     return {
-        create: getCreate(utils),
-        getById: getGetById(utils),
-        deleteById: getDeleteById(utils),
-        replaceById: getReplaceById(utils),
-        search: getSearch(utils),
-        utils,
+        create: getCreate(utilities),
+        getById: getGetById(utilities),
+        deleteById: getDeleteById(utilities),
+        replaceById: getReplaceById(utilities),
+        search: getSearch(utilities),
+        utilities,
     };
 }
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {Create} A function to create entities
+ * @returns {import('./types').Create<Object>} A function to create entities
  */
 function getCreate({
     setVersionInfo,
@@ -154,7 +99,7 @@ function getCreate({
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {GetById} A function to get entities by their identifiers
+ * @returns {import('./types').GetById<Object>} A function to get entities by their identifiers
  */
 function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
     return async function getById(id) {
@@ -170,7 +115,7 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {DeleteById} A function to delete entities by their identifier
+ * @returns {import('./types').DeleteById<Object>} A function to delete entities by their identifier
  */
 function getDeleteById({ collection, getIdentifierQuery, metadata, auditors }) {
     return async function deleteById(id, context) {
@@ -185,7 +130,7 @@ function getDeleteById({ collection, getIdentifierQuery, metadata, auditors }) {
 }
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {ReplaceById} A function to replace documents based off of their _id
+ * @returns {import("./types").ReplaceById<Object>} A function to replace documents based off of their _id
  */
 function getReplaceById({
     setVersionInfo,
@@ -220,7 +165,7 @@ function getReplaceById({
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {Search} A function to search for entities
+ * @returns {import('./types').Search<Object>} A function to search for entities
  */
 function getSearch({ collection, mapOutput, paginationDefaults }) {
     return async function search(query) {
@@ -248,7 +193,7 @@ module.exports = { getUtils, getCrud };
 
 /**
  * @param {EntityMetadata} metadata The entity metadata containing the rules for the string identifier
- * @returns {SetStringIdentifier} The function to set the string identifier on an object
+ * @returns {import('./types').SetStringIdentifier} The function to set the string identifier on an object
  */
 function createStringIdentifierSetter(metadata) {
     return function setStringIdentifier(item) {
@@ -266,7 +211,7 @@ function createStringIdentifierSetter(metadata) {
 function ensureEntityIsObject(entity, metadata) {
     if (entity === null || typeof entity !== 'object') {
         throw new ValidationError(
-            `The ${metadata.title} value provided was not an object, type was :${typeof _entity}`
+            `The ${metadata.title} value provided was not an object, type was :${typeof entity}`
         );
     }
 }

@@ -4,6 +4,7 @@ const removeFromArrayIfExists = require('./remove-from-array-if-exists');
 const _ = require('lodash');
 const withVersionInfo = require('../version-info/with-version-info');
 
+/** @param {import('./types').JsonSchema} schema */
 module.exports = function filterPropertiesForOutput(schema) {
     clearProperties(schema);
     _.merge(schema, withVersionInfo());
@@ -14,6 +15,7 @@ module.exports = function filterPropertiesForOutput(schema) {
     }
 };
 
+/** @param {import('./types').JsonSchema} schema */
 function clearProperties(schema) {
     Object.getOwnPropertyNames(schema.properties).forEach(function(propertyName) {
         const property = schema.properties[propertyName];

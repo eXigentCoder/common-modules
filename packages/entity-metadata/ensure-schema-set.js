@@ -4,9 +4,9 @@ const setAndValidateId = require('./set-and-validate-id');
 const setAndValidateName = require('./set-and-validate-name');
 
 /**
- * @typedef {import('../validation/ajv').Validator} Validator
+ * @typedef {import('./types').Validator} Validator
  *
- * @param {import('./index').EntityMetadata } metadata
+ * @param {import('./types').EntityMetadata} metadata
  * @param {string} operation The operation to be performed [output, create, replace]
  * @param {string} direction The data flow direction [Output, Input]
  * @param {Validator} outputValidator The validator for transforming entities to output

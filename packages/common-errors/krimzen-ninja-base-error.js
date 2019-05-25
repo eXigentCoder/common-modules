@@ -1,29 +1,9 @@
 'use strict';
 
-/**
- * @typedef {Object} BaseErrorParameters
- * @property {string} message The error message
- * @property {string} name The name of the error
- * @property {string} codeSuffix The suffix to append to the error code for internationalisation etc
- * @property {Error} [innerError] An inner error if applicable
- * @property {boolean} [safeToShowToUsers=false] Specifies if the details in this error, including the decoration properties safe to show to a user?
- * @property {number} [httpStatusCode] The resultant httpStatus Code should this error go unhandled
- * @property {Object} [decorate] An object with additional properties to include in the error object
- *
- * @typedef {Object} ErrorParameters
- * @property {Error} [innerError] An inner error if applicable
- * @property {boolean} [safeToShowToUsers=false] Specifies if the details in this error, including the decoration properties safe to show to a user?
- * @property {Object} [decorate] An object with additional properties to include in the error object
- */
-
-/**
- * @class KrimZenNinjaBaseError
- * @extends {Error}
- */
 class KrimZenNinjaBaseError extends Error {
     /**
      * Creates an instance of KrimZenNinjaBaseError.
-     * @param {BaseErrorParameters} params
+     * @param {import("./types").BaseErrorParameters} params
      * @memberof KrimZenNinjaBaseError
      */
     constructor({
@@ -46,6 +26,7 @@ class KrimZenNinjaBaseError extends Error {
         }
         super(message);
         this.name = name;
+        /** A unique code to check the type of the error, even if the message changes */
         this.code = `ERR_KN_${codeSuffix}`;
         this.innerError = innerError;
         this.safeToShowToUsers = safeToShowToUsers;

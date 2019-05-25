@@ -7,7 +7,7 @@ const moment = require('moment');
 
 /**
  * @param {import('../entity-metadata').EntityMetadata} metadata
- * @param {import('./mongodb-crud').Db} db
+ * @param {import('mongodb').Db} db
  * @returns
  */
 module.exports = async function createMongoDbAuditors(metadata, db) {

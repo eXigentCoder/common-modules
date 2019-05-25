@@ -29,7 +29,6 @@
         "jsdoc/check-tag-names": 1,
         "jsdoc/check-types": 1,
         "jsdoc/no-undefined-types": 1,
-        "jsdoc/require-param": 1,
         "jsdoc/require-param-description": 1,
         "jsdoc/require-param-name": 1,
         "jsdoc/require-param-type": 1,

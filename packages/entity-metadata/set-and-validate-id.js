@@ -3,6 +3,12 @@
 const isNil = require('lodash/isNil');
 const endsWith = require('lodash/endsWith');
 
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').JsonSchema} coreSchema
+ * @param {string} operation
+ * @returns {void}
+ */
 module.exports = function setAndValidateId(schema, coreSchema, operation) {
     if (isNil(schema)) {
         throw new Error('schema is required');

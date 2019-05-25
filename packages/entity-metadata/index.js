@@ -12,56 +12,12 @@ const getMetadataSchema = require('./metadata-schema');
 const defaultTitleToStringIdentifierFn = require('./title-to-string-identifier');
 module.exports = generateEntityMetadata;
 /**
- *
- * @typedef {Object} Schema
- * @property {string} [$id]
- * @property {string} [name]
- * @property {string} [title]
- * @property {string} [description]
- * @property {any} [default]
- * @property {any} [examples]
- * @property {string} [$comment]
- * @property {string|string[]} [type]
- * @property {boolean} [additionalProperties]
- * @property {{[key: string]: Schema}} [properties]
- * @property {Object} [allOf]
- * @property {Object} [anyOf]
- * @property {Object} [oneOf]
- * @property {Object} [not]
- * @property {Object} [anyOf]
- * @property {Array<Object>} [enum]
- * @property {Object} [const]
- * @property {string[]} [required]
- * @property {Object} [errorMessage]
- *
- *
- * @typedef {Object} EntityMetadata
- * @property {Object} schemas
- * @property {Schema} schemas.core
- * @property {Schema} [schemas.output]
- * @property {Schema} [schemas.create]
- * @property {Schema} [schemas.replace]
- * @property {string} [name] Either set or comes from the core schema
- * @property {string} [namePlural]
- * @property {string} [title]
- * @property {string} [titlePlural]
- * @property {string} [aOrAn]
- * @property {Object} identifier
- * @property {string} identifier.name
- * @property {Object} identifier.schema
- * @property {Object} [stringIdentifier]
- * @property {string} stringIdentifier.name
- * @property {Object} stringIdentifier.schema
- * @property {Object} [stringIdentifier.source]
- * @property {string} collectionName
- * @property {string} [auditCollectionName]
- * @property {boolean} [auditChanges]
- * @property {string} baseUrl
- * @property {(title:string)=>string} [titleToStringIdentifier]
+ * @typedef {import('./types').EntityMetadata} EntityMetadata
+ * @typedef {import('../validation/ajv').Validator} Validator
  *
  * @param {EntityMetadata} metadata
- * @param {import('../validation/ajv').Validator} inputValidator
- * @param {import('../validation/ajv').Validator} outputValidator
+ * @param {Validator} inputValidator
+ * @param {Validator} outputValidator
  * @returns {EntityMetadata}
  */
 function generateEntityMetadata(metadata, inputValidator, outputValidator) {
@@ -92,7 +48,7 @@ function generateEntityMetadata(metadata, inputValidator, outputValidator) {
 
 /**
  * @param {EntityMetadata} metadata
- * @param {import('../validation/ajv').Validator} validator
+ * @param {Validator} validator
  */
 function validate(metadata, validator) {
     const metadataSchema = getMetadataSchema();

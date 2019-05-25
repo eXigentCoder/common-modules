@@ -1,4 +1,9 @@
 'use strict';
+
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').EntityMetadata} metadata
+ */
 module.exports = function hydrateSchema(schema, metadata) {
     schema.properties = schema.properties || {};
     schema.required = schema.required || [];
@@ -8,10 +13,18 @@ module.exports = function hydrateSchema(schema, metadata) {
     // addOwnerInfo(schema);
 };
 
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').EntityMetadata} metadata
+ */
 function addIdentifier(schema, metadata) {
     addAnIdentifer(schema, metadata.identifier);
 }
 
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').EntityMetadata} metadata
+ */
 function addStringIdentifier(schema, metadata) {
     const identifier = metadata.stringIdentifier;
     if (!identifier) {
@@ -20,6 +33,11 @@ function addStringIdentifier(schema, metadata) {
     addAnIdentifer(schema, identifier, false);
 }
 
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').Identifier} identifier
+ * @param {boolean} required
+ */
 function addAnIdentifer(schema, identifier, required = true) {
     if (schema.properties[identifier.name]) {
         return;

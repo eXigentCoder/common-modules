@@ -4,6 +4,7 @@ const _ = require('lodash');
 const nconf = require('nconf');
 const path = require('path');
 const debug = require('debug')('@exigentcoder/common-modules.config');
+
 let initialised = false;
 const defaultConfigOptions = {
     name: null,
@@ -22,11 +23,7 @@ const defaultConfigOptions = {
  * * source code files stored in the ./config folder of your application.
  * Also allows for using nconf.set which will save to memory.
  * @name initialise
- * @param {Object|string} inputOptions The options used to setup the configuration library.
- * @param {string} inputOptions.name The name of the source application initialising the configuration.
- * @param {string} [inputOptions.configPath=''] The optional path to the `config` folder. Usually this would be `cwd/config` where `cwd` is the current working directory from node's `process.cwd`.
- * @param {any} [inputOptions.argvOptions] The yargs options to pass in
- * @param {string[]} [inputOptions.envOptions] If set, only the provided values will be taken from process.env
+ * @param {import('./types').ConfigOptions|string} inputOptions The options used to setup the configuration library.
  */
 function initialise(inputOptions) {
     debug('Initialising configuration with options: %o', inputOptions);
@@ -48,6 +45,7 @@ function initialise(inputOptions) {
     };
     nconf
         .argv(inputOptions.argvOptions)
+        // @ts-ignore
         .env(inputOptions.envOptions)
         .defaults(internalConfig)
         .use('memory'); //lets us call set later on
@@ -97,6 +95,7 @@ function ensureInitialised(methodName) {
  * Gets a value out of the config store
  * @name get
  * @param {string} key The unique name of they key for the value
+ * @returns {any} The returned value if one existed
  */
 function get(key) {
     ensureInitialised('get');

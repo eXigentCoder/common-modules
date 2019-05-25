@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * @param {string[]} array
+ * @param {string} item
+ * @returns {void}
+ */
 module.exports = function removeFromArrayIfExists(array, item) {
     if (!array) {
         return;

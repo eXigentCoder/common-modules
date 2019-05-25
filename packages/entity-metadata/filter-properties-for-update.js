@@ -2,6 +2,10 @@
 
 const removeFromArrayIfExists = require('./remove-from-array-if-exists');
 
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').EntityMetadata} metadata
+ */
 module.exports = function filterPropertiesForReplace(schema, metadata) {
     if (!schema) {
         throw new Error('Schema is a required field');

@@ -8,13 +8,16 @@ module.exports = class IsRequiredError extends KrimZenNinjaBaseError {
      * @param {string} requiredValue The name of the required value
      * @param {string} [functionName] The name of the function where the required value was supposed to be provided too
      * @param {string} [functionType] Specifies if the function was a function or constructor
-     * @param {import('../krimzen-ninja-base-error').ErrorParameters} errorOptions
+     * @param {import('../types').ErrorParameters} errorOptions
      */
     constructor(
         requiredValue,
         functionName,
         functionType = 'function',
-        { innerError, decorate, safeToShowToUsers = false } = { safeToShowToUsers: false }
+        { innerError, decorate, safeToShowToUsers = false } = {
+            safeToShowToUsers: false,
+            decorate: {},
+        }
     ) {
         if (!requiredValue) {
             throw new IsRequiredError('requiredValue', 'IsRequiredError', 'constructor');

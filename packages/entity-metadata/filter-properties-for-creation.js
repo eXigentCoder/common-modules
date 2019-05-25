@@ -3,8 +3,8 @@
 const removeFromArrayIfExists = require('./remove-from-array-if-exists');
 
 /**
- * @param {Object} schema
- * @param {import('.').EntityMetadata} metadata
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').EntityMetadata} metadata
  */
 module.exports = function filterPropertiesForCreation(schema, metadata) {
     if (!schema) {
