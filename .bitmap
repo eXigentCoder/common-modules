@@ -39,168 +39,6 @@
         "origin": "IMPORTED",
         "originallySharedDir": "src/testers/mocha"
     },
-    "exigentcoder.common-modules/config@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/config/config.test.js",
-                "test": true,
-                "name": "config.test.js"
-            },
-            {
-                "relativePath": "packages/config/index.js",
-                "test": false,
-                "name": "index.js"
-            }
-        ],
-        "mainFile": "packages/config/index.js",
-        "trackDir": "packages/config",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/common-errors@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.js",
-                "test": false,
-                "name": "entity-not-found-error.js"
-            },
-            {
-                "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.test.js",
-                "test": true,
-                "name": "entity-not-found-error.test.js"
-            },
-            {
-                "relativePath": "packages/common-errors/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/common-errors/is-required-error/is-required-error.js",
-                "test": false,
-                "name": "is-required-error.js"
-            },
-            {
-                "relativePath": "packages/common-errors/is-required-error/is-required-error.test.js",
-                "test": true,
-                "name": "is-required-error.test.js"
-            },
-            {
-                "relativePath": "packages/common-errors/krimzen-ninja-base-error.js",
-                "test": false,
-                "name": "krimzen-ninja-base-error.js"
-            },
-            {
-                "relativePath": "packages/common-errors/krimzen-ninja-base-error.test.js",
-                "test": true,
-                "name": "krimzen-ninja-base-error.test.js"
-            },
-            {
-                "relativePath": "packages/common-errors/validation-error/validation-error.js",
-                "test": false,
-                "name": "validation-error.js"
-            },
-            {
-                "relativePath": "packages/common-errors/validation-error/validation-error.test.js",
-                "test": true,
-                "name": "validation-error.test.js"
-            }
-        ],
-        "mainFile": "packages/common-errors/index.js",
-        "trackDir": "packages/common-errors",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/validation@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/validation/ajv.js",
-                "test": false,
-                "name": "ajv.js"
-            },
-            {
-                "relativePath": "packages/validation/ajv.test.js",
-                "test": true,
-                "name": "ajv.test.js"
-            },
-            {
-                "relativePath": "packages/validation/create-output-mapper.js",
-                "test": false,
-                "name": "create-output-mapper.js"
-            },
-            {
-                "relativePath": "packages/validation/create-output-mapper.test.js",
-                "test": true,
-                "name": "create-output-mapper.test.js"
-            },
-            {
-                "relativePath": "packages/validation/index.js",
-                "test": false,
-                "name": "index.js"
-            }
-        ],
-        "mainFile": "packages/validation/index.js",
-        "trackDir": "packages/validation",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/logging@0.13.1": {
-        "files": [
-            {
-                "relativePath": "packages/logging/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/logging/logging.test.js",
-                "test": true,
-                "name": "logging.test.js"
-            }
-        ],
-        "mainFile": "packages/logging/index.js",
-        "trackDir": "packages/logging",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/express-error-handler@0.13.1": {
-        "files": [
-            {
-                "name": "boom-error-handler.js",
-                "relativePath": "packages/express-error-handler/boom-error-handler.js",
-                "test": false
-            },
-            {
-                "name": "boom-error-handler.test.js",
-                "relativePath": "packages/express-error-handler/boom-error-handler.test.js",
-                "test": true
-            },
-            {
-                "name": "error-handler.js",
-                "relativePath": "packages/express-error-handler/error-handler.js",
-                "test": false
-            },
-            {
-                "name": "error-handler.test.js",
-                "relativePath": "packages/express-error-handler/error-handler.test.js",
-                "test": true
-            },
-            {
-                "name": "express-error-handler.test.js",
-                "relativePath": "packages/express-error-handler/express-error-handler.test.js",
-                "test": true
-            },
-            {
-                "name": "index.js",
-                "relativePath": "packages/express-error-handler/index.js",
-                "test": false
-            }
-        ],
-        "mainFile": "packages/express-error-handler/index.js",
-        "origin": "AUTHORED",
-        "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.13.1"
-        ],
-        "exported": true
-    },
     "exigentcoder.common-modules/tester-mocha@0.13.1": {
         "files": [
             {
@@ -257,39 +95,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/validation-mongodb@0.13.8": {
-        "files": [
-            {
-                "relativePath": "packages/validation-mongodb/add-mongo-id.js",
-                "test": false,
-                "name": "add-mongo-id.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/add-mongo-id.test.js",
-                "test": true,
-                "name": "add-mongo-id.test.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/json-schema.js",
-                "test": false,
-                "name": "json-schema.js"
-            },
-            {
-                "relativePath": "packages/validation-mongodb/objectId.test.js",
-                "test": true,
-                "name": "objectId.test.js"
-            }
-        ],
-        "mainFile": "packages/validation-mongodb/index.js",
-        "trackDir": "packages/validation-mongodb",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "exigentcoder.common-modules/json-schema-faker@0.13.8": {
         "files": [
             {
@@ -303,107 +108,88 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/json-schema@0.13.9": {
+    "exigentcoder.common-modules/config@0.13.10": {
         "files": [
             {
-                "relativePath": "packages/json-schema/common-module-schema-id-generator.js",
-                "test": false,
-                "name": "common-module-schema-id-generator.js"
-            },
-            {
-                "relativePath": "packages/json-schema/date-time.test.js",
+                "relativePath": "packages/config/config.test.js",
                 "test": true,
-                "name": "date-time.test.js"
+                "name": "config.test.js"
             },
             {
-                "relativePath": "packages/json-schema/description.test.js",
-                "test": true,
-                "name": "description.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/email.test.js",
-                "test": true,
-                "name": "email.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/identifier.test.js",
-                "test": true,
-                "name": "identifier.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/index.js",
+                "relativePath": "packages/config/index.js",
                 "test": false,
                 "name": "index.js"
             },
             {
-                "relativePath": "packages/json-schema/schema-id-generator.js",
+                "relativePath": "packages/config/types.d.ts",
                 "test": false,
-                "name": "schema-id-generator.js"
-            },
-            {
-                "relativePath": "packages/json-schema/schema-id-generator.test.js",
-                "test": true,
-                "name": "schema-id-generator.test.js"
-            },
-            {
-                "relativePath": "packages/json-schema/title.test.js",
-                "test": true,
-                "name": "title.test.js"
+                "name": "types.d.ts"
             }
         ],
-        "mainFile": "packages/json-schema/index.js",
-        "trackDir": "packages/json-schema",
+        "mainFile": "packages/config/index.js",
+        "trackDir": "packages/config",
         "origin": "AUTHORED",
-        "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.13.1",
-            "exigentcoder.common-modules/validation@0.13.1"
-        ],
         "exported": true
     },
-    "exigentcoder.common-modules/version-info@0.13.9": {
+    "exigentcoder.common-modules/common-errors@0.13.10": {
         "files": [
             {
-                "relativePath": "packages/version-info/create-version-info-setter.js",
+                "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.js",
                 "test": false,
-                "name": "create-version-info-setter.js"
+                "name": "entity-not-found-error.js"
             },
             {
-                "relativePath": "packages/version-info/create-version-info-setter.test.js",
+                "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.test.js",
                 "test": true,
-                "name": "create-version-info-setter.test.js"
+                "name": "entity-not-found-error.test.js"
             },
             {
-                "relativePath": "packages/version-info/execution-context-schema.js",
-                "test": false,
-                "name": "execution-context-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/identity-schema.js",
-                "test": false,
-                "name": "identity-schema.js"
-            },
-            {
-                "relativePath": "packages/version-info/index.js",
+                "relativePath": "packages/common-errors/index.js",
                 "test": false,
                 "name": "index.js"
             },
             {
-                "relativePath": "packages/version-info/version-info-schema.js",
+                "relativePath": "packages/common-errors/is-required-error/is-required-error.js",
                 "test": false,
-                "name": "version-info-schema.js"
+                "name": "is-required-error.js"
             },
             {
-                "relativePath": "packages/version-info/with-version-info.js",
+                "relativePath": "packages/common-errors/is-required-error/is-required-error.test.js",
+                "test": true,
+                "name": "is-required-error.test.js"
+            },
+            {
+                "relativePath": "packages/common-errors/krimzen-ninja-base-error.js",
                 "test": false,
-                "name": "with-version-info.js"
+                "name": "krimzen-ninja-base-error.js"
+            },
+            {
+                "relativePath": "packages/common-errors/krimzen-ninja-base-error.test.js",
+                "test": true,
+                "name": "krimzen-ninja-base-error.test.js"
+            },
+            {
+                "relativePath": "packages/common-errors/types.d.ts",
+                "test": false,
+                "name": "types.d.ts"
+            },
+            {
+                "relativePath": "packages/common-errors/validation-error/validation-error.js",
+                "test": false,
+                "name": "validation-error.js"
+            },
+            {
+                "relativePath": "packages/common-errors/validation-error/validation-error.test.js",
+                "test": true,
+                "name": "validation-error.test.js"
             }
         ],
-        "mainFile": "packages/version-info/index.js",
-        "trackDir": "packages/version-info",
+        "mainFile": "packages/common-errors/index.js",
+        "trackDir": "packages/common-errors",
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.13.9": {
+    "exigentcoder.common-modules/mongodb@0.13.10": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -469,6 +255,11 @@
                 "relativePath": "packages/mongodb/query-string-to-mongo-query.test.js",
                 "test": true,
                 "name": "query-string-to-mongo-query.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/types.d.ts",
+                "test": false,
+                "name": "types.d.ts"
             }
         ],
         "mainFile": "packages/mongodb/index.js",
@@ -476,7 +267,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.13.6": {
+    "exigentcoder.common-modules/entity-metadata@0.13.10": {
         "files": [
             {
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
@@ -562,6 +353,11 @@
                 "relativePath": "packages/entity-metadata/title-to-string-identifier.test.js",
                 "test": true,
                 "name": "title-to-string-identifier.test.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/types.d.ts",
+                "test": false,
+                "name": "types.d.ts"
             }
         ],
         "mainFile": "packages/entity-metadata/index.js",
@@ -569,7 +365,231 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.9": {
+    "exigentcoder.common-modules/validation@0.13.2": {
+        "files": [
+            {
+                "relativePath": "packages/validation/ajv.js",
+                "test": false,
+                "name": "ajv.js"
+            },
+            {
+                "relativePath": "packages/validation/ajv.test.js",
+                "test": true,
+                "name": "ajv.test.js"
+            },
+            {
+                "relativePath": "packages/validation/create-output-mapper.js",
+                "test": false,
+                "name": "create-output-mapper.js"
+            },
+            {
+                "relativePath": "packages/validation/create-output-mapper.test.js",
+                "test": true,
+                "name": "create-output-mapper.test.js"
+            },
+            {
+                "relativePath": "packages/validation/index.js",
+                "test": false,
+                "name": "index.js"
+            }
+        ],
+        "mainFile": "packages/validation/index.js",
+        "trackDir": "packages/validation",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/logging@0.13.2": {
+        "files": [
+            {
+                "relativePath": "packages/logging/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/logging/logging.test.js",
+                "test": true,
+                "name": "logging.test.js"
+            }
+        ],
+        "mainFile": "packages/logging/index.js",
+        "trackDir": "packages/logging",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/express-error-handler@0.13.2": {
+        "files": [
+            {
+                "name": "boom-error-handler.js",
+                "relativePath": "packages/express-error-handler/boom-error-handler.js",
+                "test": false
+            },
+            {
+                "name": "boom-error-handler.test.js",
+                "relativePath": "packages/express-error-handler/boom-error-handler.test.js",
+                "test": true
+            },
+            {
+                "name": "error-handler.js",
+                "relativePath": "packages/express-error-handler/error-handler.js",
+                "test": false
+            },
+            {
+                "name": "error-handler.test.js",
+                "relativePath": "packages/express-error-handler/error-handler.test.js",
+                "test": true
+            },
+            {
+                "name": "express-error-handler.test.js",
+                "relativePath": "packages/express-error-handler/express-error-handler.test.js",
+                "test": true
+            },
+            {
+                "name": "index.js",
+                "relativePath": "packages/express-error-handler/index.js",
+                "test": false
+            }
+        ],
+        "mainFile": "packages/express-error-handler/index.js",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.13.10"
+        ],
+        "exported": true
+    },
+    "exigentcoder.common-modules/validation-mongodb@0.13.9": {
+        "files": [
+            {
+                "relativePath": "packages/validation-mongodb/add-mongo-id.js",
+                "test": false,
+                "name": "add-mongo-id.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/add-mongo-id.test.js",
+                "test": true,
+                "name": "add-mongo-id.test.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/json-schema.js",
+                "test": false,
+                "name": "json-schema.js"
+            },
+            {
+                "relativePath": "packages/validation-mongodb/objectId.test.js",
+                "test": true,
+                "name": "objectId.test.js"
+            }
+        ],
+        "mainFile": "packages/validation-mongodb/index.js",
+        "trackDir": "packages/validation-mongodb",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/json-schema@0.13.10": {
+        "files": [
+            {
+                "relativePath": "packages/json-schema/common-module-schema-id-generator.js",
+                "test": false,
+                "name": "common-module-schema-id-generator.js"
+            },
+            {
+                "relativePath": "packages/json-schema/date-time.test.js",
+                "test": true,
+                "name": "date-time.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/description.test.js",
+                "test": true,
+                "name": "description.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/email.test.js",
+                "test": true,
+                "name": "email.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/identifier.test.js",
+                "test": true,
+                "name": "identifier.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/json-schema/schema-id-generator.js",
+                "test": false,
+                "name": "schema-id-generator.js"
+            },
+            {
+                "relativePath": "packages/json-schema/schema-id-generator.test.js",
+                "test": true,
+                "name": "schema-id-generator.test.js"
+            },
+            {
+                "relativePath": "packages/json-schema/title.test.js",
+                "test": true,
+                "name": "title.test.js"
+            }
+        ],
+        "mainFile": "packages/json-schema/index.js",
+        "trackDir": "packages/json-schema",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.13.10",
+            "exigentcoder.common-modules/validation@0.13.2"
+        ],
+        "exported": true
+    },
+    "exigentcoder.common-modules/version-info@0.13.10": {
+        "files": [
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.js",
+                "test": false,
+                "name": "create-version-info-setter.js"
+            },
+            {
+                "relativePath": "packages/version-info/create-version-info-setter.test.js",
+                "test": true,
+                "name": "create-version-info-setter.test.js"
+            },
+            {
+                "relativePath": "packages/version-info/execution-context-schema.js",
+                "test": false,
+                "name": "execution-context-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/identity-schema.js",
+                "test": false,
+                "name": "identity-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/version-info/version-info-schema.js",
+                "test": false,
+                "name": "version-info-schema.js"
+            },
+            {
+                "relativePath": "packages/version-info/with-version-info.js",
+                "test": false,
+                "name": "with-version-info.js"
+            }
+        ],
+        "mainFile": "packages/version-info/index.js",
+        "trackDir": "packages/version-info",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.13.10": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
