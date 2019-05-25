@@ -36,6 +36,7 @@ const ObjectId = require('mongodb').ObjectId;
  * @property {Validator} inputValidator
  * @property {Validator} outputValidator
  * @property {Auditors} auditors
+ * @property {PaginationDefaults} [paginationDefaults]
  *
  * @typedef {(item:Object)=>void} SetStringIdentifier
  *
@@ -59,13 +60,30 @@ const ObjectId = require('mongodb').ObjectId;
  * @property {Validator} outputValidator
  * @property {Db} db
  * @property {Auditors} [auditors]
+ * @property {PaginationDefaults} [paginationDefaults]
+ *
+ * @typedef {Object} PaginationDefaults
+ * @typedef {number} itemsPerPage The default items in a page if not specified.
+ * @typedef {object} projection The default projection to run
+ * @typedef {object} sort The default sort param
  */
 
 /**
  * @param {CreateUtilityParams} params Parameters used to create the utilities
  * @returns {Promise<Utilities>} A promise which resolves to the utilties
  */
-async function getUtils({ metadata, inputValidator, outputValidator, db, auditors }) {
+async function getUtils({
+    metadata,
+    inputValidator,
+    outputValidator,
+    db,
+    auditors,
+    paginationDefaults = {
+        itemsPerPage: 20,
+        sort: {},
+        projection: {},
+    },
+}) {
     const setVersionInfo = createVersionInfoSetter({ metadata, validator: inputValidator });
     const collection = db.collection(metadata.collectionName);
     const mapOutput = createOutputMapper(metadata.schemas.output.$id, outputValidator);
@@ -83,6 +101,7 @@ async function getUtils({ metadata, inputValidator, outputValidator, db, auditor
         inputValidator,
         outputValidator,
         auditors,
+        paginationDefaults,
     };
 }
 
@@ -203,15 +222,22 @@ function getReplaceById({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {Search} A function to search for entities
  */
-function getSearch({ collection, mapOutput }) {
+function getSearch({ collection, mapOutput, paginationDefaults }) {
     return async function search(query) {
-        const { filter, skip, limit, sort, projection } = query;
+        let { filter, skip, limit, sort, projection } = query;
+        if (query.filter === null || query.filter === undefined) {
+            filter = query;
+            skip = undefined;
+            limit = undefined;
+            sort = undefined;
+            projection = undefined;
+        }
         const items = await collection
             .find(filter)
-            .skip(skip)
-            .limit(limit)
-            .sort(sort)
-            .project(projection)
+            .skip(skip || 0)
+            .limit(limit || paginationDefaults.itemsPerPage)
+            .sort(sort || paginationDefaults.sort)
+            .project(projection || paginationDefaults.projection)
             .toArray();
         mapOutput(items);
         return items;

@@ -52,7 +52,7 @@ describe('MongoDB', () => {
             });
         });
         describe('Delete By Id', () => {
-            it('Should allow you to create a valid entity', async () => {
+            it('Should allow you to delete an existing entity', async () => {
                 const { deleteById, create, getById } = await getPopulatedCrud();
                 const entity = validEntity();
                 const created = await create(entity, createContext());
@@ -65,7 +65,7 @@ describe('MongoDB', () => {
             });
         });
         describe('Get By Id', () => {
-            it('Should allow you to create a valid entity', async () => {
+            it('Should allow you to get an existing entity by id', async () => {
                 const { create, getById } = await getPopulatedCrud();
                 const entity = validEntity();
                 const created = await create(entity, createContext());
@@ -74,7 +74,7 @@ describe('MongoDB', () => {
             });
         });
         describe('Replace By Id', () => {
-            it('Should allow you to create a valid entity', async () => {
+            it('Should allow you to replace an existing entity with a valid entity', async () => {
                 const { replaceById, create } = await getPopulatedCrud();
                 const entity = validEntity();
                 const created = await create(entity, createContext());
@@ -87,11 +87,31 @@ describe('MongoDB', () => {
             });
         });
         describe('Search', () => {
-            it('Should allow you to create a valid entity', async () => {
+            it('Should allow you to search', async () => {
                 const { search, create, queryMapper } = await getPopulatedCrud();
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = queryMapper({ filter: { username: entity.username } });
+                const results = await search(query);
+                expect(results).to.be.an('array');
+                expect(results).to.have.length(1);
+                expect(results[0]).to.eql(created);
+            });
+            it('Should allow you to search with just a filter', async () => {
+                const { search, create } = await getPopulatedCrud();
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                const query = { filter: { username: entity.username } };
+                const results = await search(query);
+                expect(results).to.be.an('array');
+                expect(results).to.have.length(1);
+                expect(results[0]).to.eql(created);
+            });
+            it('Should allow you to search if filter is passed through without the filter keyword', async () => {
+                const { search, create } = await getPopulatedCrud();
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                const query = { username: entity.username };
                 const results = await search(query);
                 expect(results).to.be.an('array');
                 expect(results).to.have.length(1);
