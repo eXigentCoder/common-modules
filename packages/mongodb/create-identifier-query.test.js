@@ -106,7 +106,6 @@ function validMetaDataNoStringIdentifer() {
                 },
             },
         },
-        name: 'users',
         identifier: { name: '_id', schema: jsonSchemas.objectId },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
@@ -117,8 +116,8 @@ function validMetaDataWithStringIdentifer() {
     return {
         schemas: {
             core: {
-                name: 'user',
                 type: 'object',
+                name: 'user',
                 properties: {
                     firstName: {
                         type: 'string',

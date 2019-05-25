@@ -2,7 +2,7 @@ export { Validator } from '../validation/ajv';
 export interface JsonSchema {
     $id?: string;
     //todo rk needs to use title instead but requires a rework
-    name?: string;
+    name: string;
     title?: string;
     description?: string;
     default?: any;
@@ -43,7 +43,7 @@ export interface StringIdentifier {
 
 export interface EntityMetadata {
     schemas: { [key: string]: JsonSchema } & MainSchemas;
-    name: string;
+    name?: string;
     namePlural?: string;
     title?: string;
     titlePlural?: string;
