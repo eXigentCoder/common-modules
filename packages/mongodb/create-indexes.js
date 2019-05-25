@@ -1,16 +1,16 @@
 'use strict';
 
 /**
- * @typedef {object} Index
- * @property {string | any} key
- * @property {import('mongodb').IndexOptions} options
+ * @typedef {import('./types').Index} Index
+ * @typedef {import('mongodb').IndexOptions} IndexOptions
+ * @typedef {import('mongodb').Db} Db
  */
 
 /**
- * @param {import('mongodb').Db} db The MongoDB db object connected to the database
+ * @param {Db} db The MongoDB db object connected to the database
  * @param {string} collectionName The name of the collection in the database
  * @param {Index[]} indexes The indexs to be created
- * @returns {Promise<undefined>}
+ * @returns {Promise<void>}
  */
 module.exports = async function createIndexes(db, collectionName, indexes) {
     await db.createCollection(collectionName);
@@ -27,8 +27,8 @@ module.exports = async function createIndexes(db, collectionName, indexes) {
 /**
  * @param {Index} index The index to be created
  * @param {string} collectionName The name of the collection in the database
- * @param {import('mongodb').IndexOptions[]} existingIndexes The collection of existing indexes
- * @param {import('mongodb').Db} db The MongoDB db object connected to the database
+ * @param {IndexOptions[]} existingIndexes The collection of existing indexes
+ * @param {Db} db The MongoDB db object connected to the database
  * @returns {Promise<undefined>}
  */
 async function ensureIndexExists(index, collectionName, existingIndexes, db) {
@@ -46,8 +46,8 @@ async function ensureIndexExists(index, collectionName, existingIndexes, db) {
 }
 /**
  * @param {Index} indexToCreate The spec of the index
- * @param {import('mongodb').IndexOptions[]}existingIndexes The eixising indexes in the db
- * @returns {import('mongodb').IndexOptions | null} The found index or null if one was not found
+ * @param {IndexOptions[]}existingIndexes The eixising indexes in the db
+ * @returns {IndexOptions | null} The found index or null if one was not found
  */
 function findExistingIndex(indexToCreate, existingIndexes) {
     let foundIndex = null;
@@ -68,7 +68,7 @@ function findExistingIndex(indexToCreate, existingIndexes) {
 
 /**
  * @param {Index} indexToCreate the spec of the index
- * @param {import('mongodb').IndexOptions} foundIndex The existing index
+ * @param {IndexOptions} foundIndex The existing index
  * @returns {boolean} a value indicating if the index should be dropped and recreated
  */
 function shouldDropAndCreate(indexToCreate, foundIndex) {

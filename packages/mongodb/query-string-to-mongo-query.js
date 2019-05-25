@@ -4,34 +4,7 @@ const ObjectId = require('mongodb').ObjectID;
 const aqp = require('api-query-params');
 const set = require('lodash/set');
 /**
- * @typedef {object} Query
- * @property {object} filter
- * @property {number} skip
- * @property {number} limit
- * @property {object} sort
- * @property {object} projection
- */
-
-/**
- * @typedef {object} Options
- * @property {number} [skip]
- * @property {number} [limit]
- * @property {object} [sort]
- * @property {object} [projection]
- * @property {AgpOptions} [agpOptions]
- */
-
-/**
- * @typedef {object} AgpOptions
- * @property {string} [skipKey=skip] Custom skip operator key (default is skip)
- * @property {string} [limitKey=limit] Custom limit operator key (default is limit)
- * @property {string} [sortKey=sort] Custom projection operator key (default is fields)
- * @property {string} [projectionKey=fields] Custom sort operator key (default is sort)
- * @property {string} [filterKey=filter] Custom filter operator key (default is filter)
- * @property {string[]} [blacklist] Filter on all keys except the ones specified
- * @property {string[]} [whitelist] Filter only on the keys specified
- * @property {{[key:string]: ()=>*}} [casters] object to specify custom casters, key is the caster name, and value is a function which is passed the query parameter value as parameter.
- * @property {{[key:string]: string}} [castParams] object which map keys to casters (built-in or custom ones using the casters option).
+ * @typedef {import('./types').Query} Query
  */
 
 const defaultOptions = {
@@ -42,7 +15,7 @@ const defaultOptions = {
 };
 /**
  * @param {Object} schema The schema representing the object in the db
- * @param {Options} options The options to use when creating the query string mapper
+ * @param {import('./types').QueryStringMapperOptions} options The options to use when creating the query string mapper
  * @returns {(queryString: string|Object) => Query} The resultant query to run against MongoDB
  */
 module.exports = function createQueryStringMapper(schema, options = defaultOptions) {

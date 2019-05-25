@@ -1,4 +1,4 @@
-import { Db } from 'mongodb';
+import { Db, IndexOptions } from 'mongodb';
 import { Validator } from '../validation/ajv';
 import { ExecutionContext } from '../version-info/create-version-info-setter';
 
@@ -50,16 +50,82 @@ export type DeleteById<T> = (id: string, context: ExecutionContext) => Promise<v
 export type ReplaceById<T> = (entity: T, context: ExecutionContext) => Promise<T>;
 export type Search<T> = (query: Query) => Promise<T[]>;
 
-export interface Auditors {
-    writeCreation: (entityAfterCreation: Object, context: ExecutionContext) => Promise<void>;
-    writeDeletion: (deletedObject: Object, context: ExecutionContext) => Promise<void>;
-    writeReplacement: (
-        oldEntity: Object,
-        newEntity: Object,
-        context: ExecutionContext
-    ) => Promise<void>;
+export interface Auditors<T> {
+    writeCreation: WriteCreation<T>;
+    writeDeletion: WriteDeletion<T>;
+    writeReplacement: WriteReplacement<T>;
 }
+
+export type WriteCreation<T> = (entityAfterCreation: T, context: ExecutionContext) => Promise<void>;
+export type WriteDeletion<T> = (deletedObject: T, context: ExecutionContext) => Promise<void>;
+export type WriteReplacement<T> = (
+    oldEntity: T,
+    newEntity: T,
+    context: ExecutionContext
+) => Promise<void>;
 
 export type SetStringIdentifier = (item: Object) => void;
 
 export type GetUtils = (params: CreateUtilityParams) => Promise<Utilities>;
+
+export interface UrlConfig {
+    username?: string;
+    password?: string;
+    server: string;
+    dbName: string;
+}
+
+export interface Index {
+    key: string | object;
+    options: IndexOptions;
+}
+
+export interface Query {
+    filter: Object;
+    skip: number;
+    limit: number;
+    sort: Object;
+    projection: Object;
+}
+
+export interface QueryStringMapperOptions {
+    skip?: number;
+    limit?: number;
+    sort?: { [key: string]: -1 | 1 } | string;
+    projection?: { [key: string]: 0 | 1 };
+    agpOptions?: AgpOptions;
+}
+
+export interface AgpOptions {
+    /** Custom skip operator key
+     * @default 'skip' */
+    skipKey?: string;
+
+    /** Custom limit operator key
+     * @default 'limit' */
+    limitKey?: string;
+
+    /** Custom sort operator key
+     * @default 'sort' */
+    sortKey?: string;
+
+    /** Custom projection operator key
+     * @default 'fields' */
+    projectionKey?: string;
+
+    /** Custom filter operator key
+     * @default 'filter' */
+    filterKey?: string;
+
+    /** Filter on all keys except the ones specified */
+    blacklist?: string[];
+
+    /** Filter only on the keys specified */
+    whitelist?: string[];
+
+    /** object to specify custom casters, key is the caster name, and value is a function which is passed the query parameter value as parameter. */
+    caster?: { [key: string]: () => any };
+
+    /** object which map keys to casters (built-in or custom ones using the casters option). */
+    castParams: { [key: string]: string };
+}
