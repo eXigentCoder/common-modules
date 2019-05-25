@@ -39,7 +39,7 @@
         "origin": "IMPORTED",
         "originallySharedDir": "src/testers/mocha"
     },
-    "exigentcoder.common-modules/tester-mocha@0.14.0": {
+    "exigentcoder.common-modules/tester-mocha@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/tester-mocha/baseReporter.js",
@@ -77,7 +77,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/packages/express-error-handler@0.14.0": {
+    "exigentcoder.common-modules/packages/express-error-handler@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/express-error-handler/not-found-route.js",
@@ -95,7 +95,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/json-schema-faker@0.14.0": {
+    "exigentcoder.common-modules/json-schema-faker@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/json-schema-faker/index.js",
@@ -108,7 +108,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/config@0.14.0": {
+    "exigentcoder.common-modules/config@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/config/config.test.js",
@@ -131,7 +131,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/common-errors@0.14.0": {
+    "exigentcoder.common-modules/common-errors@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/common-errors/entity-not-found-error/entity-not-found-error.js",
@@ -189,7 +189,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.14.0": {
+    "exigentcoder.common-modules/mongodb@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -267,7 +267,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/validation@0.14.0": {
+    "exigentcoder.common-modules/validation@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/validation/ajv.js",
@@ -300,7 +300,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/logging@0.14.0": {
+    "exigentcoder.common-modules/logging@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/logging/index.js",
@@ -318,7 +318,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/express-error-handler@0.14.0": {
+    "exigentcoder.common-modules/express-error-handler@0.14.1": {
         "files": [
             {
                 "name": "boom-error-handler.js",
@@ -354,11 +354,11 @@
         "mainFile": "packages/express-error-handler/index.js",
         "origin": "AUTHORED",
         "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.14.0"
+            "exigentcoder.common-modules/common-errors@0.14.1"
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/validation-mongodb@0.14.0": {
+    "exigentcoder.common-modules/validation-mongodb@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/validation-mongodb/add-mongo-id.js",
@@ -391,7 +391,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/json-schema@0.14.0": {
+    "exigentcoder.common-modules/json-schema@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/json-schema/common-module-schema-id-generator.js",
@@ -443,12 +443,12 @@
         "trackDir": "packages/json-schema",
         "origin": "AUTHORED",
         "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.14.0",
-            "exigentcoder.common-modules/validation@0.14.0"
+            "exigentcoder.common-modules/common-errors@0.14.1",
+            "exigentcoder.common-modules/validation@0.14.1"
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/version-info@0.14.0": {
+    "exigentcoder.common-modules/version-info@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/version-info/create-version-info-setter.js",
@@ -491,7 +491,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.0": {
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.1": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
@@ -559,7 +559,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/entity-metadata@0.13.6": {
+    "exigentcoder.common-modules/entity-metadata@0.14.1": {
         "files": [
             {
                 "name": "ensure-schema-set.js",
