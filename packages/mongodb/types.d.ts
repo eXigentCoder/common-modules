@@ -48,7 +48,7 @@ export type Create<T> = (entity: T, context: ExecutionContext) => Promise<T>;
 export type GetById<T> = (id: string) => Promise<T>;
 export type DeleteById<T> = (id: string, context: ExecutionContext) => Promise<void>;
 export type ReplaceById<T> = (entity: T, context: ExecutionContext) => Promise<T>;
-export type Search<T> = (query: Query) => Promise<T[]>;
+export type Search<T> = (query: Query | Object) => Promise<T[]>;
 
 export interface Auditors<T> {
     writeCreation: WriteCreation<T>;
@@ -82,10 +82,10 @@ export interface Index {
 
 export interface Query {
     filter: Object;
-    skip: number;
-    limit: number;
-    sort: Object;
-    projection: Object;
+    skip?: number;
+    limit?: number;
+    sort?: Object;
+    projection?: Object;
 }
 
 export interface QueryStringMapperOptions {
