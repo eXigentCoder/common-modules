@@ -6,23 +6,11 @@ const { IsRequiredError } = require('../common-errors');
 const defaultExecutionContextSchema = require('./execution-context-schema');
 const { createInputValidator } = require('../validation/ajv');
 const v8n = require('v8n');
-/**
- * @typedef {{ id:string }} Identity The entity which made the change
- * @typedef {{ dateCreated:Date, versionTag: string, dateUpdated:Date, createdBy:Identity, lastUpdatedBy:Identity, updatedByRequestId:string }} VersionInfo
- * @typedef {{ requestId:string, identity:Identity, codeVersion:string, sourceIp?: string, source?:string }} ExecutionContext
- * @typedef {{ versionInfo:VersionInfo }} VersionedObject
- * @typedef {(object:object,context: ExecutionContext)=>VersionedObject} SetVersionInfo
- *
- * @typedef {Object} CreateVersionInfoSetterOptions The options used to construct the versionInfoSetter instance
- * @property {import('../entity-metadata/index').EntityMetadata} options.metadata
- * @property {import('../validation/ajv').Validator} [options.validator] The Ajv validator used to validate the execution context
- * @property {object} [options.executionContextSchema] The schema for the execution context, will default to the built in one
- */
 
 /**
  * Creates an instance of the Version Info Setter
- * @param {CreateVersionInfoSetterOptions} options The options used to construct the versionInfoSetter instance
- * @returns {SetVersionInfo} A function to set version info on an object based on a context
+ * @param {import('./types').CreateVersionInfoSetterOptions} options The options used to construct the versionInfoSetter instance
+ * @returns {import('./types').SetVersionInfo} A function to set version info on an object based on a context
  */
 // @ts-ignore
 module.exports = function createVersionInfoSetter(options) {
@@ -52,8 +40,8 @@ module.exports = function createVersionInfoSetter(options) {
 
 /**
  * @param {Object} object The object to add the version info too
- * @param {ExecutionContext} context The context that caused the creation or modification to happen
- * @returns {VersionedObject} The object with version info added to it
+ * @param {import('./types').ExecutionContext} context The context that caused the creation or modification to happen
+ * @returns {import('./types').VersionedObject} The object with version info added to it
  */
 function addVersionInfoToObject(object, context) {
     object.versionInfo = {
@@ -71,8 +59,8 @@ function addVersionInfoToObject(object, context) {
 
 /**
  * @param {Object} object The object to add the version info too
- * @param {ExecutionContext} context The context that caused the creation or modification to happen
- * @returns {VersionedObject} The object with version info added to it
+ * @param {import('./types').ExecutionContext} context The context that caused the creation or modification to happen
+ * @returns {import('./types').VersionedObject} The object with version info added to it
  */
 function updateVersionInfoOnObject(object, context) {
     object.versionInfo.versionTag = uuid.v4();
@@ -85,8 +73,8 @@ function updateVersionInfoOnObject(object, context) {
 
 /**
  * @param {Object} object The object to add the version info too
- * @param {ExecutionContext} context The context that caused the creation or modification to happen
- * @param {CreateVersionInfoSetterOptions} options The options passed in to createVersionInfoSetter
+ * @param {import('./types').ExecutionContext} context The context that caused the creation or modification to happen
+ * @param {import('./types').CreateVersionInfoSetterOptions} options The options passed in to createVersionInfoSetter
  */
 function validateParams(object, context, options) {
     if (!object) {

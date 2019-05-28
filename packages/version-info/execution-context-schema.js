@@ -4,6 +4,7 @@ const commonSchemas = require('../json-schema');
 const generateId = require('../json-schema/common-module-schema-id-generator');
 const identitySchema = require('./identity-schema');
 
+/** @type {import('../entity-metadata/types').JsonSchema} */
 module.exports = {
     $id: generateId('versionInfo/context'),
     name: 'The execution context that will be used to alter the object and stored in versionInfo',
