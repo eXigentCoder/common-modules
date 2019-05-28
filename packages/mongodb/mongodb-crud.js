@@ -14,6 +14,7 @@ const ObjectId = require('mongodb').ObjectId;
  * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
  * @typedef {import('./types').Utilities} Utilities
  * @typedef {import('./types').Crud<Object>} Crud
+ * @typedef {Crud & {utilities:Utilities}} GetCrud
  */
 
 /** @type {import('./types').GetUtils} */
@@ -52,7 +53,7 @@ async function getUtils({
 
 /**
  * @param {CreateUtilityParams} createUtilityParams The input utilities to create the function
- * @returns {Promise<Crud>} A promise which resolves to the CRUD methods
+ * @returns {Promise<GetCrud>} A promise which resolves to the CRUD methods
  */
 async function getCrud({ metadata, inputValidator, outputValidator, db }) {
     const utilities = await getUtils({
@@ -169,7 +170,9 @@ function getReplaceById({
  */
 function getSearch({ collection, mapOutput, paginationDefaults }) {
     return async function search(query) {
+        // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
+        // @ts-ignore
         if (query.filter === null || query.filter === undefined) {
             filter = query;
             skip = undefined;

@@ -41,7 +41,6 @@ export interface Crud<T> {
     deleteById: DeleteById<T>;
     replaceById: ReplaceById<T>;
     search: Search<T>;
-    utilities: Utilities;
 }
 
 export type Create<T> = (entity: T, context: ExecutionContext) => Promise<T>;
