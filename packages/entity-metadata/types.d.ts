@@ -1,26 +1,9 @@
+import { JSONSchema7 } from '@types/json-schema';
 export { Validator } from '../validation/ajv';
-export interface JsonSchema {
-    $id?: string;
-    //todo rk needs to use title instead but requires a rework
+
+export interface JsonSchema extends JSONSchema7 {
+    //todo rk needs to use title instead but requires a rework of code
     name?: string;
-    title?: string;
-    description?: string;
-    default?: any;
-    examples?: any;
-    $comment?: string;
-    type?: string | string[];
-    additionalProperties?: boolean;
-    properties?: { [key: string]: JsonSchema };
-    allOf?: JsonSchema[];
-    anyOf?: JsonSchema[];
-    oneOf?: JsonSchema[];
-    not?: JsonSchema;
-    enum?: Array[any];
-    const?: any;
-    required?: string[];
-    errorMessage?: Object;
-    definitions?: { [key: string]: JsonSchema };
-    $ref?: string;
 }
 
 interface MainSchemas {

@@ -44,10 +44,10 @@ export interface Crud<T> {
 }
 
 export type Create<T> = (entity: T, context: ExecutionContext) => Promise<T>;
-export type GetById<T> = (id: string) => Promise<T>;
+export type GetById<T> = (id: string, context: ExecutionContext) => Promise<T>;
 export type DeleteById<T> = (id: string, context: ExecutionContext) => Promise<void>;
 export type ReplaceById<T> = (entity: T, context: ExecutionContext) => Promise<T>;
-export type Search<T> = (query: Query | Object) => Promise<T[]>;
+export type Search<T> = (query: Query | Object, context: ExecutionContext) => Promise<T[]>;
 
 export interface Auditors<T> {
     writeCreation: WriteCreation<T>;
