@@ -332,7 +332,7 @@
         ],
         "exported": true
     },
-    "exigentcoder.common-modules/version-info@0.14.1": {
+    "exigentcoder.common-modules/version-info@0.14.3": {
         "files": [
             {
                 "relativePath": "packages/version-info/create-version-info-setter.js",
@@ -360,6 +360,11 @@
                 "name": "index.js"
             },
             {
+                "relativePath": "packages/version-info/types.d.ts",
+                "test": false,
+                "name": "types.d.ts"
+            },
+            {
                 "relativePath": "packages/version-info/version-info-schema.js",
                 "test": false,
                 "name": "version-info-schema.js"
@@ -375,75 +380,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.2": {
-        "files": [
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
-                "test": false,
-                "name": "create-test-data.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/drop-existing-data.js",
-                "test": false,
-                "name": "drop-existing-data.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/populate-from-disk.test.js",
-                "test": true,
-                "name": "populate-from-disk.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/async-fn-multiple-item.test-data.js",
-                "test": false,
-                "name": "async-fn-multiple-item.test-data.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/async-fn-single-item.test-data.js",
-                "test": false,
-                "name": "async-fn-single-item.test-data.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/fn-multiple-items.test-data.js",
-                "test": false,
-                "name": "fn-multiple-items.test-data.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/fn-single-item.test-data.js",
-                "test": false,
-                "name": "fn-single-item.test-data.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/multiple-items.json",
-                "test": false,
-                "name": "multiple-items.json"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/multiple-items.test-data.js",
-                "test": false,
-                "name": "multiple-items.test-data.js"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/single-item.json",
-                "test": false,
-                "name": "single-item.json"
-            },
-            {
-                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/single-item.test-data.js",
-                "test": false,
-                "name": "single-item.test-data.js"
-            }
-        ],
-        "mainFile": "packages/mongodb-populate-from-disk/index.js",
-        "trackDir": "packages/mongodb-populate-from-disk",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/entity-metadata@0.14.2": {
+    "exigentcoder.common-modules/entity-metadata@0.14.3": {
         "files": [
             {
                 "name": "ensure-schema-set.js",
@@ -540,7 +477,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.14.2": {
+    "exigentcoder.common-modules/mongodb@0.14.3": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -615,6 +552,74 @@
         ],
         "mainFile": "packages/mongodb/index.js",
         "trackDir": "packages/mongodb",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.3": {
+        "files": [
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
+                "test": false,
+                "name": "create-test-data.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/drop-existing-data.js",
+                "test": false,
+                "name": "drop-existing-data.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/populate-from-disk.test.js",
+                "test": true,
+                "name": "populate-from-disk.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/async-fn-multiple-item.test-data.js",
+                "test": false,
+                "name": "async-fn-multiple-item.test-data.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/async-fn-single-item.test-data.js",
+                "test": false,
+                "name": "async-fn-single-item.test-data.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/fn-multiple-items.test-data.js",
+                "test": false,
+                "name": "fn-multiple-items.test-data.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/fn-single-item.test-data.js",
+                "test": false,
+                "name": "fn-single-item.test-data.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/multiple-items.json",
+                "test": false,
+                "name": "multiple-items.json"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/multiple-items.test-data.js",
+                "test": false,
+                "name": "multiple-items.test-data.js"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/single-item.json",
+                "test": false,
+                "name": "single-item.json"
+            },
+            {
+                "relativePath": "packages/mongodb-populate-from-disk/test-data/users/single-item.test-data.js",
+                "test": false,
+                "name": "single-item.test-data.js"
+            }
+        ],
+        "mainFile": "packages/mongodb-populate-from-disk/index.js",
+        "trackDir": "packages/mongodb-populate-from-disk",
         "origin": "AUTHORED",
         "exported": true
     },
