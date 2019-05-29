@@ -477,7 +477,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.14.4": {
+    "exigentcoder.common-modules/mongodb@0.15.0": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -555,7 +555,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.4": {
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.5": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
@@ -623,7 +623,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "azure-functions": {
+    "exigentcoder.common-modules/azure-functions@0.15.0": {
         "files": [
             {
                 "relativePath": "packages/azure-functions/azure-wrapper.js",
@@ -664,7 +664,7 @@
         "mainFile": "packages/azure-functions/index.js",
         "trackDir": "packages/azure-functions",
         "origin": "AUTHORED",
-        "exported": false
+        "exported": true
     },
     "version": "14.1.1"
 }
