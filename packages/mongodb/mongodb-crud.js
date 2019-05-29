@@ -74,7 +74,7 @@ async function getCrud({ metadata, inputValidator, outputValidator, db }) {
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {import('./types').Create<Object>} A function to create entities
+ * @returns {import("./types").Create<object>} A function to create entities
  */
 function getCreate({
     setVersionInfo,
@@ -100,7 +100,7 @@ function getCreate({
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {import('./types').GetById<Object>} A function to get entities by their identifiers
+ * @returns {import("./types").GetById<object>} A function to get entities by their identifiers
  */
 function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
     return async function getById(id) {
@@ -116,7 +116,7 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {import('./types').DeleteById<Object>} A function to delete entities by their identifier
+ * @returns {import("./types").DeleteById<object>} A function to delete entities by their identifier
  */
 function getDeleteById({ collection, getIdentifierQuery, metadata, auditors }) {
     return async function deleteById(id, context) {
@@ -131,7 +131,7 @@ function getDeleteById({ collection, getIdentifierQuery, metadata, auditors }) {
 }
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {import("./types").ReplaceById<Object>} A function to replace documents based off of their _id
+ * @returns {import("./types").ReplaceById<object>} A function to replace documents based off of their _id
  */
 function getReplaceById({
     setVersionInfo,
@@ -166,7 +166,7 @@ function getReplaceById({
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
- * @returns {import('./types').Search<Object>} A function to search for entities
+ * @returns {import("./types").Search<object>} A function to search for entities
  */
 function getSearch({ collection, mapOutput, paginationDefaults }) {
     return async function search(query) {
