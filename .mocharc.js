@@ -1,5 +1,7 @@
 'use strict';
 
 module.exports = {
+    file: './test-init.js',
     spec: ['./packages/**/*.test.js'],
+    timeout: 2000,
 };

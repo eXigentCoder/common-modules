@@ -10,12 +10,12 @@
     "packages"
   ],
   "scripts": {
-    "coverage": "nyc --require ./test-init.js mocha --exit",
     "codecov": "codecov",
     "lint-ci": "eslint \"packages/**/*.js\"",
     "lint": "npm run lint-ci -- --fix",
-    "test": "mocha --require ./test-init.js",
-    "watch": "npm run test -- --watch",
+    "coverage": "nyc mocha",
+    "test": "mocha --config .mocharc.js",
+    "watch-tests": "npm run test -- --watch",
     "snyk": "snyk test",
     "prettier": "prettier --write \"packages/**/*.js\"",
     "update": "npm-check -Eu",
