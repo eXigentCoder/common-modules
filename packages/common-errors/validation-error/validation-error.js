@@ -7,7 +7,7 @@ module.exports = class ValidationError extends KrimZenNinjaBaseError {
     /**
      * An error used when some input value is not valid
      * @param {string} message The name of the required value
-     * @param {Object} [errors] The error object containing extra information
+     * @param {object} [errors] The error object containing extra information
      * @param {import('../types').ErrorParameters} errorOptions
      */
     constructor(

@@ -8,22 +8,22 @@ const moment = require('moment');
 /**
  * @param {import('../entity-metadata').EntityMetadata} metadata
  * @param {import('mongodb').Db} db
- * @returns {Promise<import('./types').Auditors<Object>>}
+ * @returns {Promise<import("./types").Auditors<object>>}
  */
 module.exports = async function createMongoDbAuditors(metadata, db) {
     const auditCollection = db.collection(metadata.auditCollectionName);
 
-    /** @type {import('./types').WriteCreation<Object>} */
+    /** @type {import("./types").WriteCreation<object>} */
     async function writeCreation(entityAfterCreation, context) {
         await writeAuditEntry(entityAfterCreation, context, 'replace');
     }
 
-    /** @type {import('./types').WriteDeletion<Object>} */
+    /** @type {import("./types").WriteDeletion<object>} */
     async function writeDeletion(deletedObject, context) {
         await writeAuditEntry(deletedObject, context, 'replace');
     }
 
-    /** @type {import('./types').WriteReplacement<Object>} */
+    /** @type {import("./types").WriteReplacement<object>} */
     async function writeReplacement(oldEntity, newEntity, context) {
         await writeAuditEntry(newEntity, context, 'replace');
     }

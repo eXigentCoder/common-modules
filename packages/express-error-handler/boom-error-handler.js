@@ -4,7 +4,7 @@ const util = require('util');
 
 module.exports = function boomErrorHandler(options) {
     // eslint-disable-next-line no-unused-vars
-    return function boomErrorHandler(err, req, res, next) {
+    return function _boomErrorHandler(err, req, res, next) {
         if (!req.log) {
             debug(
                 'req.log was falsy, falling back to console. Make sure you are using express-pino-logger see https://github.com/pinojs/express-pino-logger'
@@ -24,14 +24,12 @@ module.exports = function boomErrorHandler(options) {
             if (err.message !== payload.message) {
                 payload.serverErrorMessage = err.message;
             }
-            res
-                .status(err.output.statusCode)
+            res.status(err.output.statusCode)
                 .set(err.output.headers)
                 .json(payload);
             return;
         }
-        res
-            .status(err.output.statusCode)
+        res.status(err.output.statusCode)
             .set(err.output.headers)
             .json(err.output.payload);
     };

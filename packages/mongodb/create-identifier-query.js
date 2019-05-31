@@ -5,7 +5,7 @@ const util = require('util');
 const { ValidationError } = require('../common-errors');
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
- * @typedef {(identifier: string|Object) => Object} GetIdentifierQuery
+ * @typedef {(identifier: string|object) => object} GetIdentifierQuery
  *
  * @param {EntityMetadata} metadata The entity metadata containing the rules for identifiers
  * @returns {GetIdentifierQuery} The function to set the get the right mongodb query based on the type of supplied identifier

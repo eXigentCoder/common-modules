@@ -39,7 +39,7 @@ module.exports = function createVersionInfoSetter(options) {
 };
 
 /**
- * @param {Object} object The object to add the version info too
+ * @param {object} object The object to add the version info too
  * @param {import('./types').ExecutionContext} context The context that caused the creation or modification to happen
  * @returns {import('./types').VersionedObject} The object with version info added to it
  */
@@ -58,7 +58,7 @@ function addVersionInfoToObject(object, context) {
 }
 
 /**
- * @param {Object} object The object to add the version info too
+ * @param {object} object The object to add the version info too
  * @param {import('./types').ExecutionContext} context The context that caused the creation or modification to happen
  * @returns {import('./types').VersionedObject} The object with version info added to it
  */
@@ -72,7 +72,7 @@ function updateVersionInfoOnObject(object, context) {
 }
 
 /**
- * @param {Object} object The object to add the version info too
+ * @param {object} object The object to add the version info too
  * @param {import('./types').ExecutionContext} context The context that caused the creation or modification to happen
  * @param {import('./types').CreateVersionInfoSetterOptions} options The options passed in to createVersionInfoSetter
  */

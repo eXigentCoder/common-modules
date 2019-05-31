@@ -80,17 +80,17 @@ export interface Index {
 }
 
 export interface Query {
-    filter: Object;
+    filter: any;
     skip?: number;
     limit?: number;
-    sort?: Object;
-    projection?: Object;
+    sort?: { [key: string]: -1 | 1 };
+    projection?: { [key: string]: 0 | 1 };
 }
 
 export interface QueryStringMapperOptions {
     skip?: number;
     limit?: number;
-    sort?: { [key: string]: -1 | 1 } | string;
+    sort?: { [key: string]: -1 | 1 };
     projection?: { [key: string]: 0 | 1 };
     agpOptions?: AgpOptions;
 }

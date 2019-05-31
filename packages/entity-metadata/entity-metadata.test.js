@@ -8,6 +8,7 @@ describe('Entity Metadata', () => {
     describe('Generate Entity Metadata', () => {
         const inputValidator = createInputValidator();
         const outputValidator = createOutputValidator();
+        /** @returns {import('./types').EntityMetadata} */
         function validMetaData() {
             return {
                 schemas: {
@@ -33,6 +34,7 @@ describe('Entity Metadata', () => {
             expect(() => generateEntityMetadata(null, inputValidator, outputValidator)).to.throw();
         });
         it('should throw an error if metadata is an empty object', () => {
+            // @ts-ignore
             expect(() => generateEntityMetadata({}, inputValidator, outputValidator)).to.throw();
         });
         it('should throw an error if metadata is missing the identifier property', () => {
@@ -99,8 +101,6 @@ describe('Entity Metadata', () => {
                     },
                 },
             };
-            const inputValidator = createInputValidator();
-            const outputValidator = createOutputValidator();
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             expect(metadata).to.be.ok;
             expect(metadata.schemas.create.$id).to.be.ok;
@@ -115,8 +115,6 @@ describe('Entity Metadata', () => {
                     },
                 },
             };
-            const inputValidator = createInputValidator();
-            const outputValidator = createOutputValidator();
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             expect(metadata).to.be.ok;
             expect(metadata.schemas.create.properties[inputMetadata.identifier.name]).to.not.be.ok;

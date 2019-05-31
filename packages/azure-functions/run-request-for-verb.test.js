@@ -54,7 +54,7 @@ describe('Azure-Functions', () => {
         });
         it('Should pass in the correct parameters', done => {
             /**@type {import('azure-functions-ts-essentials').HttpRequest} */
-            const req = {
+            const fakReq = {
                 // @ts-ignore
                 method: 'GET',
             };
@@ -65,7 +65,7 @@ describe('Azure-Functions', () => {
                     done();
                 },
             };
-            runRequestForVerb(testContext(), req, verbReqMap);
+            runRequestForVerb(testContext(), fakReq, verbReqMap);
         });
     });
 });

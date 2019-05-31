@@ -24,6 +24,7 @@
         "no-console": ["off"],
         "node/exports-style": ["error", "module.exports"],
         "strict": ["error", "global"],
+        "no-shadow": ["error"],
         "jsdoc/check-param-names": 1,
         "jsdoc/check-syntax": 1,
         "jsdoc/check-tag-names": 1,

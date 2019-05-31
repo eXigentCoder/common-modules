@@ -111,6 +111,7 @@ describe('MongoDB', () => {
         });
 
         it('Should allow you to set the default options', () => {
+            /**@type {import('./types').QueryStringMapperOptions} */
             const options = {
                 skip: 3,
                 limit: 0,
@@ -275,8 +276,8 @@ describe('MongoDB', () => {
                 },
             };
             const mapper = createQueryStringMapper(multiType);
-            const qs = 'value1=1&value2=2';
-            const result = mapper(qs);
+            const queryString = 'value1=1&value2=2';
+            const result = mapper(queryString);
             expect(result).to.be.ok;
             expect(result.filter.value1).to.eql(1);
             expect(result.filter.value2).to.eql('2');
@@ -302,8 +303,8 @@ describe('MongoDB', () => {
                 },
             };
             const mapper = createQueryStringMapper(multiType);
-            const qs = 'sub.sub.value=1';
-            const result = mapper(qs);
+            const queryString = 'sub.sub.value=1';
+            const result = mapper(queryString);
             expect(result).to.be.ok;
             expect(result.filter['sub.sub.value']).to.eql('1');
         });
@@ -318,13 +319,12 @@ describe('MongoDB', () => {
                 },
             };
             const mapper = createQueryStringMapper(castTypeSchema);
-            //const qs = 'value1=true';
-            const qs = {
+            const queryString = {
                 filter: {
                     value: true,
                 },
             };
-            const result = mapper(qs);
+            const result = mapper(queryString);
             expect(result).to.be.ok;
             expect(result.filter.value).to.eql(true);
         });

@@ -14,9 +14,9 @@ const defaultOptions = {
     sort: {},
 };
 /**
- * @param {Object} schema The schema representing the object in the db
+ * @param {object} schema The schema representing the object in the db
  * @param {import('./types').QueryStringMapperOptions} options The options to use when creating the query string mapper
- * @returns {(queryString: string|Object) => Query} The resultant query to run against MongoDB
+ * @returns {(queryString: string|object) => Query} The resultant query to run against MongoDB
  */
 module.exports = function createQueryStringMapper(schema, options = defaultOptions) {
     return function(queryString) {
@@ -111,24 +111,24 @@ function setCastParamsFromSchema(agpOptions, properties, prefix = '') {
 function flatten(obj, opt_out, opt_paths) {
     var out = opt_out || {};
     var paths = opt_paths || [];
-    return Object.getOwnPropertyNames(obj).reduce(function(out, key) {
+    return Object.getOwnPropertyNames(obj).reduce(function(_out, key) {
         paths.push(key);
         const value = obj[key];
         if (typeof value === 'object' && !(value instanceof RegExp)) {
             if (key[0] === '$') {
-                set(out, paths.join('.'), value);
+                set(_out, paths.join('.'), value);
             } else if (
                 typeof value === 'object' &&
                 Object.getOwnPropertyNames(value)[0][0] === '$'
             ) {
-                out[paths.join('.')] = value;
+                _out[paths.join('.')] = value;
             } else {
-                flatten(value, out, paths);
+                flatten(value, _out, paths);
             }
         } else {
-            out[paths.join('.')] = value;
+            _out[paths.join('.')] = value;
         }
         paths.pop();
-        return out;
+        return _out;
     }, out);
 }

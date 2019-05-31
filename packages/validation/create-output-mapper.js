@@ -2,7 +2,7 @@
 
 /**
  * Returns a function you can use to map an item or array of items
- * @typedef {(itemOrItems: Object|Array<Object>) => void} MapOutput
+ * @typedef {(itemOrItems: object|Array<object>) => void} MapOutput
  *
  * @param {string} schemaId The key used to refer to the schema in the outputValidator to use for the mapping
  * @param {import('./ajv').Validator} outputValidator the outputValidator instance
