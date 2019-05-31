@@ -477,7 +477,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb@0.15.0": {
+    "exigentcoder.common-modules/mongodb@0.15.1": {
         "files": [
             {
                 "relativePath": "packages/mongodb/connection.js",
@@ -555,7 +555,50 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.5": {
+    "exigentcoder.common-modules/azure-functions@0.15.1": {
+        "files": [
+            {
+                "relativePath": "packages/azure-functions/azure-wrapper.js",
+                "test": false,
+                "name": "azure-wrapper.js"
+            },
+            {
+                "relativePath": "packages/azure-functions/create-crud-verb-request-map.js",
+                "test": false,
+                "name": "create-crud-verb-request-map.js"
+            },
+            {
+                "relativePath": "packages/azure-functions/create-crud-verb-request-map.test.js",
+                "test": true,
+                "name": "create-crud-verb-request-map.test.js"
+            },
+            {
+                "relativePath": "packages/azure-functions/index.js",
+                "test": false,
+                "name": "index.js"
+            },
+            {
+                "relativePath": "packages/azure-functions/run-request-for-verb.js",
+                "test": false,
+                "name": "run-request-for-verb.js"
+            },
+            {
+                "relativePath": "packages/azure-functions/run-request-for-verb.test.js",
+                "test": true,
+                "name": "run-request-for-verb.test.js"
+            },
+            {
+                "relativePath": "packages/azure-functions/types.d.ts",
+                "test": false,
+                "name": "types.d.ts"
+            }
+        ],
+        "mainFile": "packages/azure-functions/index.js",
+        "trackDir": "packages/azure-functions",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "exigentcoder.common-modules/mongodb-populate-from-disk@0.14.6": {
         "files": [
             {
                 "relativePath": "packages/mongodb-populate-from-disk/create-test-data.js",
@@ -620,49 +663,6 @@
         ],
         "mainFile": "packages/mongodb-populate-from-disk/index.js",
         "trackDir": "packages/mongodb-populate-from-disk",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "exigentcoder.common-modules/azure-functions@0.15.0": {
-        "files": [
-            {
-                "relativePath": "packages/azure-functions/azure-wrapper.js",
-                "test": false,
-                "name": "azure-wrapper.js"
-            },
-            {
-                "relativePath": "packages/azure-functions/create-crud-verb-request-map.js",
-                "test": false,
-                "name": "create-crud-verb-request-map.js"
-            },
-            {
-                "relativePath": "packages/azure-functions/create-crud-verb-request-map.test.js",
-                "test": true,
-                "name": "create-crud-verb-request-map.test.js"
-            },
-            {
-                "relativePath": "packages/azure-functions/index.js",
-                "test": false,
-                "name": "index.js"
-            },
-            {
-                "relativePath": "packages/azure-functions/run-request-for-verb.js",
-                "test": false,
-                "name": "run-request-for-verb.js"
-            },
-            {
-                "relativePath": "packages/azure-functions/run-request-for-verb.test.js",
-                "test": true,
-                "name": "run-request-for-verb.test.js"
-            },
-            {
-                "relativePath": "packages/azure-functions/types.d.ts",
-                "test": false,
-                "name": "types.d.ts"
-            }
-        ],
-        "mainFile": "packages/azure-functions/index.js",
-        "trackDir": "packages/azure-functions",
         "origin": "AUTHORED",
         "exported": true
     },
