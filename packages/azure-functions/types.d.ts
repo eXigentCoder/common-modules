@@ -1,5 +1,6 @@
 import { Context, HttpRequest, HttpResponse } from 'azure-functions-ts-essentials';
 import { Crud, Query } from '../mongodb/types';
+import { ExecutionContext } from '../version-info/types';
 
 export type AzureWebRequest = (context: Context, req: HttpRequest) => Promise<HttpResponse>;
 export type RequestHandler = (params: RequestParams) => Promise<any>;
@@ -36,4 +37,4 @@ export interface VerbReqMap {
     OPTIONS?: RequestHandler;
 }
 
-export { HttpRequest, CrudService };
+export { HttpRequest, CrudService, AzureContext };

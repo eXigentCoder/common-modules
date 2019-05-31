@@ -8,6 +8,8 @@ const { jsonSchemas, addMongoId } = require('../validation-mongodb');
 const crypto = require('crypto');
 const ObjectId = require('mongodb').ObjectId;
 
+//todo rk needs to be more extensive. string identifier and normal identifier.
+
 describe('MongoDB', () => {
     describe('CRUD', () => {
         describe('Create', () => {
@@ -57,7 +59,7 @@ describe('MongoDB', () => {
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 await deleteById(created._id, createContext());
-                await expect(getById(created._id)).to.be.rejected;
+                await expect(getById(created._id, createContext())).to.be.rejected;
             });
             it("Should throw an error if the entity to delete doesn't exist", async () => {
                 const { deleteById } = await getPopulatedCrud();
@@ -69,18 +71,18 @@ describe('MongoDB', () => {
                 const { create, getById } = await getPopulatedCrud();
                 const entity = validEntity();
                 const created = await create(entity, createContext());
-                const retrieved = await getById(created._id);
+                const retrieved = await getById(created._id, createContext());
                 expect(created).to.eql(retrieved);
             });
         });
         describe('Replace By Id', () => {
-            it('Should allow you to replace an existing entity with a valid entity', async () => {
+            it('Should allow you to replace an existing entity with a valid entity when using the main identifier', async () => {
                 const { replaceById, create } = await getPopulatedCrud();
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const toUpdate = JSON.parse(JSON.stringify(created));
                 toUpdate.username += '-updated';
-                const replaced = await replaceById(toUpdate, createContext());
+                const replaced = await replaceById(toUpdate._id, toUpdate, createContext());
                 expect(replaced.username).to.eql(toUpdate.username);
                 expect(replaced._id).to.eql(toUpdate._id);
                 expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
@@ -92,7 +94,7 @@ describe('MongoDB', () => {
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = queryMapper({ filter: { username: entity.username } });
-                const results = await search(query);
+                const results = await search(query, createContext());
                 expect(results).to.be.an('array');
                 expect(results).to.have.length(1);
                 expect(results[0]).to.eql(created);
@@ -102,7 +104,7 @@ describe('MongoDB', () => {
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = { filter: { username: entity.username } };
-                const results = await search(query);
+                const results = await search(query, createContext());
                 expect(results).to.be.an('array');
                 expect(results).to.have.length(1);
                 expect(results[0]).to.eql(created);
@@ -112,7 +114,7 @@ describe('MongoDB', () => {
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = { username: entity.username };
-                const results = await search(query);
+                const results = await search(query, createContext());
                 expect(results).to.be.an('array');
                 expect(results).to.have.length(1);
                 expect(results[0]).to.eql(created);

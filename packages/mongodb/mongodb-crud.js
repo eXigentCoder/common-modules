@@ -140,24 +140,24 @@ function getReplaceById({
     metadata,
     inputValidator,
     auditors,
+    getIdentifierQuery,
 }) {
-    return async function replaceById(_entity, context) {
+    return async function replaceById(id, _entity, context) {
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         // comes from outside, can't be trusted
         delete entity.versionInfo;
-        const _id = entity._id;
         delete entity._id;
+        const query = getIdentifierQuery(id);
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
-        const query = { _id: new ObjectId(_id) };
         const existing = await collection.findOne(query);
         if (!existing) {
-            throw new EntityNotFoundError(metadata.title, _id);
+            throw new EntityNotFoundError(metadata.title, JSON.stringify(query));
         }
         entity.versionInfo = existing.versionInfo;
         setVersionInfo(entity, context);
         const replaceResult = await collection.findOneAndReplace(query, entity);
-        entity._id = _id;
+        entity._id = replaceResult.value._id;
         auditors.writeReplacement(replaceResult.value, entity, context);
         mapOutput(entity);
         return entity;

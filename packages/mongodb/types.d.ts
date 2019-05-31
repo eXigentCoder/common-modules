@@ -1,6 +1,6 @@
 import { Db, IndexOptions } from 'mongodb';
 import { Validator } from '../validation/ajv';
-import { ExecutionContext } from '../version-info/create-version-info-setter';
+import { ExecutionContext } from '../version-info/types';
 
 /** Default options used to paginate search queries */
 export interface PaginationDefaults {
@@ -46,7 +46,7 @@ export interface Crud<T> {
 export type Create<T> = (entity: T, context: ExecutionContext) => Promise<T>;
 export type GetById<T> = (id: string, context: ExecutionContext) => Promise<T>;
 export type DeleteById<T> = (id: string, context: ExecutionContext) => Promise<void>;
-export type ReplaceById<T> = (entity: T, context: ExecutionContext) => Promise<T>;
+export type ReplaceById<T> = (id: string, entity: T, context: ExecutionContext) => Promise<T>;
 export type Search<T> = (query: Query | Object, context: ExecutionContext) => Promise<T[]>;
 
 export interface Auditors<T> {
