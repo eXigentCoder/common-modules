@@ -17,7 +17,7 @@ module.exports = function createCrudVerbReqMap(crudServices) {
             return await crudServices.create(req.body, context);
         },
         PUT: async ({ req, context }) => {
-            return await crudServices.replaceById(req.body, context);
+            return await crudServices.replaceById(req.params.id, req.body, context);
         },
         DELETE: async ({ req, context }) => {
             return await crudServices.deleteById(req.params.id, context);

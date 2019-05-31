@@ -23,7 +23,7 @@ export interface RequestParams {
     rawContext: Context;
 }
 
-export interface CrudService extends Crud {
+export interface CrudService<T> extends Crud<T> {
     mapQueryString: (any) => Query;
     [key: string]: any;
 }
