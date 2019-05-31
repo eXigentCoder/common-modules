@@ -5,6 +5,7 @@ const { getClient, getDb, getCrud, createQueryStringMapper } = require('.');
 const generateEntityMetadata = require('../entity-metadata');
 const { createInputValidator, createOutputValidator } = require('../validation');
 const { jsonSchemas, addMongoId } = require('../validation-mongodb');
+const schemas = require('../json-schema');
 const crypto = require('crypto');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -120,6 +121,29 @@ describe('MongoDB', () => {
                 expect(results[0]).to.eql(created);
             });
         });
+
+        describe('Utilities', () => {
+            describe('setStringIdentifier', () => {
+                it('Should set the identifier from the source', async () => {
+                    const { utilities } = await getPopulatedCrud();
+                    const { setStringIdentifier } = utilities;
+                    const entity = validEntity();
+                    expect(entity.name).to.not.be.ok;
+                    setStringIdentifier(entity);
+                    expect(entity.name).to.be.ok;
+                });
+                it('Should not replace one if it already exists', async () => {
+                    const { utilities } = await getPopulatedCrud();
+                    const { setStringIdentifier } = utilities;
+                    const setName = 'bob';
+                    const entity = validEntity();
+                    expect(entity.name).to.not.be.ok;
+                    entity.name = setName;
+                    setStringIdentifier(entity);
+                    expect(entity.name).to.equal(setName);
+                });
+            });
+        });
     });
 });
 after(async () => {
@@ -163,6 +187,7 @@ function validMetaData() {
             },
         },
         identifier: { name: '_id', schema: jsonSchemas.objectId },
+        stringIdentifier: { name: 'name', schema: schemas.identifier, source: 'username' },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
     };

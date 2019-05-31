@@ -203,6 +203,9 @@ function createStringIdentifierSetter(metadata) {
             return;
         }
         if (metadata.stringIdentifier.source) {
+            if (item[metadata.stringIdentifier.name]) {
+                return;
+            }
             item[metadata.stringIdentifier.name] = metadata.titleToStringIdentifier(
                 get(item, metadata.stringIdentifier.source)
             );
