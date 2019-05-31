@@ -7,7 +7,6 @@ const get = require('lodash/get');
 const { EntityNotFoundError } = require('../common-errors');
 const createGetIdentifierQuery = require('./create-identifier-query');
 const createMongoDbAuditors = require('./create-mongodb-auditors');
-const ObjectId = require('mongodb').ObjectId;
 
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
