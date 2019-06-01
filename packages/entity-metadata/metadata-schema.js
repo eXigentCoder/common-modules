@@ -45,15 +45,30 @@ module.exports = function() {
                 type: 'object',
                 additionalProperties: false,
                 properties: {
-                    name: commonSchemas.identifier,
+                    name: {
+                        type: 'string',
+                    },
                     schema: {
                         type: 'object',
                     },
-                    source: {
+                    entitySourceLocation: {
                         type: 'string',
                     },
                 },
                 required: ['name', 'schema'],
+            },
+            tenantInfo: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                    entityDestinationLocation: {
+                        type: 'string',
+                    },
+                    executionContextSource: {
+                        type: 'string',
+                    },
+                },
+                required: ['entityDestinationLocation', 'executionContextSource'],
             },
             collectionName: commonSchemas.identifier,
             auditCollectionName: commonSchemas.identifier,

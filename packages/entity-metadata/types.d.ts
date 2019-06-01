@@ -4,6 +4,10 @@ export { Validator } from '../validation/ajv';
 export interface JsonSchema extends JSONSchema7 {
     //todo rk needs to use title instead but requires a rework of code
     name?: string;
+    mongoId?: boolean;
+    faker?: any;
+    chance?: any;
+    firebaseTimestamp?: boolean;
 }
 
 interface MainSchemas {
@@ -21,7 +25,12 @@ export interface Identifier {
 export interface StringIdentifier {
     name: string;
     schema: JsonSchema;
-    source?: string;
+    entitySourceLocation?: string;
+}
+
+export interface TenantInfo {
+    entityDestinationLocation: string;
+    executionContextSource: string;
 }
 
 export interface EntityMetadata {
@@ -38,4 +47,5 @@ export interface EntityMetadata {
     auditChanges?: boolean;
     baseUrl: string;
     titleToStringIdentifier?: (title: string) => string;
+    tenantInfo?: TenantInfo;
 }

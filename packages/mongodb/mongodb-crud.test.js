@@ -15,35 +15,35 @@ describe('MongoDB', () => {
     describe('CRUD', () => {
         describe('Create', () => {
             it('Should throw a validation error if the item is null', async () => {
-                const { create } = await getPopulatedCrud();
+                const { create } = await getPopulatedCrud(noStringIdNoTenant);
                 await expect(create(null, createContext())).to.be.rejectedWith(ValidationError);
             });
             it('Should throw a validation error if the item is undefined', async () => {
-                const { create } = await getPopulatedCrud();
+                const { create } = await getPopulatedCrud(noStringIdNoTenant);
                 await expect(create(undefined, createContext())).to.be.rejectedWith(
                     ValidationError
                 );
             });
             it('Should throw a validation error if the item is a number', async () => {
-                const { create } = await getPopulatedCrud();
+                const { create } = await getPopulatedCrud(noStringIdNoTenant);
                 await expect(create(1, createContext())).to.be.rejectedWith(ValidationError);
             });
             it('Should throw a validation error if the item is a string', async () => {
-                const { create } = await getPopulatedCrud();
+                const { create } = await getPopulatedCrud(noStringIdNoTenant);
                 await expect(create('1', createContext())).to.be.rejectedWith(ValidationError);
             });
             it('Should throw a validation error if the item is a boolean', async () => {
-                const { create } = await getPopulatedCrud();
+                const { create } = await getPopulatedCrud(noStringIdNoTenant);
                 await expect(create(true, createContext())).to.be.rejectedWith(ValidationError);
             });
             it('Should throw a validation error if the item is a symbol', async () => {
-                const { create } = await getPopulatedCrud();
+                const { create } = await getPopulatedCrud(noStringIdNoTenant);
                 await expect(create(Symbol('wrong'), createContext())).to.be.rejectedWith(
                     ValidationError
                 );
             });
-            it('Should allow you to create a valid entity', async () => {
-                const { create } = await getPopulatedCrud();
+            it('Should allow you to create a valid entity - no stringId or tenant', async () => {
+                const { create } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 expect(entity.username).to.equal(created.username);
@@ -53,32 +53,116 @@ describe('MongoDB', () => {
                 expect(created._id).to.be.ok;
                 expect(created.versionInfo).to.be.ok;
             });
+            it('Should allow you to create a valid entity - stringId no tenant', async () => {
+                const { create } = await getPopulatedCrud(stringIdNoTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                expect(entity.username).to.equal(created.username);
+                expect(entity._id).to.not.be.ok;
+                expect(entity.versionInfo).to.not.be.ok;
+                expect(created).to.be.ok;
+                expect(created._id).to.be.ok;
+                expect(created.versionInfo).to.be.ok;
+                expect(created.name).to.be.ok;
+            });
+            it('Should allow you to create a valid entity - stringId and tenant', async () => {
+                const { create } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                expect(entity.username).to.equal(created.username);
+                expect(entity._id).to.not.be.ok;
+                expect(entity.versionInfo).to.not.be.ok;
+                expect(created).to.be.ok;
+                expect(created._id).to.be.ok;
+                expect(created.versionInfo).to.be.ok;
+                expect(created.name).to.be.ok;
+                expect(created.tenantId).to.be.ok;
+            });
+            it('Should throw an error if the tenant id in the execution context was falsy', async () => {
+                const { create } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const context = createContext();
+                context.identity.tenant.id = '';
+                await expect(create(entity, context)).to.be.rejected;
+            });
         });
         describe('Delete By Id', () => {
-            it('Should allow you to delete an existing entity', async () => {
-                const { deleteById, create, getById } = await getPopulatedCrud();
+            it("Should throw an error if the entity to delete doesn't exist", async () => {
+                const { deleteById } = await getPopulatedCrud(noStringIdNoTenant);
+                await expect(deleteById(new ObjectId().toString(), createContext())).to.be.rejected;
+            });
+            it('Should allow you to delete an existing entity - no stringId or tenant', async () => {
+                const { deleteById, create, getById } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 await deleteById(created._id, createContext());
                 await expect(getById(created._id, createContext())).to.be.rejected;
             });
-            it("Should throw an error if the entity to delete doesn't exist", async () => {
-                const { deleteById } = await getPopulatedCrud();
-                await expect(deleteById(new ObjectId().toString(), createContext())).to.be.rejected;
+            it('Should allow you to delete an existing entity - stringId no tenant', async () => {
+                const { deleteById, create, getById } = await getPopulatedCrud(stringIdNoTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                await deleteById(created._id, createContext());
+                await expect(getById(created._id, createContext())).to.be.rejected;
+            });
+            it('Should allow you to delete an existing entity - stringId and tenant', async () => {
+                const { deleteById, create, getById } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                await deleteById(created._id, context);
+                await expect(getById(created._id, createContext())).to.be.rejected;
+            });
+
+            it('Should not allow you to delete an existing entity by id from another tenant', async () => {
+                const { create, deleteById } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                await expect(deleteById(created._id, createContext())).to.be.rejected;
+            });
+
+            it('Should not delete if the tenant id in the execution context was falsy', async () => {
+                const { create, deleteById } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                context.identity.tenant.id = '';
+                await expect(deleteById(created._id, context)).to.be.rejected;
             });
         });
         describe('Get By Id', () => {
-            it('Should allow you to get an existing entity by id', async () => {
-                const { create, getById } = await getPopulatedCrud();
+            it('Should allow you to get an existing entity by id - no stringId or tenant', async () => {
+                const { create, getById } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const retrieved = await getById(created._id, createContext());
                 expect(created).to.eql(retrieved);
             });
+            it('Should allow you to get an existing entity by id - stringId no tenant', async () => {
+                const { create, getById } = await getPopulatedCrud(stringIdNoTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                const retrieved = await getById(created._id, createContext());
+                expect(created).to.eql(retrieved);
+            });
+            it('Should allow you to get an existing entity by id - stringId and tenant', async () => {
+                const { create, getById } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                const retrieved = await getById(created._id, context);
+                expect(created).to.eql(retrieved);
+            });
+            it('Should not allow you to get an existing entity by id from another tenant', async () => {
+                const { create, getById } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                await expect(getById(created._id, createContext())).to.be.rejected;
+            });
         });
         describe('Replace By Id', () => {
-            it('Should allow you to replace an existing entity with a valid entity when using the main identifier', async () => {
-                const { replaceById, create } = await getPopulatedCrud();
+            it('Should allow you to replace an existing entity with a valid entity when using the main identifier - no stringId or tenant', async () => {
+                const { replaceById, create } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const toUpdate = JSON.parse(JSON.stringify(created));
@@ -88,20 +172,41 @@ describe('MongoDB', () => {
                 expect(replaced._id).to.eql(toUpdate._id);
                 expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
-        });
-        describe('Search', () => {
-            it('Should allow you to search', async () => {
-                const { search, create, queryMapper } = await getPopulatedCrud();
+            it('Should allow you to replace an existing entity with a valid entity when using the main identifier - stringId no tenant', async () => {
+                const { replaceById, create } = await getPopulatedCrud(stringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
-                const query = queryMapper({ filter: { username: entity.username } });
-                const results = await search(query, createContext());
-                expect(results).to.be.an('array');
-                expect(results).to.have.length(1);
-                expect(results[0]).to.eql(created);
+                const toUpdate = JSON.parse(JSON.stringify(created));
+                toUpdate.username += '-updated';
+                const replaced = await replaceById(toUpdate._id, toUpdate, createContext());
+                expect(replaced.username).to.eql(toUpdate.username);
+                expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
+            it('Should allow you to replace an existing entity with a valid entity when using the main identifier - stringId and tenant', async () => {
+                const { replaceById, create } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                const toUpdate = JSON.parse(JSON.stringify(created));
+                toUpdate.username += '-updated';
+                const replaced = await replaceById(toUpdate._id, toUpdate, context);
+                expect(replaced.username).to.eql(toUpdate.username);
+                expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
+            });
+            it('Should not allow you to replace an existing entity if from a different tenant', async () => {
+                const { replaceById, create } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                const toUpdate = JSON.parse(JSON.stringify(created));
+                toUpdate.username += '-updated';
+                await expect(replaceById(toUpdate._id, toUpdate, createContext())).to.be.rejected;
+            });
+        });
+        describe('Search', () => {
             it('Should allow you to search with just a filter', async () => {
-                const { search, create } = await getPopulatedCrud();
+                const { search, create } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = { filter: { username: entity.username } };
@@ -111,7 +216,7 @@ describe('MongoDB', () => {
                 expect(results[0]).to.eql(created);
             });
             it('Should allow you to search if filter is passed through without the filter keyword', async () => {
-                const { search, create } = await getPopulatedCrud();
+                const { search, create } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = { username: entity.username };
@@ -120,12 +225,52 @@ describe('MongoDB', () => {
                 expect(results).to.have.length(1);
                 expect(results[0]).to.eql(created);
             });
+            it('Should allow you to search - no stringId or tenant', async () => {
+                const { search, create, queryMapper } = await getPopulatedCrud(noStringIdNoTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                const query = queryMapper({ filter: { username: entity.username } });
+                const results = await search(query, createContext());
+                expect(results).to.be.an('array');
+                expect(results).to.have.length(1);
+                expect(results[0]).to.eql(created);
+            });
+            it('Should allow you to search - stringId no tenant', async () => {
+                const { search, create, queryMapper } = await getPopulatedCrud(stringIdNoTenant);
+                const entity = validEntity();
+                const created = await create(entity, createContext());
+                const query = queryMapper({ filter: { username: entity.username } });
+                const results = await search(query, createContext());
+                expect(results).to.be.an('array');
+                expect(results).to.have.length(1);
+                expect(results[0]).to.eql(created);
+            });
+            it('Should allow you to search - stringId and tenant', async () => {
+                const { search, create, queryMapper } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                const query = queryMapper({ filter: { username: entity.username } });
+                const results = await search(query, context);
+                expect(results).to.be.an('array');
+                expect(results).to.have.length(1);
+                expect(results[0]).to.eql(created);
+            });
+            it('Should not return results from other tenants', async () => {
+                const { search, create, queryMapper } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                await create(entity, createContext());
+                const query = queryMapper({ filter: { username: entity.username } });
+                const results = await search(query, createContext());
+                expect(results).to.be.an('array');
+                expect(results).to.have.length(0);
+            });
         });
 
         describe('Utilities', () => {
             describe('setStringIdentifier', () => {
                 it('Should set the identifier from the source', async () => {
-                    const { utilities } = await getPopulatedCrud();
+                    const { utilities } = await getPopulatedCrud(stringIdNoTenant);
                     const { setStringIdentifier } = utilities;
                     const entity = validEntity();
                     expect(entity.name).to.not.be.ok;
@@ -133,7 +278,7 @@ describe('MongoDB', () => {
                     expect(entity.name).to.be.ok;
                 });
                 it('Should not replace one if it already exists', async () => {
-                    const { utilities } = await getPopulatedCrud();
+                    const { utilities } = await getPopulatedCrud(stringIdNoTenant);
                     const { setStringIdentifier } = utilities;
                     const setName = 'bob';
                     const entity = validEntity();
@@ -153,7 +298,11 @@ after(async () => {
     }
 });
 
-async function getPopulatedCrud() {
+/**
+ * @param {()=>import('../entity-metadata/types').EntityMetadata} getMetadata a function to get the metadata
+ * @returns {Promise<import('./mongodb-crud').GetCrud &{queryMapper:(queryString: string|object) => import('./types').Query}>}
+ */
+async function getPopulatedCrud(getMetadata) {
     const urlConfig = {
         server: 'localhost',
         dbName: 'test-common',
@@ -161,8 +310,7 @@ async function getPopulatedCrud() {
     const db = await getDb(urlConfig);
     const inputValidator = createInputValidator(addMongoId);
     const outputValidator = createOutputValidator(addMongoId);
-    const inputMetadata = validMetaData();
-    const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
+    const metadata = generateEntityMetadata(getMetadata(), inputValidator, outputValidator);
     const queryMapper = createQueryStringMapper(metadata.schemas.core);
     const crud = await getCrud({
         db,
@@ -170,11 +318,11 @@ async function getPopulatedCrud() {
         metadata,
         outputValidator,
     });
-    crud.queryMapper = queryMapper;
-    return crud;
+    return Object.assign(crud, { queryMapper });
 }
 
-function validMetaData() {
+/** @returns {import('../entity-metadata/types').EntityMetadata} */
+function noStringIdNoTenant() {
     return {
         schemas: {
             core: {
@@ -187,7 +335,58 @@ function validMetaData() {
             },
         },
         identifier: { name: '_id', schema: jsonSchemas.objectId },
-        stringIdentifier: { name: 'name', schema: schemas.identifier, source: 'username' },
+        collectionName: 'crud-users',
+        baseUrl: 'https://ryankotzen.com',
+    };
+}
+
+/** @returns {import('../entity-metadata/types').EntityMetadata} */
+function stringIdNoTenant() {
+    return {
+        schemas: {
+            core: {
+                name: 'user',
+                properties: {
+                    username: {
+                        type: 'string',
+                    },
+                },
+            },
+        },
+        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        stringIdentifier: {
+            name: 'name',
+            schema: schemas.identifier,
+            entitySourceLocation: 'username',
+        },
+        collectionName: 'crud-users',
+        baseUrl: 'https://ryankotzen.com',
+    };
+}
+
+/** @returns {import('../entity-metadata/types').EntityMetadata} */
+function stringIdTenant() {
+    return {
+        schemas: {
+            core: {
+                name: 'user',
+                properties: {
+                    username: {
+                        type: 'string',
+                    },
+                },
+            },
+        },
+        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        stringIdentifier: {
+            name: 'name',
+            schema: schemas.identifier,
+            entitySourceLocation: 'username',
+        },
+        tenantInfo: {
+            entityDestinationLocation: 'tenantId',
+            executionContextSource: 'identity.tenant.id',
+        },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
     };
@@ -199,11 +398,15 @@ function validEntity() {
     };
 }
 
+/** @returns {import('../version-info/types').ExecutionContext} */
 function createContext() {
     return {
         requestId: randomString(),
         identity: {
             id: randomString(),
+            tenant: {
+                id: randomString(),
+            },
         },
         codeVersion: '0.0.1',
         sourceIp: '127.0.0.1',

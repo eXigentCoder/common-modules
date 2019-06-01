@@ -56,6 +56,7 @@ after(async () => {
     }
 });
 
+/**@returns {Promise<import('./types').Auditors<object> & {setVersionInfo:import('../version-info/types').SetVersionInfo}>} */
 async function getAuditors() {
     const urlConfig = {
         server: 'localhost',
@@ -68,8 +69,7 @@ async function getAuditors() {
     const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
     const setVersionInfo = createVersionInfoSetter({ metadata, validator: inputValidator });
     const auditors = await createAuditors(metadata, db);
-    auditors.setVersionInfo = setVersionInfo;
-    return auditors;
+    return Object.assign(auditors, { setVersionInfo });
 }
 
 /** @returns {import('../entity-metadata').EntityMetadata} */

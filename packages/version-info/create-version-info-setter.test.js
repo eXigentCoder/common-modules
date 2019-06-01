@@ -22,7 +22,7 @@ const metadata = {
 const setVersionInfo = createVersionInfoSetter({ metadata });
 describe('Version Info', () => {
     describe('setVersionInfo', () => {
-        /**@type {import('./create-version-info-setter').ExecutionContext} */
+        /**@type {import('./types').ExecutionContext} */
         const validContext = {
             requestId: '1',
             identity: {

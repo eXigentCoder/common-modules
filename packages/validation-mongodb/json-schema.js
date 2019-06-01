@@ -1,6 +1,7 @@
 'use strict';
 
-// a mongodb object id
+/** a mongodb object id
+ * @type {import("../entity-metadata/types").JsonSchema}*/
 const objectId = {
     type: ['string', 'object'],
     format: 'mongoId',

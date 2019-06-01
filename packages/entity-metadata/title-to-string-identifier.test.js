@@ -8,7 +8,7 @@ describe('Entity Metadata', () => {
             expect(() => titleToStringIdentifier(null)).to.throw();
         });
         it('should throw an error for undefined', () => {
-            expect(() => titleToStringIdentifier(unescape)).to.throw();
+            expect(() => titleToStringIdentifier(undefined)).to.throw();
         });
         it('should throw an error for blank', () => {
             expect(() => titleToStringIdentifier('')).to.throw();
@@ -17,9 +17,11 @@ describe('Entity Metadata', () => {
             expect(() => titleToStringIdentifier(' \t\r\n')).to.throw();
         });
         it('should throw an error for numbers', () => {
+            // @ts-ignore
             expect(() => titleToStringIdentifier(1)).to.throw();
         });
         it('should throw an error for objects', () => {
+            // @ts-ignore
             expect(() => titleToStringIdentifier({})).to.throw();
         });
         it('should kebab case a string', () => {

@@ -1,7 +1,7 @@
 import { Db, IndexOptions } from 'mongodb';
 import { Validator } from '../validation/ajv';
 import { ExecutionContext } from '../version-info/types';
-
+import { EntityMetadata } from '../entity-metadata/types';
 /** Default options used to paginate search queries */
 export interface PaginationDefaults {
     /** The number of items to include in a page when no overriding value is provided */
@@ -33,6 +33,8 @@ export interface Utilities {
     outputValidator: Validator;
     auditors: Auditors;
     paginationDefaults: PaginationDefaults;
+    setTenant: SetTenant;
+    addTenantToFilter: AddTenantToFilter;
 }
 
 export interface Crud<T> {
@@ -64,7 +66,10 @@ export type WriteReplacement<T> = (
 ) => Promise<void>;
 
 export type SetStringIdentifier = (item: Object) => void;
-
+export type CreateSetTenant = (metatada: EntityMetadata) => SetTenant;
+export type SetTenant = (entity: any, context: ExecutionContext) => void;
+export type CreateAddTenantToFilter = (metatada: EntityMetadata) => AddTenantToFilter;
+export type AddTenantToFilter = (query: Query, context: ExecutionContext) => void;
 export type GetUtils = (params: CreateUtilityParams) => Promise<Utilities>;
 
 export interface UrlConfig {

@@ -4,6 +4,7 @@ const { ValidationError } = require('../common-errors');
 const { createOutputMapper } = require('../validation');
 const { createVersionInfoSetter } = require('../version-info');
 const get = require('lodash/get');
+const set = require('lodash/set');
 const { EntityNotFoundError } = require('../common-errors');
 const createGetIdentifierQuery = require('./create-identifier-query');
 const createMongoDbAuditors = require('./create-mongodb-auditors');
@@ -29,24 +30,20 @@ async function getUtils({
         projection: {},
     },
 }) {
-    const setVersionInfo = createVersionInfoSetter({ metadata, validator: inputValidator });
-    const collection = db.collection(metadata.collectionName);
-    const mapOutput = createOutputMapper(metadata.schemas.output.$id, outputValidator);
-    const setStringIdentifier = createStringIdentifierSetter(metadata);
-    const getIdentifierQuery = createGetIdentifierQuery(metadata);
-    auditors = auditors || (await createMongoDbAuditors(metadata, db));
     return {
-        setVersionInfo,
         db,
-        collection,
-        mapOutput,
         metadata,
-        setStringIdentifier,
-        getIdentifierQuery,
         inputValidator,
         outputValidator,
-        auditors,
         paginationDefaults,
+        setVersionInfo: createVersionInfoSetter({ metadata, validator: inputValidator }),
+        collection: db.collection(metadata.collectionName),
+        mapOutput: createOutputMapper(metadata.schemas.output.$id, outputValidator),
+        setStringIdentifier: createStringIdentifierSetter(metadata),
+        getIdentifierQuery: createGetIdentifierQuery(metadata),
+        auditors: auditors || (await createMongoDbAuditors(metadata, db)),
+        setTenant: createSetTenant(metadata),
+        addTenantToFilter: createAddTenantToFilter(metadata),
     };
 }
 
@@ -83,15 +80,17 @@ function getCreate({
     setStringIdentifier,
     inputValidator,
     auditors,
+    setTenant,
 }) {
     return async function create(_entity, context) {
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         inputValidator.ensureValid(metadata.schemas.create.$id, entity);
         setStringIdentifier(entity);
+        setTenant(entity, context);
         setVersionInfo(entity, context);
         await collection.insertOne(entity);
-        auditors.writeCreation(entity, context);
+        await auditors.writeCreation(entity, context);
         mapOutput(entity);
         return entity;
     };
@@ -101,9 +100,10 @@ function getCreate({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").GetById<object>} A function to get entities by their identifiers
  */
-function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
-    return async function getById(id) {
+function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTenantToFilter }) {
+    return async function getById(id, context) {
         const query = getIdentifierQuery(id);
+        addTenantToFilter(query, context);
         const item = await collection.findOne(query);
         if (!item) {
             throw new EntityNotFoundError(metadata.title, id);
@@ -117,14 +117,15 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata }) {
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").DeleteById<object>} A function to delete entities by their identifier
  */
-function getDeleteById({ collection, getIdentifierQuery, metadata, auditors }) {
+function getDeleteById({ collection, getIdentifierQuery, metadata, auditors, addTenantToFilter }) {
     return async function deleteById(id, context) {
         const query = getIdentifierQuery(id);
+        addTenantToFilter(query, context);
         const result = await collection.findOneAndDelete(query);
         if (!result.value) {
             throw new EntityNotFoundError(metadata.title, id);
         }
-        auditors.writeDeletion(result.value, context);
+        await auditors.writeDeletion(result.value, context);
         return;
     };
 }
@@ -140,6 +141,7 @@ function getReplaceById({
     inputValidator,
     auditors,
     getIdentifierQuery,
+    addTenantToFilter,
 }) {
     return async function replaceById(id, _entity, context) {
         ensureEntityIsObject(_entity, metadata);
@@ -148,6 +150,7 @@ function getReplaceById({
         delete entity.versionInfo;
         delete entity._id;
         const query = getIdentifierQuery(id);
+        addTenantToFilter(query, context);
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
         const existing = await collection.findOne(query);
         if (!existing) {
@@ -157,7 +160,7 @@ function getReplaceById({
         setVersionInfo(entity, context);
         const replaceResult = await collection.findOneAndReplace(query, entity);
         entity._id = replaceResult.value._id;
-        auditors.writeReplacement(replaceResult.value, entity, context);
+        await auditors.writeReplacement(replaceResult.value, entity, context);
         mapOutput(entity);
         return entity;
     };
@@ -167,10 +170,11 @@ function getReplaceById({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").Search<object>} A function to search for entities
  */
-function getSearch({ collection, mapOutput, paginationDefaults }) {
-    return async function search(query) {
+function getSearch({ collection, mapOutput, paginationDefaults, addTenantToFilter }) {
+    return async function search(query, context) {
         // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
+        addTenantToFilter(filter, context);
         // @ts-ignore
         if (query.filter === null || query.filter === undefined) {
             filter = query;
@@ -202,13 +206,15 @@ function createStringIdentifierSetter(metadata) {
         if (!metadata.stringIdentifier) {
             return;
         }
-        if (metadata.stringIdentifier.source) {
-            if (item[metadata.stringIdentifier.name]) {
+        if (metadata.stringIdentifier.entitySourceLocation) {
+            const currentValue = get(item, metadata.stringIdentifier.name);
+            if (currentValue) {
                 return;
             }
-            item[metadata.stringIdentifier.name] = metadata.titleToStringIdentifier(
-                get(item, metadata.stringIdentifier.source)
+            const newValue = metadata.titleToStringIdentifier(
+                get(item, metadata.stringIdentifier.entitySourceLocation)
             );
+            set(item, metadata.stringIdentifier.name, newValue);
         }
     };
 }
@@ -219,4 +225,32 @@ function ensureEntityIsObject(entity, metadata) {
             `The ${metadata.title} value provided was not an object, type was :${typeof entity}`
         );
     }
+}
+
+/** @type {import('./types').CreateSetTenant} */
+function createSetTenant(metadata) {
+    return function setTenant(entity, context) {
+        if (!metadata.tenantInfo) {
+            return;
+        }
+        const value = get(context, metadata.tenantInfo.executionContextSource);
+        if (!value) {
+            throw new Error('Tenant id was falsy');
+        }
+        set(entity, metadata.tenantInfo.entityDestinationLocation, value);
+    };
+}
+
+/** @type {import('./types').CreateAddTenantToFilter} */
+function createAddTenantToFilter(metadata) {
+    return function addTenantToFilter(query, context) {
+        if (!metadata.tenantInfo) {
+            return;
+        }
+        const value = get(context, metadata.tenantInfo.executionContextSource);
+        if (!value) {
+            throw new Error('Tenant id was falsy');
+        }
+        set(query, metadata.tenantInfo.entityDestinationLocation, value);
+    };
 }
