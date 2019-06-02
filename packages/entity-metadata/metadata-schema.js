@@ -12,6 +12,7 @@ const objectSchema = {
     required: ['name'],
 };
 
+//todo rk, duplication here between typescript and JSON schema, need to generate the TS
 module.exports = function() {
     return {
         $id: generateId('metadata'),
@@ -51,7 +52,7 @@ module.exports = function() {
                     schema: {
                         type: 'object',
                     },
-                    entitySourceLocation: {
+                    entitySourcePath: {
                         type: 'string',
                     },
                 },
@@ -61,14 +62,20 @@ module.exports = function() {
                 type: 'object',
                 additionalProperties: false,
                 properties: {
-                    entityDestinationLocation: {
+                    entityPathToId: {
                         type: 'string',
                     },
-                    executionContextSource: {
+                    executionContextSourcePath: {
                         type: 'string',
+                    },
+                    title: {
+                        type: 'string',
+                    },
+                    schema: {
+                        type: 'object',
                     },
                 },
-                required: ['entityDestinationLocation', 'executionContextSource'],
+                required: ['entityPathToId', 'executionContextSourcePath', 'title', 'schema'],
             },
             collectionName: commonSchemas.identifier,
             auditCollectionName: commonSchemas.identifier,

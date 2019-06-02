@@ -1,17 +1,27 @@
 'use strict';
+const {
+    getSchemaForEntityPath,
+    setSchemaForEntityPath,
+    markFullPathAsRequiredForEntityPath,
+} = require('./json-schema-utilities');
 
 /**
  * @param {import('./types').JsonSchema} schema
  * @param {import('./types').EntityMetadata} metadata
  */
-module.exports = function hydrateSchema(schema, metadata) {
-    schema.properties = schema.properties || {};
-    schema.required = schema.required || [];
+function hydrateSchema(schema, metadata) {
+    ensurePropsAndRequired(schema);
     addIdentifier(schema, metadata);
     addStringIdentifier(schema, metadata);
+    addTenantInfo(schema, metadata.tenantInfo);
     // addStatusInfo(schema);
     // addOwnerInfo(schema);
-};
+}
+
+function ensurePropsAndRequired(schema) {
+    schema.properties = schema.properties || {};
+    schema.required = schema.required || [];
+}
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -39,6 +49,7 @@ function addStringIdentifier(schema, metadata) {
  * @param {boolean} required
  */
 function addAnIdentifer(schema, identifier, required = true) {
+    ensurePropsAndRequired(schema);
     if (schema.properties[identifier.name]) {
         return;
     }
@@ -47,8 +58,26 @@ function addAnIdentifer(schema, identifier, required = true) {
         schema.required.push(identifier.name);
     }
 }
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').TenantInfo} tenantInfo
+ */
+function addTenantInfo(schema, tenantInfo) {
+    if (!tenantInfo) {
+        return;
+    }
+    ensurePropsAndRequired(schema);
+    const currentValue = getSchemaForEntityPath(schema, tenantInfo.entityPathToId);
+    if (currentValue) {
+        markFullPathAsRequiredForEntityPath(schema, tenantInfo.entityPathToId);
+        return;
+    }
+    setSchemaForEntityPath(schema, tenantInfo.entityPathToId, tenantInfo.schema);
+    markFullPathAsRequiredForEntityPath(schema, tenantInfo.entityPathToId);
+}
 
 // function addStatusInfo(schema) {
+//     ensurePropsAndRequired(schema);
 //     if (!schema.statuses) {
 //         return;
 //     }
@@ -87,6 +116,7 @@ function addAnIdentifer(schema, identifier, required = true) {
 // }
 
 // function addOwnerInfo(schema) {
+//     ensurePropsAndRequired(schema);
 //     if (!schema.ownership) {
 //         return;
 //     }
@@ -122,3 +152,4 @@ function addAnIdentifer(schema, identifier, required = true) {
 //     schema.required.push('ownerDate');
 //     schema.required.push('ownerLog');
 // }
+module.exports = { hydrateSchema, addIdentifier, addStringIdentifier, addTenantInfo };

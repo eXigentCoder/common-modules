@@ -1,6 +1,12 @@
 'use strict';
 
-const removeFromArrayIfExists = require('./remove-from-array-if-exists');
+const {
+    removeFromArrayIfExists,
+    removeFromRequiredForEntityPath,
+    getLastNodeOnPath,
+    removeLastNNodesOnPath,
+    deleteSchemaForEntityPath,
+} = require('./json-schema-utilities');
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -12,7 +18,12 @@ module.exports = function filterPropertiesForCreation(schema, metadata) {
     }
     delete schema.properties[metadata.identifier.name];
     removeFromArrayIfExists(schema.required, metadata.identifier.name);
-
+    if (metadata.tenantInfo) {
+        const tenantFieldName = getLastNodeOnPath(metadata.tenantInfo.entityPathToId);
+        const pathExcludingId = removeLastNNodesOnPath(metadata.tenantInfo.entityPathToId, 1);
+        removeFromRequiredForEntityPath(schema, pathExcludingId, tenantFieldName);
+        deleteSchemaForEntityPath(schema, metadata.tenantInfo.entityPathToId);
+    }
     // delete schema.properties.status;
     // removeFromArrayIfExists(schema.required, 'status');
     // delete schema.properties.statusDate;

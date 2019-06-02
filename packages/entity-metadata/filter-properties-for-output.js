@@ -1,6 +1,6 @@
 'use strict';
 
-const removeFromArrayIfExists = require('./remove-from-array-if-exists');
+const { removeFromArrayIfExists } = require('./json-schema-utilities');
 const _ = require('lodash');
 const withVersionInfo = require('../version-info/with-version-info');
 

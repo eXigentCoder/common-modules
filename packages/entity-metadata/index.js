@@ -3,10 +3,10 @@
 const inferNames = require('./infer-names');
 const vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
 const ensureSchemaSet = require('./ensure-schema-set');
-const hydrateSchema = require('./hydrate-schema');
+const { hydrateSchema } = require('./hydrate-schema');
 const filterPropertiesForOutput = require('./filter-properties-for-output');
 const filterPropertiesForCreation = require('./filter-properties-for-creation');
-const filterPropertiesForReplace = require('./filter-properties-for-update');
+const filterPropertiesForReplace = require('./filter-properties-for-replace');
 const { generateId } = require('../json-schema/schema-id-generator');
 const getMetadataSchema = require('./metadata-schema');
 const defaultTitleToStringIdentifierFn = require('./title-to-string-identifier');

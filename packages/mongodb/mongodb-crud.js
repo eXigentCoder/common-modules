@@ -8,7 +8,7 @@ const set = require('lodash/set');
 const { EntityNotFoundError } = require('../common-errors');
 const createGetIdentifierQuery = require('./create-identifier-query');
 const createMongoDbAuditors = require('./create-mongodb-auditors');
-
+const { removePropertyFromEntity } = require('../entity-metadata/json-schema-utilities');
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
@@ -150,7 +150,10 @@ function getReplaceById({
         delete entity.versionInfo;
         delete entity._id;
         const query = getIdentifierQuery(id);
-        addTenantToFilter(query, context);
+        if (metadata.tenantInfo) {
+            removePropertyFromEntity(entity, metadata.tenantInfo.entityPathToId);
+            addTenantToFilter(query, context);
+        }
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
         const existing = await collection.findOne(query);
         if (!existing) {
@@ -206,13 +209,13 @@ function createStringIdentifierSetter(metadata) {
         if (!metadata.stringIdentifier) {
             return;
         }
-        if (metadata.stringIdentifier.entitySourceLocation) {
+        if (metadata.stringIdentifier.entitySourcePath) {
             const currentValue = get(item, metadata.stringIdentifier.name);
             if (currentValue) {
                 return;
             }
             const newValue = metadata.titleToStringIdentifier(
-                get(item, metadata.stringIdentifier.entitySourceLocation)
+                get(item, metadata.stringIdentifier.entitySourcePath)
             );
             set(item, metadata.stringIdentifier.name, newValue);
         }
@@ -233,11 +236,11 @@ function createSetTenant(metadata) {
         if (!metadata.tenantInfo) {
             return;
         }
-        const value = get(context, metadata.tenantInfo.executionContextSource);
+        const value = get(context, metadata.tenantInfo.executionContextSourcePath);
         if (!value) {
             throw new TenantError(metadata.tenantInfo.title);
         }
-        set(entity, metadata.tenantInfo.entityDestinationLocation, value);
+        set(entity, metadata.tenantInfo.entityPathToId, value);
     };
 }
 
@@ -247,10 +250,10 @@ function createAddTenantToFilter(metadata) {
         if (!metadata.tenantInfo) {
             return;
         }
-        const value = get(context, metadata.tenantInfo.executionContextSource);
+        const value = get(context, metadata.tenantInfo.executionContextSourcePath);
         if (!value) {
             throw new TenantError(metadata.tenantInfo.title);
         }
-        set(query, metadata.tenantInfo.entityDestinationLocation, value);
+        set(query, metadata.tenantInfo.entityPathToId, value);
     };
 }

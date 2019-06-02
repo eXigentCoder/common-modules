@@ -25,12 +25,18 @@ export interface Identifier {
 export interface StringIdentifier {
     name: string;
     schema: JsonSchema;
-    entitySourceLocation?: string;
+    entitySourcePath?: string;
 }
 
 export interface TenantInfo {
-    entityDestinationLocation: string;
-    executionContextSource: string;
+    /** The path as to where to set the tenantId on the entity */
+    entityPathToId: string;
+    /** The path to the source for the tenantId on the ExecutionContext */
+    executionContextSourcePath: string;
+    /** The display name as a user would see it for what the tenant is e.g. Team or Organisation */
+    title: string;
+    /** The schema used to validate the tenantId */
+    schema: JsonSchema;
 }
 
 export interface EntityMetadata {

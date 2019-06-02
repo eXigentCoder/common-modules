@@ -358,7 +358,7 @@ function stringIdNoTenant() {
         stringIdentifier: {
             name: 'name',
             schema: schemas.identifier,
-            entitySourceLocation: 'username',
+            entitySourcePath: 'username',
         },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
@@ -383,12 +383,15 @@ function stringIdTenant() {
         stringIdentifier: {
             name: 'name',
             schema: schemas.identifier,
-            entitySourceLocation: 'username',
+            entitySourcePath: 'username',
         },
         tenantInfo: {
-            entityDestinationLocation: 'tenantId',
-            executionContextSource: 'identity.tenant.id',
+            entityPathToId: 'tenantId',
+            executionContextSourcePath: 'identity.tenant.id',
             title: 'Team',
+            schema: {
+                type: 'string',
+            },
         },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
