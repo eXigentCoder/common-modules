@@ -1,4 +1,3 @@
-declare var chai: any;
-declare var expect: any;
-declare var assert: any;
-declare var should: any;
+declare var chai: Chai;
+declare var expect: Chai.ExpectStatic;
+declare var assert: Chai.Assert | Chai.AssertStatic;

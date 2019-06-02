@@ -1,6 +1,6 @@
 'use strict';
 
-const { ValidationError } = require('../common-errors');
+const { ValidationError, TenantError } = require('../common-errors');
 const { createOutputMapper } = require('../validation');
 const { createVersionInfoSetter } = require('../version-info');
 const get = require('lodash/get');
@@ -235,7 +235,7 @@ function createSetTenant(metadata) {
         }
         const value = get(context, metadata.tenantInfo.executionContextSource);
         if (!value) {
-            throw new Error('Tenant id was falsy');
+            throw new TenantError(metadata.tenantInfo.title);
         }
         set(entity, metadata.tenantInfo.entityDestinationLocation, value);
     };
@@ -249,7 +249,7 @@ function createAddTenantToFilter(metadata) {
         }
         const value = get(context, metadata.tenantInfo.executionContextSource);
         if (!value) {
-            throw new Error('Tenant id was falsy');
+            throw new TenantError(metadata.tenantInfo.title);
         }
         set(query, metadata.tenantInfo.entityDestinationLocation, value);
     };

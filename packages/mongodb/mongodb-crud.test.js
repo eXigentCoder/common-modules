@@ -1,6 +1,6 @@
 'use strict';
 
-const { ValidationError } = require('../common-errors');
+const { ValidationError, TenantError } = require('../common-errors');
 const { getClient, getDb, getCrud, createQueryStringMapper } = require('.');
 const generateEntityMetadata = require('../entity-metadata');
 const { createInputValidator, createOutputValidator } = require('../validation');
@@ -8,7 +8,6 @@ const { jsonSchemas, addMongoId } = require('../validation-mongodb');
 const schemas = require('../json-schema');
 const crypto = require('crypto');
 const ObjectId = require('mongodb').ObjectId;
-
 //todo rk needs to be more extensive. string identifier and normal identifier.
 
 describe('MongoDB', () => {
@@ -83,7 +82,7 @@ describe('MongoDB', () => {
                 const entity = validEntity();
                 const context = createContext();
                 context.identity.tenant.id = '';
-                await expect(create(entity, context)).to.be.rejected;
+                await expect(create(entity, context)).to.be.rejectedWith(TenantError);
             });
         });
         describe('Delete By Id', () => {
@@ -332,6 +331,7 @@ function noStringIdNoTenant() {
                         type: 'string',
                     },
                 },
+                additionalProperties: false,
             },
         },
         identifier: { name: '_id', schema: jsonSchemas.objectId },
@@ -351,6 +351,7 @@ function stringIdNoTenant() {
                         type: 'string',
                     },
                 },
+                additionalProperties: false,
             },
         },
         identifier: { name: '_id', schema: jsonSchemas.objectId },
@@ -375,6 +376,7 @@ function stringIdTenant() {
                         type: 'string',
                     },
                 },
+                additionalProperties: false,
             },
         },
         identifier: { name: '_id', schema: jsonSchemas.objectId },
@@ -386,6 +388,7 @@ function stringIdTenant() {
         tenantInfo: {
             entityDestinationLocation: 'tenantId',
             executionContextSource: 'identity.tenant.id',
+            title: 'Team',
         },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
