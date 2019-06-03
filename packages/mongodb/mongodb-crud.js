@@ -210,14 +210,14 @@ function createStringIdentifierSetter(metadata) {
             return;
         }
         if (metadata.stringIdentifier.entitySourcePath) {
-            const currentValue = get(item, metadata.stringIdentifier.name);
+            const currentValue = get(item, metadata.stringIdentifier.pathToId);
             if (currentValue) {
                 return;
             }
             const newValue = metadata.titleToStringIdentifier(
                 get(item, metadata.stringIdentifier.entitySourcePath)
             );
-            set(item, metadata.stringIdentifier.name, newValue);
+            set(item, metadata.stringIdentifier.pathToId, newValue);
         }
     };
 }

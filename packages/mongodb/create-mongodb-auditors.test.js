@@ -90,7 +90,7 @@ function validMetaData() {
             },
         },
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
-        stringIdentifier: { name: 'username', schema: { type: 'string' } },
+        stringIdentifier: { pathToId: 'username', schema: { type: 'string' } },
         collectionName: 'users',
         auditChanges: true,
         baseUrl: 'https://ryankotzen.com',

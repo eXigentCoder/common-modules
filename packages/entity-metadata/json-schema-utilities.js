@@ -236,7 +236,7 @@ function removeSchemaAndRequired(schema, path) {
  * @param {string} path
  * @param {JsonSchema} fieldSchema
  */
-function addRequiredSchema(baseSchema, path, fieldSchema) {
+function addFullRequiredSchema(baseSchema, path, fieldSchema) {
     const alreadyHasASchema = getSchemaForEntityPath(baseSchema, path);
     if (alreadyHasASchema) {
         markFullPathAsRequiredForEntityPath(baseSchema, path);
@@ -244,6 +244,19 @@ function addRequiredSchema(baseSchema, path, fieldSchema) {
     }
     setSchemaForEntityPath(baseSchema, path, fieldSchema);
     markFullPathAsRequiredForEntityPath(baseSchema, path);
+}
+/**
+ * Adds the provided fieldSchema to the baseSchema at the specified path as a non-required field
+ * @param {JsonSchema} baseSchema
+ * @param {string} path
+ * @param {JsonSchema} fieldSchema
+ */
+function addSchema(baseSchema, path, fieldSchema) {
+    const alreadyHasASchema = getSchemaForEntityPath(baseSchema, path);
+    if (alreadyHasASchema) {
+        return;
+    }
+    setSchemaForEntityPath(baseSchema, path, fieldSchema);
 }
 
 module.exports = {
@@ -272,5 +285,6 @@ module.exports = {
     removeFromArrayIfExists,
 
     removeSchemaAndRequired,
-    addRequiredSchema,
+    addFullRequiredSchema,
+    addSchema,
 };

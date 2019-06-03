@@ -129,7 +129,7 @@ function validMetaDataWithStringIdentifer() {
             },
         },
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
-        stringIdentifier: { name: 'username', schema: { type: 'string' } },
+        stringIdentifier: { pathToId: 'username', schema: { type: 'string' } },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
     };

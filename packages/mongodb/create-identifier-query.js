@@ -15,7 +15,7 @@ module.exports = function createGetIdentifierQuery(metadata) {
 
     return function getIdentifierQuery(identifierValue) {
         let identifierNameErrorMessage = stringIdentifier
-            ? `${identifier.pathToId} or ${stringIdentifier.name}`
+            ? `${identifier.pathToId} or ${stringIdentifier.pathToId}`
             : `${identifier.pathToId}`;
         if (identifierValue === null || identifierValue === undefined) {
             throw new ValidationError(
@@ -44,7 +44,7 @@ module.exports = function createGetIdentifierQuery(metadata) {
         }
         if (typeof identifierValue === 'string' && stringIdentifier) {
             const identifierQuery = {};
-            identifierQuery[stringIdentifier.name] = identifierValue;
+            identifierQuery[stringIdentifier.pathToId] = identifierValue;
             return identifierQuery;
         }
         throw new ValidationError(

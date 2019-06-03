@@ -356,7 +356,7 @@ function stringIdNoTenant() {
         },
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: {
-            name: 'name',
+            pathToId: 'name',
             schema: schemas.identifier,
             entitySourcePath: 'username',
         },
@@ -381,7 +381,7 @@ function stringIdTenant() {
         },
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: {
-            name: 'name',
+            pathToId: 'name',
             schema: schemas.identifier,
             entitySourcePath: 'username',
         },

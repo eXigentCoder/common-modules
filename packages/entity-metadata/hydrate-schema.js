@@ -1,5 +1,9 @@
 'use strict';
-const { ensurePropsAndRequired, addRequiredSchema } = require('./json-schema-utilities');
+const {
+    ensurePropsAndRequired,
+    addFullRequiredSchema,
+    addSchema,
+} = require('./json-schema-utilities');
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -19,7 +23,7 @@ function hydrateSchema(schema, metadata) {
  * @param {import('./types').EntityMetadata} metadata
  */
 function addIdentifier(schema, metadata) {
-    addRequiredSchema(schema, metadata.identifier.pathToId, metadata.identifier.schema);
+    addFullRequiredSchema(schema, metadata.identifier.pathToId, metadata.identifier.schema);
 }
 
 /**
@@ -27,14 +31,10 @@ function addIdentifier(schema, metadata) {
  * @param {import('./types').EntityMetadata} metadata
  */
 function addStringIdentifier(schema, metadata) {
-    const identifier = metadata.stringIdentifier;
-    if (!identifier) {
+    if (!metadata.stringIdentifier) {
         return;
     }
-    if (schema.properties[identifier.name]) {
-        return;
-    }
-    schema.properties[identifier.name] = Object.assign({}, identifier.schema);
+    addSchema(schema, metadata.stringIdentifier.pathToId, metadata.stringIdentifier.schema);
 }
 
 /**
@@ -45,7 +45,7 @@ function addTenantInfo(schema, tenantInfo) {
     if (!tenantInfo) {
         return;
     }
-    addRequiredSchema(schema, tenantInfo.entityPathToId, tenantInfo.schema);
+    addFullRequiredSchema(schema, tenantInfo.entityPathToId, tenantInfo.schema);
 }
 
 // function addStatusInfo(schema) {

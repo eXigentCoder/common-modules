@@ -23,7 +23,7 @@ export interface Identifier {
 }
 
 export interface StringIdentifier {
-    name: string;
+    pathToId: string;
     schema: JsonSchema;
     entitySourcePath?: string;
 }

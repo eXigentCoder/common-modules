@@ -48,7 +48,7 @@ module.exports = function() {
                 type: 'object',
                 additionalProperties: false,
                 properties: {
-                    name: {
+                    pathToId: {
                         type: 'string',
                     },
                     schema: {
@@ -58,7 +58,7 @@ module.exports = function() {
                         type: 'string',
                     },
                 },
-                required: ['name', 'schema'],
+                required: ['pathToId', 'schema'],
             },
             tenantInfo: {
                 type: 'object',
