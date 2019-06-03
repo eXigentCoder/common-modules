@@ -10,6 +10,7 @@ const filterPropertiesForReplace = require('./filter-properties-for-replace');
 const { generateId } = require('../json-schema/schema-id-generator');
 const getMetadataSchema = require('./metadata-schema');
 const defaultTitleToStringIdentifierFn = require('./title-to-string-identifier');
+
 module.exports = generateEntityMetadata;
 /**
  * @typedef {import('./types').EntityMetadata} EntityMetadata
@@ -34,6 +35,10 @@ function generateEntityMetadata(metadata, inputValidator, outputValidator) {
     if (metadata.auditChanges === undefined || metadata.auditChanges === null) {
         metadata.auditChanges = false;
     }
+    Object.getOwnPropertyNames(metadata.schemas).forEach(function(key) {
+        const schema = metadata.schemas[key];
+        schema.title = schema.title || metadata.title;
+    });
     ensureSchemaSet(metadata, 'output', 'Output', outputValidator, inputValidator);
     ensureSchemaSet(metadata, 'create', 'Input', outputValidator, inputValidator);
     ensureSchemaSet(metadata, 'replace', 'Input', outputValidator, inputValidator);

@@ -77,7 +77,6 @@ function validMetaData() {
     return {
         schemas: {
             core: {
-                name: 'user',
                 type: 'object',
                 properties: {
                     firstName: {
@@ -89,6 +88,7 @@ function validMetaData() {
                 },
             },
         },
+        name: 'user',
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: { pathToId: 'username', schema: { type: 'string' } },
         collectionName: 'users',

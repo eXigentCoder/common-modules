@@ -325,7 +325,6 @@ function noStringIdNoTenant() {
     return {
         schemas: {
             core: {
-                name: 'user',
                 properties: {
                     username: {
                         type: 'string',
@@ -334,6 +333,8 @@ function noStringIdNoTenant() {
                 additionalProperties: false,
             },
         },
+        name: 'user',
+
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
@@ -345,7 +346,6 @@ function stringIdNoTenant() {
     return {
         schemas: {
             core: {
-                name: 'user',
                 properties: {
                     username: {
                         type: 'string',
@@ -354,6 +354,7 @@ function stringIdNoTenant() {
                 additionalProperties: false,
             },
         },
+        name: 'user',
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: {
             pathToId: 'name',
@@ -370,7 +371,6 @@ function stringIdTenant() {
     return {
         schemas: {
             core: {
-                name: 'user',
                 properties: {
                     username: {
                         type: 'string',
@@ -379,6 +379,7 @@ function stringIdTenant() {
                 additionalProperties: false,
             },
         },
+        name: 'user',
         identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: {
             pathToId: 'name',

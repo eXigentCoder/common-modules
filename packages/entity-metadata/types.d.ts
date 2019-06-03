@@ -2,8 +2,6 @@ import { JSONSchema7 } from '@types/json-schema';
 export { Validator } from '../validation/ajv';
 
 export interface JsonSchema extends JSONSchema7 {
-    //todo rk needs to use title instead but requires a rework of code
-    name?: string;
     mongoId?: boolean;
     faker?: any;
     chance?: any;

@@ -2,7 +2,7 @@
 
 const generateEntityMetadata = require('./index');
 const { createInputValidator, createOutputValidator } = require('../validation/ajv');
-const { ValidationError } = require('../common-errors');
+const { ValidationError, IsRequiredError } = require('../common-errors');
 
 describe('Entity Metadata', () => {
     describe('Generate Entity Metadata', () => {
@@ -13,7 +13,6 @@ describe('Entity Metadata', () => {
             return {
                 schemas: {
                     core: {
-                        name: 'user',
                         properties: {
                             username: {
                                 type: 'string',
@@ -21,6 +20,7 @@ describe('Entity Metadata', () => {
                         },
                     },
                 },
+                name: 'user',
                 identifier: { pathToId: 'id', schema: { type: 'string' } },
                 collectionName: 'users',
                 baseUrl: 'https://ryankotzen.com',
@@ -72,12 +72,12 @@ describe('Entity Metadata', () => {
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(ValidationError);
         });
-        it('should throw an error if metadata.schemas.core is missing the name property', () => {
+        it('should throw an error if metadata is missing the name property', () => {
             const inputMetadata = validMetaData();
-            delete inputMetadata.schemas.core.name;
+            delete inputMetadata.name;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
-            ).to.throw(ValidationError);
+            ).to.throw(IsRequiredError);
         });
         it('should not throw an error if provided with valid arguments', () => {
             expect(() =>
@@ -94,7 +94,6 @@ describe('Entity Metadata', () => {
         it('should add $id to non core schemas', () => {
             const inputMetadata = validMetaData();
             inputMetadata.schemas.create = {
-                name: 'user',
                 properties: {
                     username: {
                         type: 'string',
@@ -108,7 +107,6 @@ describe('Entity Metadata', () => {
         it('Create schemas should not containe the identifier', () => {
             const inputMetadata = validMetaData();
             inputMetadata.schemas.create = {
-                name: 'user',
                 properties: {
                     username: {
                         type: 'string',
@@ -119,7 +117,9 @@ describe('Entity Metadata', () => {
             expect(metadata).to.be.ok;
             expect(metadata.schemas.create.properties[inputMetadata.identifier.pathToId]).to.not.be
                 .ok;
-            expect(metadata.schemas.create.required).to.not.include(inputMetadata.identifier.name);
+            expect(metadata.schemas.create.required).to.not.include(
+                inputMetadata.identifier.pathToId
+            );
         });
     });
 });

@@ -23,19 +23,19 @@ module.exports = function setAndValidateName(schema, coreSchema, operation, dire
     if (isNil(direction)) {
         throw new Error('direction is required');
     }
-    if (isNil(coreSchema.name)) {
-        throw new Error('coreSchema must have a name');
+    if (isNil(coreSchema.title)) {
+        throw new Error('coreSchema must have a title');
     }
-    if (!coreSchema.name.trim()) {
-        throw new Error('coreSchema.name cannot be blank');
+    if (!coreSchema.title.trim()) {
+        throw new Error('coreSchema.title cannot be blank');
     }
-    if (schema.name !== coreSchema.name) {
+    if (schema.title !== coreSchema.title) {
         return;
     }
     operation = upperFirst(operation);
     if (operation === direction) {
-        schema.name += direction;
+        schema.title += direction;
         return;
     }
-    schema.name += upperFirst(operation) + direction;
+    schema.title += upperFirst(operation) + direction;
 };

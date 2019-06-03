@@ -2,14 +2,12 @@
 
 const commonSchemas = require('../json-schema');
 const generateId = require('../json-schema/common-module-schema-id-generator');
+//const jsonSchema = require('ajv/lib/refs/json-schema-draft-07.json');
 
 const objectSchema = {
     type: 'object',
-    properties: {
-        name: commonSchemas.identifier,
-    },
+    properties: {},
     additionalProperties: true,
-    required: ['name'],
 };
 
 //todo rk, duplication here between typescript and JSON schema, need to generate the TS

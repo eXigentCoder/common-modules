@@ -7,14 +7,21 @@ describe('Entity Metadata', () => {
         const inputValidator = createInputValidator();
         const outputValidator = createOutputValidator();
         it('should not throw an error when adding the same schema twice', () => {
+            /**@type {import('./types').EntityMetadata} */
             const metadata = {
                 collectionName: 'bobs',
                 schemas: {
                     core: {
                         $id: 'someAwesomeSchema',
-                        name: 'bob',
+                        title: 'bob',
                     },
                 },
+                name: 'bob',
+                identifier: {
+                    pathToId: '_id',
+                    schema: {},
+                },
+                baseUrl: 'https://ryankotzen.com',
             };
             //@ts-ignore
             ensureSchemaSet(metadata, 'output', 'Output', outputValidator, inputValidator);
