@@ -1,10 +1,10 @@
 'use strict';
 
 const _ = require('lodash');
+
 /**
  * @typedef {import('./types').JsonSchema} JsonSchema
  */
-//todo RK rename locaiton to path
 //todo rk probably need to move this to the other lib
 
 /**
@@ -209,6 +209,42 @@ function removeFromArrayIfExists(array, item) {
         array.splice(index, 1);
     }
 }
+/**
+ * Ensures that the provided schema has properties and required array at the base level
+ * @param {JsonSchema} schema
+ */
+function ensurePropsAndRequired(schema) {
+    schema.properties = schema.properties || {};
+    schema.required = schema.required || [];
+}
+
+/**
+ * Removes the required field and any schema associated with at the specified path
+ * @param {JsonSchema} schema
+ * @param {string} path
+ */
+function removeSchemaAndRequired(schema, path) {
+    const tenantFieldName = getLastNodeOnPath(path);
+    const pathExcludingId = removeLastNNodesOnPath(path, 1);
+    removeFromRequiredForEntityPath(schema, pathExcludingId, tenantFieldName);
+    deleteSchemaForEntityPath(schema, path);
+}
+
+/**
+ * Adds the provided fieldSchema to the baseSchema at the specified path as a required field
+ * @param {JsonSchema} baseSchema
+ * @param {string} path
+ * @param {JsonSchema} fieldSchema
+ */
+function addRequiredSchema(baseSchema, path, fieldSchema) {
+    const alreadyHasASchema = getSchemaForEntityPath(baseSchema, path);
+    if (alreadyHasASchema) {
+        markFullPathAsRequiredForEntityPath(baseSchema, path);
+        return;
+    }
+    setSchemaForEntityPath(baseSchema, path, fieldSchema);
+    markFullPathAsRequiredForEntityPath(baseSchema, path);
+}
 
 module.exports = {
     //path translation
@@ -231,5 +267,10 @@ module.exports = {
 
     markFullPathAsRequiredForEntityPath,
 
+    ensurePropsAndRequired,
+
     removeFromArrayIfExists,
+
+    removeSchemaAndRequired,
+    addRequiredSchema,
 };

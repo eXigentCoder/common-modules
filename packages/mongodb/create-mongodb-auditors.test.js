@@ -89,7 +89,7 @@ function validMetaData() {
                 },
             },
         },
-        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: { name: 'username', schema: { type: 'string' } },
         collectionName: 'users',
         auditChanges: true,

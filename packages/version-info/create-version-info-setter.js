@@ -6,6 +6,7 @@ const { IsRequiredError } = require('../common-errors');
 const defaultExecutionContextSchema = require('./execution-context-schema');
 const { createInputValidator } = require('../validation/ajv');
 const v8n = require('v8n');
+const get = require('lodash/get');
 
 /**
  * Creates an instance of the Version Info Setter
@@ -81,11 +82,11 @@ function validateParams(object, context, options) {
         throw new IsRequiredError('object', 'setVersionInfo');
     }
     options.validator.ensureValid(options.executionContextSchema.$id, context);
-    if (object[options.metadata.identifier.name] && !object.versionInfo) {
+    if (get(object, options.metadata.identifier.pathToId) && !object.versionInfo) {
         throw new Error(
-            `Object had the "${
-                options.metadata.identifier.name
-            }" property, indicating that it already exists in the db but no "versionInfo" property was provided, this would cause the creation info to be incorrect and has been prevented.`
+            `Object had a value for "${
+                options.metadata.identifier.pathToId
+            }", indicating that it already exists in the db but no "versionInfo" property was provided, this would cause the creation info to be incorrect and has been prevented.`
         );
     }
 }

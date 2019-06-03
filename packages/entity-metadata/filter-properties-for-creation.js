@@ -1,12 +1,6 @@
 'use strict';
 
-const {
-    removeFromArrayIfExists,
-    removeFromRequiredForEntityPath,
-    getLastNodeOnPath,
-    removeLastNNodesOnPath,
-    deleteSchemaForEntityPath,
-} = require('./json-schema-utilities');
+const { removeSchemaAndRequired } = require('./json-schema-utilities');
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -16,13 +10,10 @@ module.exports = function filterPropertiesForCreation(schema, metadata) {
     if (!schema) {
         throw new Error('Schema is a required field');
     }
-    delete schema.properties[metadata.identifier.name];
-    removeFromArrayIfExists(schema.required, metadata.identifier.name);
+    removeSchemaAndRequired(schema, metadata.identifier.pathToId);
+
     if (metadata.tenantInfo) {
-        const tenantFieldName = getLastNodeOnPath(metadata.tenantInfo.entityPathToId);
-        const pathExcludingId = removeLastNNodesOnPath(metadata.tenantInfo.entityPathToId, 1);
-        removeFromRequiredForEntityPath(schema, pathExcludingId, tenantFieldName);
-        deleteSchemaForEntityPath(schema, metadata.tenantInfo.entityPathToId);
+        removeSchemaAndRequired(schema, metadata.tenantInfo.entityPathToId);
     }
     // delete schema.properties.status;
     // removeFromArrayIfExists(schema.required, 'status');

@@ -14,19 +14,19 @@ module.exports = function createGetIdentifierQuery(metadata) {
     const { stringIdentifier, identifier } = metadata;
 
     return function getIdentifierQuery(identifierValue) {
-        let identifierNameString = stringIdentifier
-            ? `${identifier.name} or ${stringIdentifier.name}`
-            : `${identifier.name}`;
+        let identifierNameErrorMessage = stringIdentifier
+            ? `${identifier.pathToId} or ${stringIdentifier.name}`
+            : `${identifier.pathToId}`;
         if (identifierValue === null || identifierValue === undefined) {
             throw new ValidationError(
-                `${identifierNameString} is required as an identifier to refer to a ${
+                `${identifierNameErrorMessage} is required as an identifier to refer to a ${
                     metadata.title
                 }`
             );
         }
         if (typeof identifierValue === 'number') {
             throw new ValidationError(
-                `${identifierNameString} cannot be a number when used to refer to a ${
+                `${identifierNameErrorMessage} cannot be a number when used to refer to a ${
                     metadata.title
                 }`
             );
@@ -37,7 +37,7 @@ module.exports = function createGetIdentifierQuery(metadata) {
 
         if (typeof identifierValue === 'object') {
             throw new ValidationError(
-                `${identifierNameString} cannot be an object when used to refer to a ${
+                `${identifierNameErrorMessage} cannot be an object when used to refer to a ${
                     metadata.title
                 }`
             );
@@ -48,9 +48,7 @@ module.exports = function createGetIdentifierQuery(metadata) {
             return identifierQuery;
         }
         throw new ValidationError(
-            `${
-                identifierNameString
-            } was an invalid type: "${typeof identifierValue}", value: "${util.inspect(
+            `${identifierNameErrorMessage} was an invalid type: "${typeof identifierValue}", value: "${util.inspect(
                 identifierValue
             )}" when trying to refer to a ${metadata.title}, must be a string or ObjectId`
         );

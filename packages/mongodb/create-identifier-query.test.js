@@ -106,7 +106,7 @@ function validMetaDataNoStringIdentifer() {
                 },
             },
         },
-        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
     };
@@ -128,7 +128,7 @@ function validMetaDataWithStringIdentifer() {
                 },
             },
         },
-        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: { name: 'username', schema: { type: 'string' } },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',

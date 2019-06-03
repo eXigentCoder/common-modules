@@ -7,12 +7,15 @@ const operation = 'Test';
 describe('Entity Metadata', () => {
     describe('setAndValidateId', () => {
         it('should throw an error if no schema provided', () => {
+            // @ts-ignore
             expect(() => setAndValidateId()).to.throw('schema is required');
         });
         it('should throw an error if no core schema provided', () => {
+            // @ts-ignore
             expect(() => setAndValidateId({})).to.throw('coreSchema is required');
         });
         it('should throw an error if no operation provided', () => {
+            // @ts-ignore
             expect(() => setAndValidateId({}, {})).to.throw('operation is required');
         });
         it('should throw an error if core schema has no $id', () => {

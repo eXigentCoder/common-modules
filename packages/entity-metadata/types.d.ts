@@ -18,7 +18,7 @@ interface MainSchemas {
 }
 
 export interface Identifier {
-    name: string;
+    pathToId: string;
     schema: JsonSchema;
 }
 

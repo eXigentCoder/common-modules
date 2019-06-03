@@ -334,7 +334,7 @@ function noStringIdNoTenant() {
                 additionalProperties: false,
             },
         },
-        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         collectionName: 'crud-users',
         baseUrl: 'https://ryankotzen.com',
     };
@@ -354,7 +354,7 @@ function stringIdNoTenant() {
                 additionalProperties: false,
             },
         },
-        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: {
             name: 'name',
             schema: schemas.identifier,
@@ -379,7 +379,7 @@ function stringIdTenant() {
                 additionalProperties: false,
             },
         },
-        identifier: { name: '_id', schema: jsonSchemas.objectId },
+        identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
         stringIdentifier: {
             name: 'name',
             schema: schemas.identifier,

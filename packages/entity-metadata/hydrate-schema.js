@@ -1,9 +1,5 @@
 'use strict';
-const {
-    getSchemaForEntityPath,
-    setSchemaForEntityPath,
-    markFullPathAsRequiredForEntityPath,
-} = require('./json-schema-utilities');
+const { ensurePropsAndRequired, addRequiredSchema } = require('./json-schema-utilities');
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -18,17 +14,12 @@ function hydrateSchema(schema, metadata) {
     // addOwnerInfo(schema);
 }
 
-function ensurePropsAndRequired(schema) {
-    schema.properties = schema.properties || {};
-    schema.required = schema.required || [];
-}
-
 /**
  * @param {import('./types').JsonSchema} schema
  * @param {import('./types').EntityMetadata} metadata
  */
 function addIdentifier(schema, metadata) {
-    addAnIdentifer(schema, metadata.identifier);
+    addRequiredSchema(schema, metadata.identifier.pathToId, metadata.identifier.schema);
 }
 
 /**
@@ -40,24 +31,12 @@ function addStringIdentifier(schema, metadata) {
     if (!identifier) {
         return;
     }
-    addAnIdentifer(schema, identifier, false);
-}
-
-/**
- * @param {import('./types').JsonSchema} schema
- * @param {import('./types').Identifier} identifier
- * @param {boolean} required
- */
-function addAnIdentifer(schema, identifier, required = true) {
-    ensurePropsAndRequired(schema);
     if (schema.properties[identifier.name]) {
         return;
     }
     schema.properties[identifier.name] = Object.assign({}, identifier.schema);
-    if (required) {
-        schema.required.push(identifier.name);
-    }
 }
+
 /**
  * @param {import('./types').JsonSchema} schema
  * @param {import('./types').TenantInfo} tenantInfo
@@ -66,14 +45,7 @@ function addTenantInfo(schema, tenantInfo) {
     if (!tenantInfo) {
         return;
     }
-    ensurePropsAndRequired(schema);
-    const currentValue = getSchemaForEntityPath(schema, tenantInfo.entityPathToId);
-    if (currentValue) {
-        markFullPathAsRequiredForEntityPath(schema, tenantInfo.entityPathToId);
-        return;
-    }
-    setSchemaForEntityPath(schema, tenantInfo.entityPathToId, tenantInfo.schema);
-    markFullPathAsRequiredForEntityPath(schema, tenantInfo.entityPathToId);
+    addRequiredSchema(schema, tenantInfo.entityPathToId, tenantInfo.schema);
 }
 
 // function addStatusInfo(schema) {

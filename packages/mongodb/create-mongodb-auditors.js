@@ -4,7 +4,8 @@ const ObjectId = require('mongodb').ObjectId;
 const cloneDeep = require('lodash/cloneDeep');
 const { IsRequiredError } = require('../common-errors');
 const moment = require('moment');
-
+const get = require('lodash/get');
+const { removePropertyFromEntity } = require('../entity-metadata/json-schema-utilities');
 /**
  * @param {import('../entity-metadata').EntityMetadata} metadata
  * @param {import('mongodb').Db} db
@@ -32,20 +33,23 @@ module.exports = async function createMongoDbAuditors(metadata, db) {
         if (metadata.auditChanges !== true) {
             return;
         }
-        let id = currentEntitState[metadata.identifier.name];
+        let id = get(currentEntitState, metadata.identifier.pathToId);
         if (!id) {
-            throw new IsRequiredError(metadata.identifier.name, `MongoDB Audit - write ${action}`);
+            throw new IsRequiredError(
+                metadata.identifier.pathToId,
+                `MongoDB Audit - write ${action}`
+            );
         }
         const auditEntry = cloneDeep(currentEntitState);
         if (ObjectId.isValid(id)) {
             id = new ObjectId(id);
         }
         auditEntry._audit = {
-            [metadata.identifier.name]: id,
+            id,
             action,
             date: moment.utc().toDate(),
         };
-        delete auditEntry[metadata.identifier.name];
+        removePropertyFromEntity(auditEntry, metadata.identifier.pathToId);
         Object.assign(auditEntry._audit, context);
         await auditCollection.insertOne(auditEntry);
     }

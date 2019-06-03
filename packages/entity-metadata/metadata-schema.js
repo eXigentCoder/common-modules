@@ -35,12 +35,14 @@ module.exports = function() {
                 type: 'object',
                 additionalProperties: false,
                 properties: {
-                    name: commonSchemas.identifier,
+                    pathToId: {
+                        type: 'string',
+                    },
                     schema: {
                         type: 'object',
                     },
                 },
-                required: ['name', 'schema'],
+                required: ['pathToId', 'schema'],
             },
             stringIdentifier: {
                 type: 'object',

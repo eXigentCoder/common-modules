@@ -8,15 +8,19 @@ const direction = 'Output';
 describe('Entity Metadata', () => {
     describe('setAndValidateName', () => {
         it('should throw an error if no schema provided', () => {
+            // @ts-ignore
             expect(() => setAndValidateName()).to.throw('schema is required');
         });
         it('should throw an error if no core schema provided', () => {
+            // @ts-ignore
             expect(() => setAndValidateName({})).to.throw('coreSchema is required');
         });
         it('should throw an error if no operation provided', () => {
+            // @ts-ignore
             expect(() => setAndValidateName({}, {})).to.throw('operation is required');
         });
         it('should throw an error if no direction provided', () => {
+            // @ts-ignore
             expect(() => setAndValidateName({}, {}, operation)).to.throw('direction is required');
         });
         it('should throw an error if core schema has no name', () => {

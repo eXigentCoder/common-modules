@@ -7,7 +7,7 @@ const metadata = {
     name: 'bob',
     collectionName: 'bobs',
     identifier: {
-        name: '_id',
+        pathToId: '_id',
         schema: jsonSchemas.objectId,
     },
     schemas: {

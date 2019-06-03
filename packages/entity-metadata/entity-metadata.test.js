@@ -21,7 +21,7 @@ describe('Entity Metadata', () => {
                         },
                     },
                 },
-                identifier: { name: 'id', schema: { type: 'string' } },
+                identifier: { pathToId: 'id', schema: { type: 'string' } },
                 collectionName: 'users',
                 baseUrl: 'https://ryankotzen.com',
             };
@@ -46,7 +46,7 @@ describe('Entity Metadata', () => {
         });
         it('should throw an error if metadata.identifier is missing the name property', () => {
             const inputMetadata = validMetaData();
-            delete inputMetadata.identifier.name;
+            delete inputMetadata.identifier.pathToId;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(ValidationError);
@@ -117,7 +117,8 @@ describe('Entity Metadata', () => {
             };
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             expect(metadata).to.be.ok;
-            expect(metadata.schemas.create.properties[inputMetadata.identifier.name]).to.not.be.ok;
+            expect(metadata.schemas.create.properties[inputMetadata.identifier.pathToId]).to.not.be
+                .ok;
             expect(metadata.schemas.create.required).to.not.include(inputMetadata.identifier.name);
         });
     });
