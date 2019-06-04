@@ -187,11 +187,13 @@ describe('MongoDB', () => {
                 const entity = validEntity();
                 const context = createContext();
                 const created = await create(entity, context);
+                expect(created.tenantId).to.be.ok;
                 const toUpdate = JSON.parse(JSON.stringify(created));
                 toUpdate.username += '-updated';
                 const replaced = await replaceById(toUpdate._id, toUpdate, context);
                 expect(replaced.username).to.eql(toUpdate.username);
                 expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced.tenantId).to.eql(created.tenantId);
                 expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
             it('Should not allow you to replace an existing entity if from a different tenant', async () => {
@@ -201,6 +203,22 @@ describe('MongoDB', () => {
                 const toUpdate = JSON.parse(JSON.stringify(created));
                 toUpdate.username += '-updated';
                 await expect(replaceById(toUpdate._id, toUpdate, createContext())).to.be.rejected;
+            });
+
+            it('Should not allow you to change the tenantId', async () => {
+                const { replaceById, create } = await getPopulatedCrud(stringIdTenant);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                expect(created.tenantId).to.be.ok;
+                const toUpdate = JSON.parse(JSON.stringify(created));
+                toUpdate.username += '-updated';
+                toUpdate.tenantId += '-updated';
+                const replaced = await replaceById(toUpdate._id, toUpdate, context);
+                expect(replaced.username).to.eql(toUpdate.username);
+                expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced.tenantId).to.eql(created.tenantId);
+                expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
         });
         describe('Search', () => {

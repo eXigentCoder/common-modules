@@ -20,7 +20,7 @@ module.exports = class TenantError extends KrimZenNinjaBaseError {
             throw new IsRequiredError('title', 'TenantError', 'constructor');
         }
         super({
-            message: `The no "${title}" identifier was provided.`,
+            message: `The "${title}" identifier was provided.`,
             name: 'TenantError',
             codeSuffix: 'TENANT',
             innerError,

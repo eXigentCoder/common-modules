@@ -6,6 +6,7 @@ export interface JsonSchema extends JSONSchema7 {
     faker?: any;
     chance?: any;
     firebaseTimestamp?: boolean;
+    errorMessage?: any;
 }
 
 interface MainSchemas {

@@ -1,4 +1,4 @@
-import { Db, IndexOptions } from 'mongodb';
+import { Db, IndexOptions, Collection } from 'mongodb';
 import { Validator } from '../validation/ajv';
 import { ExecutionContext } from '../version-info/types';
 import { EntityMetadata } from '../entity-metadata/types';

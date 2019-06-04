@@ -8,7 +8,7 @@ const set = require('lodash/set');
 const { EntityNotFoundError } = require('../common-errors');
 const createGetIdentifierQuery = require('./create-identifier-query');
 const createMongoDbAuditors = require('./create-mongodb-auditors');
-const { removePropertyFromEntity } = require('../entity-metadata/json-schema-utilities');
+
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
@@ -102,9 +102,9 @@ function getCreate({
  */
 function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTenantToFilter }) {
     return async function getById(id, context) {
-        const query = getIdentifierQuery(id);
-        addTenantToFilter(query, context);
-        const item = await collection.findOne(query);
+        const filter = getIdentifierQuery(id);
+        addTenantToFilter(filter, context);
+        const item = await collection.findOne(filter);
         if (!item) {
             throw new EntityNotFoundError(metadata.title, id);
         }
@@ -119,9 +119,9 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTe
  */
 function getDeleteById({ collection, getIdentifierQuery, metadata, auditors, addTenantToFilter }) {
     return async function deleteById(id, context) {
-        const query = getIdentifierQuery(id);
-        addTenantToFilter(query, context);
-        const result = await collection.findOneAndDelete(query);
+        const filter = getIdentifierQuery(id);
+        addTenantToFilter(filter, context);
+        const result = await collection.findOneAndDelete(filter);
         if (!result.value) {
             throw new EntityNotFoundError(metadata.title, id);
         }
@@ -149,19 +149,29 @@ function getReplaceById({
         // comes from outside, can't be trusted
         delete entity.versionInfo;
         delete entity._id;
-        const query = getIdentifierQuery(id);
+        const filter = getIdentifierQuery(id);
         if (metadata.tenantInfo) {
-            removePropertyFromEntity(entity, metadata.tenantInfo.entityPathToId);
-            addTenantToFilter(query, context);
+            addTenantToFilter(filter, context);
+        }
+        const existing = await collection.findOne(filter);
+        if (!existing) {
+            throw new EntityNotFoundError(metadata.title, JSON.stringify(filter));
+        }
+        if (metadata.tenantInfo) {
+            const existingTenantId = get(existing, metadata.tenantInfo.entityPathToId);
+            if (!existingTenantId) {
+                throw new Error(
+                    `existingTenantId was null at path "${
+                        metadata.tenantInfo.entityPathToId
+                    }" for ${metadata.title} with id ${entity._id}`
+                );
+            }
+            set(entity, metadata.tenantInfo.entityPathToId, existingTenantId);
         }
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
-        const existing = await collection.findOne(query);
-        if (!existing) {
-            throw new EntityNotFoundError(metadata.title, JSON.stringify(query));
-        }
         entity.versionInfo = existing.versionInfo;
         setVersionInfo(entity, context);
-        const replaceResult = await collection.findOneAndReplace(query, entity);
+        const replaceResult = await collection.findOneAndReplace(filter, entity);
         entity._id = replaceResult.value._id;
         await auditors.writeReplacement(replaceResult.value, entity, context);
         mapOutput(entity);

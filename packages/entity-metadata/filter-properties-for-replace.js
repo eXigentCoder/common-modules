@@ -11,9 +11,6 @@ module.exports = function filterPropertiesForReplace(schema, metadata) {
         throw new Error('Schema is a required field');
     }
     removeSchemaAndRequired(schema, metadata.identifier.pathToId);
-    if (metadata.tenantInfo) {
-        removeSchemaAndRequired(schema, metadata.tenantInfo.entityPathToId);
-    }
     // delete schema.properties.status;
     // removeFromArrayIfExists(schema.required, 'status');
     // delete schema.properties.statusDate;

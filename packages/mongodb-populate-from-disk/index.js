@@ -1,8 +1,8 @@
 'use strict';
 
-const dropExistingData = require('./drop-existing-data');
-const createTestData = require('./create-test-data');
-const v8n = require('v8n');
+const dropExistingData = require(`./drop-existing-data`);
+const createTestData = require(`./create-test-data`);
+const v8n = require(`v8n`);
 /**
  * @typedef {Object} Options
  * @property {string} options.workingDirectory
@@ -12,13 +12,16 @@ const v8n = require('v8n');
  * @param {Options} options The options used to generate the data
  */
 // @ts-ignore
-module.exports = async function populateDbFromDisk(db, options = {}) {
+
+async function populateDbFromDisk(db, options = {}) {
     v8n()
         .string()
         .minLength(1)
         .check(options.workingDirectory);
     if (options.dropExistingData) {
-        await dropExistingData(db);
+        await dropExistingData(db, false);
     }
     await createTestData(db, options.workingDirectory);
-};
+}
+
+module.exports = { populateDbFromDisk, dropExistingData, createTestData };
