@@ -131,6 +131,16 @@
                 "name": "krimzen-ninja-base-error.test.js"
             },
             {
+                "relativePath": "packages/common-errors/tenant-error/tenant-error.js",
+                "test": false,
+                "name": "tenant-error.js"
+            },
+            {
+                "relativePath": "packages/common-errors/tenant-error/tenant-error.test.js",
+                "test": true,
+                "name": "tenant-error.test.js"
+            },
+            {
                 "relativePath": "packages/common-errors/types.d.ts",
                 "test": false,
                 "name": "types.d.ts"
@@ -390,14 +400,19 @@
                 "test": false
             },
             {
-                "name": "filter-properties-for-update.js",
-                "relativePath": "packages/entity-metadata/filter-properties-for-update.js",
+                "name": "filter-properties-for-replace.js",
+                "relativePath": "packages/entity-metadata/filter-properties-for-replace.js",
                 "test": false
             },
             {
                 "name": "hydrate-schema.js",
                 "relativePath": "packages/entity-metadata/hydrate-schema.js",
                 "test": false
+            },
+            {
+                "name": "hydrate-schema.test.js",
+                "relativePath": "packages/entity-metadata/hydrate-schema.test.js",
+                "test": true
             },
             {
                 "name": "index.js",
@@ -410,13 +425,18 @@
                 "test": false
             },
             {
-                "name": "metadata-schema.js",
-                "relativePath": "packages/entity-metadata/metadata-schema.js",
+                "name": "json-schema-utilities.js",
+                "relativePath": "packages/entity-metadata/json-schema-utilities.js",
                 "test": false
             },
             {
-                "name": "remove-from-array-if-exists.js",
-                "relativePath": "packages/entity-metadata/remove-from-array-if-exists.js",
+                "name": "json-schema-utilities.test.js",
+                "relativePath": "packages/entity-metadata/json-schema-utilities.test.js",
+                "test": false
+            },
+            {
+                "name": "metadata-schema.js",
+                "relativePath": "packages/entity-metadata/metadata-schema.js",
                 "test": false
             },
             {
@@ -430,14 +450,14 @@
                 "test": true
             },
             {
-                "name": "set-and-validate-name.js",
-                "relativePath": "packages/entity-metadata/set-and-validate-name.js",
+                "name": "set-and-validate-title.js",
+                "relativePath": "packages/entity-metadata/set-and-validate-title.js",
                 "test": false
             },
             {
-                "name": "set-and-validate-name.test.js",
-                "relativePath": "packages/entity-metadata/set-and-validate-name.test.js",
-                "test": true
+                "name": "set-and-validate-title.test.js",
+                "relativePath": "packages/entity-metadata/set-and-validate-title.test.js",
+                "test": false
             },
             {
                 "name": "title-to-string-identifier.js",
