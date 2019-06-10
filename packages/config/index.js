@@ -1,17 +1,17 @@
 'use strict';
 
-const _ = require('lodash');
-const nconf = require('nconf');
-const path = require('path');
-const debug = require('debug')('@exigentcoder/common-modules.config');
+const _ = require(`lodash`);
+const nconf = require(`nconf`);
+const path = require(`path`);
+const debug = require(`debug`)(`@exigentcoder/common-modules.config`);
 
 let initialised = false;
 const defaultConfigOptions = {
     name: null,
-    configPath: '',
+    configPath: ``,
     argvOptions: null,
     envOptions: {
-        separator: '_',
+        separator: `_`,
     },
 };
 
@@ -26,21 +26,21 @@ const defaultConfigOptions = {
  * @param {import('./types').ConfigOptions|string} inputOptions The options used to setup the configuration library.
  */
 function initialise(inputOptions) {
-    debug('Initialising configuration with options: %o', inputOptions);
-    if (typeof inputOptions === 'string') {
+    debug(`Initialising configuration with options: %o`, inputOptions);
+    if (typeof inputOptions === `string`) {
         inputOptions = {
             name: inputOptions,
         };
     }
     _.defaults(inputOptions, defaultConfigOptions);
     if (!inputOptions.name) {
-        throw new Error('inputOptions.source is required');
+        throw new Error(`inputOptions.source is required`);
     }
-    if (typeof inputOptions.name !== 'string') {
-        throw new Error('Source is required');
+    if (typeof inputOptions.name !== `string`) {
+        throw new Error(`Source is required`);
     }
     const internalConfig = {
-        NODE_ENV: process.env.NODE_ENV || 'development',
+        NODE_ENV: process.env.NODE_ENV || `development`,
         name: inputOptions.name,
     };
     nconf
@@ -48,24 +48,24 @@ function initialise(inputOptions) {
         // @ts-ignore
         .env(inputOptions.envOptions)
         .defaults(internalConfig)
-        .use('memory'); //lets us call set later on
-    const environment = nconf.get('NODE_ENV');
+        .use(`memory`); //lets us call set later on
+    const environment = nconf.get(`NODE_ENV`);
     process.env.NODE_ENV = environment;
-    debug('Environment set to %s', environment);
+    debug(`Environment set to %s`, environment);
 
-    const environmentConfigFromFile = loadConfigFromFile('config/' + environment, inputOptions);
-    const defaultConfigFromFile = loadConfigFromFile('config/default', inputOptions);
+    const environmentConfigFromFile = loadConfigFromFile(`config/` + environment, inputOptions);
+    const defaultConfigFromFile = loadConfigFromFile(`config/default`, inputOptions);
 
     _.merge(internalConfig, defaultConfigFromFile, environmentConfigFromFile);
     nconf.defaults(internalConfig);
-    debug('Configuration initialised');
+    debug(`Configuration initialised`);
     initialised = true;
 }
 
 function loadConfigFromFile(filePath, options) {
     /* eslint-disable global-require*/
     const envFilePath = path.join(process.cwd(), options.configPath, filePath);
-    debug('Loading config file at %s', envFilePath);
+    debug(`Loading config file at %s`, envFilePath);
     let envFile;
     try {
         envFile = require(envFilePath);
@@ -75,9 +75,9 @@ function loadConfigFromFile(filePath, options) {
     }
     const payload = envFile.default || envFile;
     let config;
-    if (typeof payload === 'function') {
+    if (typeof payload === `function`) {
         config = payload(options);
-    } else if (typeof payload === 'object') {
+    } else if (typeof payload === `object`) {
         config = payload;
     } else {
         throw new Error(`Config file at ${filePath} must directly export a function or object`);
@@ -87,7 +87,7 @@ function loadConfigFromFile(filePath, options) {
 
 function ensureInitialised(methodName) {
     if (!initialised) {
-        throw new Error('You must call initialise before calling ' + methodName);
+        throw new Error(`You must call initialise before calling ` + methodName);
     }
 }
 
@@ -98,7 +98,7 @@ function ensureInitialised(methodName) {
  * @returns {any} The returned value if one existed
  */
 function get(key) {
-    ensureInitialised('get');
+    ensureInitialised(`get`);
     return nconf.get(key);
 }
 
@@ -110,7 +110,7 @@ function get(key) {
  */
 
 function set(key, value) {
-    ensureInitialised('set');
+    ensureInitialised(`set`);
     return nconf.set(key, value);
 }
 

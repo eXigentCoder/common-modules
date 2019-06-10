@@ -1,7 +1,7 @@
 'use strict';
 
-const IsRequiredError = require('../is-required-error/is-required-error');
-const KrimZenNinjaBaseError = require('../krimzen-ninja-base-error');
+const IsRequiredError = require(`../is-required-error/is-required-error`);
+const KrimZenNinjaBaseError = require(`../krimzen-ninja-base-error`);
 
 module.exports = class EntityNotFoundError extends KrimZenNinjaBaseError {
     /**
@@ -19,15 +19,15 @@ module.exports = class EntityNotFoundError extends KrimZenNinjaBaseError {
         }
     ) {
         if (!entityName) {
-            throw new IsRequiredError('entityName', 'EntityNotFoundError', 'constructor');
+            throw new IsRequiredError(`entityName`, `EntityNotFoundError`, `constructor`);
         }
         if (!id) {
-            throw new IsRequiredError('id', 'EntityNotFoundError', 'constructor');
+            throw new IsRequiredError(`id`, `EntityNotFoundError`, `constructor`);
         }
         super({
             message: `The "${entityName}" with an id of "${id}" was not found.`,
-            name: 'EntityNotFoundError',
-            codeSuffix: 'ENTITY_NOT_FOUND',
+            name: `EntityNotFoundError`,
+            codeSuffix: `ENTITY_NOT_FOUND`,
             innerError,
             decorate,
             httpStatusCode: 404,

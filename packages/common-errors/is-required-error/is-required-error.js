@@ -1,6 +1,6 @@
 'use strict';
 
-const KrimZenNinjaBaseError = require('../krimzen-ninja-base-error');
+const KrimZenNinjaBaseError = require(`../krimzen-ninja-base-error`);
 
 module.exports = class IsRequiredError extends KrimZenNinjaBaseError {
     /**
@@ -13,14 +13,14 @@ module.exports = class IsRequiredError extends KrimZenNinjaBaseError {
     constructor(
         requiredValue,
         functionName,
-        functionType = 'function',
+        functionType = `function`,
         { innerError, decorate, safeToShowToUsers = false } = {
             safeToShowToUsers: false,
             decorate: {},
         }
     ) {
         if (!requiredValue) {
-            throw new IsRequiredError('requiredValue', 'IsRequiredError', 'constructor');
+            throw new IsRequiredError(`requiredValue`, `IsRequiredError`, `constructor`);
         }
         let message;
         if (functionName) {
@@ -32,8 +32,8 @@ module.exports = class IsRequiredError extends KrimZenNinjaBaseError {
         }
         super({
             message,
-            name: 'IsRequiredError',
-            codeSuffix: 'IS_REQUIRED',
+            name: `IsRequiredError`,
+            codeSuffix: `IS_REQUIRED`,
             decorate,
             innerError,
             httpStatusCode: 500,

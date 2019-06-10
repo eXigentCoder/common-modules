@@ -1,7 +1,7 @@
 'use strict';
 
-const IsRequiredError = require('../is-required-error/is-required-error');
-const KrimZenNinjaBaseError = require('../krimzen-ninja-base-error');
+const IsRequiredError = require(`../is-required-error/is-required-error`);
+const KrimZenNinjaBaseError = require(`../krimzen-ninja-base-error`);
 
 module.exports = class TenantError extends KrimZenNinjaBaseError {
     /**
@@ -17,12 +17,12 @@ module.exports = class TenantError extends KrimZenNinjaBaseError {
         }
     ) {
         if (!title) {
-            throw new IsRequiredError('title', 'TenantError', 'constructor');
+            throw new IsRequiredError(`title`, `TenantError`, `constructor`);
         }
         super({
             message: `The "${title}" identifier was provided.`,
-            name: 'TenantError',
-            codeSuffix: 'TENANT',
+            name: `TenantError`,
+            codeSuffix: `TENANT`,
             innerError,
             decorate,
             httpStatusCode: 400,

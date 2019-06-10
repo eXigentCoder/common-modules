@@ -1,13 +1,13 @@
 'use strict';
 
-const _ = require('lodash');
-const pluralize = require('pluralize');
-const { IsRequiredError } = require('../common-errors');
+const _ = require(`lodash`);
+const pluralize = require(`pluralize`);
+const { IsRequiredError } = require(`../common-errors`);
 /** @param {import("./types").EntityMetadata} metadata */
 module.exports = function inferNames(metadata) {
     inferTitle(metadata);
     if (!metadata.title) {
-        throw new IsRequiredError('schema.title', 'inferNames', null, { decorate: metadata });
+        throw new IsRequiredError(`schema.title`, `inferNames`, null, { decorate: metadata });
     }
     inferTitlePlural(metadata);
     inferName(metadata);

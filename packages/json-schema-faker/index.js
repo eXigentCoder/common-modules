@@ -1,10 +1,10 @@
 'use strict';
 
-const jsf = require('json-schema-faker');
-const ObjectId = require('mongodb').ObjectId;
-const faker = require('faker');
+const jsf = require(`json-schema-faker`);
+const ObjectId = require(`mongodb`).ObjectId;
+const faker = require(`faker`);
 
-jsf.extend('faker', () => {
+jsf.extend(`faker`, () => {
     // @ts-ignore
     faker.custom = {
         mongoId: () => {
@@ -14,7 +14,7 @@ jsf.extend('faker', () => {
     return faker;
 });
 
-jsf.format('mongoId', () => {
+jsf.format(`mongoId`, () => {
     return new ObjectId().toString();
 });
 

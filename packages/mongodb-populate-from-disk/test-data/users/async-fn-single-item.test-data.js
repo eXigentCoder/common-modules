@@ -4,7 +4,7 @@ module.exports = async function() {
     return new Promise(resolve => {
         setImmediate(() => {
             resolve({
-                name: 'bobby06',
+                name: `bobby06`,
             });
         });
     });

@@ -1,7 +1,7 @@
 'use strict';
 
-const startsWithOneOf = require('@bit/bit.utils.string.starts-with-one-of');
-const mochaHooksNames = require('./mochaHooksNames');
+const startsWithOneOf = require(`@bit/bit.utils.string.starts-with-one-of`);
+const mochaHooksNames = require(`./mochaHooksNames`);
 
 module.exports = function baseReporter(runner) {
     const results = {};
@@ -20,35 +20,35 @@ module.exports = function baseReporter(runner) {
 
     runner.stats = stats;
 
-    runner.on('start', function() {
+    runner.on(`start`, function() {
         stats.start = new Date();
     });
 
-    runner.on('suite', function(suite) {
+    runner.on(`suite`, function(suite) {
         stats.suites = stats.suites || 0;
         suite.root || stats.suites++;
     });
 
-    runner.on('test end', function() {
+    runner.on(`test end`, function() {
         stats.tests = stats.tests || 0;
         stats.tests++;
     });
 
-    runner.on('pass', function(test) {
+    runner.on(`pass`, function(test) {
         stats.passes = stats.passes || 0;
 
         if (test.duration > test.slow()) {
-            test.speed = 'slow';
+            test.speed = `slow`;
         } else if (test.duration > test.slow() / 2) {
-            test.speed = 'medium';
+            test.speed = `medium`;
         } else {
-            test.speed = 'fast';
+            test.speed = `fast`;
         }
 
         stats.passes++;
     });
 
-    runner.on('fail', function(test, err) {
+    runner.on(`fail`, function(test, err) {
         if (startsWithOneOf(test.title, mochaHooksNames)) {
             stats.generalFailures = stats.generalFailures || 0;
             stats.generalFailures++;
@@ -60,12 +60,12 @@ module.exports = function baseReporter(runner) {
         test.err = err;
     });
 
-    runner.on('end', function() {
+    runner.on(`end`, function() {
         stats.end = new Date();
         stats.duration = new Date() - stats.start;
     });
 
-    runner.on('pending', function() {
+    runner.on(`pending`, function() {
         stats.pending++;
     });
 

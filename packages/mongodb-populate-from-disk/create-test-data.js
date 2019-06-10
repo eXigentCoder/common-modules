@@ -1,10 +1,10 @@
 'use strict';
 
-const glob = require('glob');
-const util = require('util');
+const glob = require(`glob`);
+const util = require(`util`);
 const loadGlob = util.promisify(glob);
-const path = require('path');
-const _ = require('lodash');
+const path = require(`path`);
+const _ = require(`lodash`);
 /**
  * @param {import('mongodb').Db} db The mongodb instance
  * @param {string} directory The directory from which to find the test data
@@ -17,7 +17,7 @@ module.exports = async function(db, directory) {
 };
 
 async function findCollections(directory) {
-    const testDataGlobPattern = path.join(directory, '/*/');
+    const testDataGlobPattern = path.join(directory, `/*/`);
     const foundTestDataDirectories = await loadGlob(testDataGlobPattern);
     const collections = [];
     foundTestDataDirectories.forEach(function(result) {
@@ -30,7 +30,7 @@ async function findCollections(directory) {
 }
 
 async function findDataForCollection(collection, db, directory) {
-    const testDataFileGlobPattern = path.join(directory, collection.name, '/*.js?(on)');
+    const testDataFileGlobPattern = path.join(directory, collection.name, `/*.js?(on)`);
     const foundTestDataFiles = await loadGlob(testDataFileGlobPattern);
     /**@type {import('mongodb').Collection} */
     const dbCollection = db.collection(collection.name);
@@ -42,16 +42,16 @@ async function findDataForCollection(collection, db, directory) {
             } else {
                 await dbCollection.insertOne(testFileData.data);
             }
-            console.log(testFileData.filename + ' inserted successfully');
+            console.log(testFileData.filename + ` inserted successfully`);
         } catch (err) {
-            console.error(testFileData.filename + ' failed to insert');
+            console.error(testFileData.filename + ` failed to insert`);
             throw err;
         }
     }
 }
 
 async function loadTestFileData(result) {
-    const relativeFilePath = './' + path.relative(__dirname, result).replace(/\\/g, '/');
+    const relativeFilePath = `./` + path.relative(__dirname, result).replace(/\\/g, `/`);
     let fileData = require(relativeFilePath);
     if (_.isFunction(fileData)) {
         fileData = await fileData();

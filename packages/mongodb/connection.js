@@ -1,7 +1,7 @@
 'use strict';
 
-var MongoClient = require('mongodb').MongoClient;
-const debug = require('debug')('@exigentcoder/common-modules.mongodb');
+var MongoClient = require(`mongodb`).MongoClient;
+const debug = require(`debug`)(`@exigentcoder/common-modules.mongodb`);
 
 /** @type {import('mongodb').Db} */
 let _db = null;
@@ -15,7 +15,7 @@ let _client = null;
  */
 async function getDb(urlConfig, options) {
     if (_db && _client && _db.serverConfig.isConnected()) {
-        debug('Using cached database instance');
+        debug(`Using cached database instance`);
         return _db;
     }
     await connect(urlConfig, options);
@@ -42,10 +42,10 @@ async function connect(
         useNewUrlParser: true,
     }
 ) {
-    debug('Creating new database instance');
+    debug(`Creating new database instance`);
     const url = buildMongoUrl(urlConfig);
     const client = await MongoClient.connect(url, options);
-    debug('Connected to mongodb');
+    debug(`Connected to mongodb`);
     _db = client.db(urlConfig.dbName);
     debug(`Database cache set to ${urlConfig.dbName}`);
     _client = client;

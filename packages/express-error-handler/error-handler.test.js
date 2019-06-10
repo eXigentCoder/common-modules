@@ -1,14 +1,14 @@
 'use strict';
 
-const errorHandler = require('./error-handler');
-const boom = require('@hapi/boom');
-const { ValidationError } = require('../common-errors');
+const errorHandler = require(`./error-handler`);
+const boom = require(`@hapi/boom`);
+const { ValidationError } = require(`../common-errors`);
 
-describe('Express error handler', () => {
-    describe('ErrorHandler', () => {
+describe(`Express error handler`, () => {
+    describe(`ErrorHandler`, () => {
         const handle = errorHandler();
-        it('should pass through boom errors', () => {
-            const error = boom.badRequest('hi');
+        it(`should pass through boom errors`, () => {
+            const error = boom.badRequest(`hi`);
             expect(boom.isBoom(error)).to.equal(true);
             handle(error, null, null, next);
             function next(err) {
@@ -16,16 +16,16 @@ describe('Express error handler', () => {
                 expect(err).to.equal(error);
             }
         });
-        it('should wrap non boom errors', () => {
-            const error = new Error('test');
+        it(`should wrap non boom errors`, () => {
+            const error = new Error(`test`);
             expect(boom.isBoom(error)).to.equal(false);
             handle(error, null, null, next);
             function next(err) {
                 expect(boom.isBoom(err)).to.equal(true);
             }
         });
-        it('should wrap strings as internal boom errors', () => {
-            const error = 'hi';
+        it(`should wrap strings as internal boom errors`, () => {
+            const error = `hi`;
             expect(boom.isBoom(error)).to.equal(false);
             handle(error, null, null, next);
             function next(err) {
@@ -34,8 +34,8 @@ describe('Express error handler', () => {
                 expect(err.output.statusCode).to.equal(500);
             }
         });
-        it('should wrap objects as internal boom errors', () => {
-            const error = { message: 'hi' };
+        it(`should wrap objects as internal boom errors`, () => {
+            const error = { message: `hi` };
             expect(boom.isBoom(error)).to.equal(false);
             handle(error, null, null, next);
             function next(err) {
@@ -45,9 +45,9 @@ describe('Express error handler', () => {
                 expect(err.data).to.equal(error);
             }
         });
-        it('should correctly convert a KrimZenNinjaBaseError to a boom error', () => {
-            const errors = { '1': 'some error', '2': 'some other error' };
-            const error = new ValidationError('Validation failed because of reasons', errors);
+        it(`should correctly convert a KrimZenNinjaBaseError to a boom error`, () => {
+            const errors = { '1': `some error`, '2': `some other error` };
+            const error = new ValidationError(`Validation failed because of reasons`, errors);
             expect(boom.isBoom(error)).to.equal(false);
             handle(error, null, null, next);
             function next(err) {

@@ -1,7 +1,7 @@
 'use strict';
 
-const setAndValidateId = require('./set-and-validate-id');
-const setAndValidateTitle = require('./set-and-validate-title');
+const setAndValidateId = require(`./set-and-validate-id`);
+const setAndValidateTitle = require(`./set-and-validate-title`);
 
 /**
  * @typedef {import('./types').Validator} Validator
@@ -26,7 +26,7 @@ module.exports = function ensureSchemaSet(
     }
     setAndValidateId(schema, metadata.schemas.core, operation);
     setAndValidateTitle(schema, metadata.schemas.core, operation, direction);
-    if (direction.toLowerCase() === 'output') {
+    if (direction.toLowerCase() === `output`) {
         if (outputValidator.getSchema(schema.$id)) {
             console.warn(
                 `Output schema with $id ${schema.$id} for ${

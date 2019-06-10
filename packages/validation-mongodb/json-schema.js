@@ -3,8 +3,8 @@
 /** a mongodb object id
  * @type {import("../entity-metadata/types").JsonSchema}*/
 const objectId = {
-    type: ['string', 'object'],
-    format: 'mongoId',
+    type: [`string`, `object`],
+    format: `mongoId`,
     mongoId: true,
     faker: {
         'custom.mongoId': true,
@@ -14,14 +14,14 @@ const objectId = {
     additionalProperties: true,
     properties: {
         _bsontype: {
-            type: 'string',
-            enum: ['ObjectID'],
+            type: `string`,
+            enum: [`ObjectID`],
         },
         id: {
-            type: 'object',
+            type: `object`,
         },
     },
-    required: ['_bsontype', 'id'],
+    required: [`_bsontype`, `id`],
 };
 
 module.exports = { objectId };

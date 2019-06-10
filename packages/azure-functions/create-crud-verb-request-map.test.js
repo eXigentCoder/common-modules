@@ -1,10 +1,10 @@
 'use strict';
 
-const createCrudVerbReqMap = require('./create-crud-verb-request-map');
+const createCrudVerbReqMap = require(`./create-crud-verb-request-map`);
 
-describe('Azure-Functions', () => {
-    describe('createCrudVerbReqMap', () => {
-        it('should work', () => {
+describe(`Azure-Functions`, () => {
+    describe(`createCrudVerbReqMap`, () => {
+        it(`should work`, () => {
             /** @type {import('../mongodb/types').Query} */
             const query = { filter: {} };
             /** @type {import('./types').CrudService} */

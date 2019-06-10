@@ -3,10 +3,10 @@
 module.exports = function() {
     return [
         {
-            name: 'bobby04',
+            name: `bobby04`,
         },
         {
-            name: 'bobby05',
+            name: `bobby05`,
         },
     ];
 };

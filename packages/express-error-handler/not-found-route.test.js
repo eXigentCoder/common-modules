@@ -1,13 +1,13 @@
 'use strict';
 
-const notFound = require('./not-found-route');
+const notFound = require(`./not-found-route`);
 
-describe('Express error handler', () => {
-    describe('notFound', () => {
+describe(`Express error handler`, () => {
+    describe(`notFound`, () => {
         const handle = notFound();
-        it('should send a 404 request with `Route not found : req.originalUrl`', () => {
+        it(`should send a 404 request with \`Route not found : req.originalUrl\``, () => {
             const req = {
-                originalUrl: 'someUrl',
+                originalUrl: `someUrl`,
             };
             const res = {};
             res.status = code => {

@@ -1,28 +1,28 @@
 'use strict';
 
-const { createOutputValidator, createValidator } = require('./ajv');
-const { ValidationError } = require('../common-errors');
-describe('Validation', () => {
-    describe('Custom keywords in constructor', () => {
-        it('should allow you to pass in custom keyword functions to the constructor', () => {
+const { createOutputValidator, createValidator } = require(`./ajv`);
+const { ValidationError } = require(`../common-errors`);
+describe(`Validation`, () => {
+    describe(`Custom keywords in constructor`, () => {
+        it(`should allow you to pass in custom keyword functions to the constructor`, () => {
             const validator = createValidator({ allErrors: true }, someKeywordFn);
-            const key = 'schemaWithKeyword';
+            const key = `schemaWithKeyword`;
             const schemaWithKeyword = {
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {
-                    answer: { type: 'string', SOMEKEYWORD: 'date' },
+                    answer: { type: `string`, SOMEKEYWORD: `date` },
                 },
             };
             validator.addSchema(schemaWithKeyword, key);
             const data = {
-                answer: '2019-01-01',
+                answer: `2019-01-01`,
             };
             validator.ensureValid(key, data);
             expect(data.answer).to.equal(42);
 
             function someKeywordFn(ajv) {
-                ajv.addKeyword('SOMEKEYWORD', {
+                ajv.addKeyword(`SOMEKEYWORD`, {
                     validate: (
                         keywordValue,
                         input,
@@ -38,15 +38,15 @@ describe('Validation', () => {
             }
         });
     });
-    describe('ensureValid', () => {
-        it('should validate if adding a schema with an explicit key', () => {
-            const key = 'someAwesomeSchema';
+    describe(`ensureValid`, () => {
+        it(`should validate if adding a schema with an explicit key`, () => {
+            const key = `someAwesomeSchema`;
             const simpleSchema = {
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {
                     integerValue: {
-                        type: 'integer',
+                        type: `integer`,
                     },
                 },
             };
@@ -54,15 +54,15 @@ describe('Validation', () => {
             validator.addSchema(simpleSchema, key);
             validator.ensureValid(key, { integerValue: 3 });
         });
-        it('should validate if adding a schema with an implicit key', () => {
-            const key = 'someAwesomeSchema';
+        it(`should validate if adding a schema with an implicit key`, () => {
+            const key = `someAwesomeSchema`;
             const simpleSchema = {
                 $id: key,
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {
                     integerValue: {
-                        type: 'integer',
+                        type: `integer`,
                     },
                 },
             };
@@ -70,40 +70,40 @@ describe('Validation', () => {
             validator.addSchema(simpleSchema);
             validator.ensureValid(key, { integerValue: 3 });
         });
-        it("should throw a ValidationError if the data doesn't match the schema", () => {
-            const key = 'someAwesomeSchema';
+        it(`should throw a ValidationError if the data doesn't match the schema`, () => {
+            const key = `someAwesomeSchema`;
             const simpleSchema = {
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {
                     integerValue: {
-                        type: 'integer',
+                        type: `integer`,
                     },
                 },
-                required: ['integerValue'],
+                required: [`integerValue`],
             };
             const validator = createValidator({ allErrors: true });
             validator.addSchema(simpleSchema, key);
             expect(() => validator.ensureValid(key, {})).to.throw(ValidationError);
         });
     });
-    describe('outputValidator', () => {
-        it('Should validate an empty object against a simple JSON Schema', () => {
+    describe(`outputValidator`, () => {
+        it(`Should validate an empty object against a simple JSON Schema`, () => {
             const simpleSchema = {
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {},
             };
             const validate = createOutputValidator().compile(simpleSchema);
             expect(validate({})).to.be.ok;
         });
-        it('Should add default values', () => {
+        it(`Should add default values`, () => {
             const simpleSchema = {
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {
                     iRABoolean: {
-                        type: 'boolean',
+                        type: `boolean`,
                         default: true,
                     },
                 },
@@ -113,66 +113,66 @@ describe('Validation', () => {
             expect(validate(obj)).to.be.ok;
             expect(validate(obj.iRABoolean)).to.equal(true);
         });
-        it('Should filter out extra properties', () => {
+        it(`Should filter out extra properties`, () => {
             const simpleSchema = {
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {},
             };
             const validate = createOutputValidator().compile(simpleSchema);
             const obj = {
-                a: 'b',
+                a: `b`,
             };
             expect(validate(obj)).to.be.ok;
             expect(obj.a).to.not.be.ok;
         });
-        it('Should not coerce types if possible', () => {
+        it(`Should not coerce types if possible`, () => {
             const simpleSchema = {
-                name: 'simple',
+                name: `simple`,
                 additionalProperties: false,
                 properties: {
-                    a: { type: 'integer' },
-                    b: { type: 'string' },
+                    a: { type: `integer` },
+                    b: { type: `string` },
                 },
             };
             const validate = createOutputValidator().compile(simpleSchema);
             const obj = {
-                a: '1',
-                b: '1',
+                a: `1`,
+                b: `1`,
             };
             expect(validate(obj)).to.be.ok;
             expect(obj.a).to.equal(1);
-            expect(obj.b).to.equal('1');
+            expect(obj.b).to.equal(`1`);
         });
-        describe('addSchema', () => {
-            it('should throw an error if you try add two of', () => {
+        describe(`addSchema`, () => {
+            it(`should throw an error if you try add two of`, () => {
                 const simpleSchema = {
-                    $id: 'bob',
-                    name: 'simple',
+                    $id: `bob`,
+                    name: `simple`,
                     additionalProperties: false,
                     properties: {},
                 };
                 const outputValidator = createOutputValidator();
                 outputValidator.addSchema(simpleSchema);
-                expect(() => outputValidator.addSchema(simpleSchema)).to.throw('already exists');
+                expect(() => outputValidator.addSchema(simpleSchema)).to.throw(`already exists`);
             });
-            it('should allow you to validate against an added schema', () => {
+            it(`should allow you to validate against an added schema`, () => {
                 const simpleSchema = {
-                    $id: 'bobby',
-                    name: 'simple',
+                    $id: `bobby`,
+                    name: `simple`,
                     additionalProperties: false,
                     properties: {
                         name: {
-                            type: 'string',
+                            type: `string`,
                         },
                     },
-                    required: ['name'],
+                    required: [`name`],
                 };
                 const outputValidator = createOutputValidator();
                 outputValidator.addSchema(simpleSchema);
                 const inValidObject = {};
                 expect(outputValidator.validate(simpleSchema.$id, inValidObject)).to.not.be.ok;
-                const validObject = { name: 'bob' };
+                const validObject = { name: `bob` };
                 expect(outputValidator.validate(simpleSchema.$id, validObject)).to.be.ok;
             });
         });

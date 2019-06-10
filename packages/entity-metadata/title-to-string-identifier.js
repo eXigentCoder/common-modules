@@ -1,6 +1,6 @@
 'use strict';
-const v8n = require('v8n');
-const kebabCase = require('lodash/kebabCase');
+const v8n = require(`v8n`);
+const kebabCase = require(`lodash/kebabCase`);
 
 /**
  * @param {string} title

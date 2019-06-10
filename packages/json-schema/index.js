@@ -3,16 +3,16 @@
 /** a v4 unique identifier
  * @type {import("../entity-metadata/types").JsonSchema}*/
 const uuid = {
-    type: 'string',
-    format: 'uuid',
+    type: `string`,
+    format: `uuid`,
     minLength: 36,
     maxLength: 36,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const identifier = {
-    description: 'A human readable string identifier used to refer to an entitiy',
-    type: 'string',
+    description: `A human readable string identifier used to refer to an entitiy`,
+    type: `string`,
     minLength: 1,
     pattern: convertRegexToAjvString(/^[a-zA-Z0-9-_]+$/),
 };
@@ -20,14 +20,14 @@ const identifier = {
 /** the name of the entity as displayed to a human
  * @type {import("../entity-metadata/types").JsonSchema}*/
 const title = {
-    type: 'string',
+    type: `string`,
     minLength: 1,
     pattern: convertRegexToAjvString(/^[a-zA-Z0-9- ]+$/),
 };
 
 /**@type {import("../entity-metadata/types").JsonSchema} */
 const numberString = {
-    type: 'string',
+    type: `string`,
     minLength: 1,
     pattern: convertRegexToAjvString(/^[0-9]+$/),
 };
@@ -35,14 +35,14 @@ const numberString = {
 /** A description of the entity
  * @type {import("../entity-metadata/types").JsonSchema}*/
 const description = {
-    type: 'string',
+    type: `string`,
     pattern: convertRegexToAjvString(/^[a-zA-Z0-9-\s]*$/),
 };
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const uniqueStringArray = {
-    type: 'array',
+    type: `array`,
     items: {
-        type: 'string',
+        type: `string`,
         minLength: 1,
     },
     additionalItems: false,
@@ -52,22 +52,22 @@ const uniqueStringArray = {
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const nonEmptyString = {
-    type: 'string',
+    type: `string`,
     minLength: 1,
     pattern: convertRegexToAjvString(/^(?!\s*$).+/),
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const oneEmailAddress = {
-    type: 'string',
-    format: 'email',
+    type: `string`,
+    format: `email`,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const oneOrMoreEmailAddresses = {
     oneOf: [
         {
-            type: 'array',
+            type: `array`,
             items: oneEmailAddress,
         },
         oneEmailAddress,
@@ -76,26 +76,26 @@ const oneOrMoreEmailAddresses = {
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const dateTime = {
-    type: 'string',
-    format: 'date-time',
+    type: `string`,
+    format: `date-time`,
     firebaseTimestamp: true,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const date = {
-    type: 'string',
-    format: 'date',
+    type: `string`,
+    format: `date`,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const time = {
-    type: 'string',
-    format: 'time',
+    type: `string`,
+    format: `time`,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const base64EncodedString = {
-    type: 'string',
+    type: `string`,
     pattern: convertRegexToAjvString(
         /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/
     ),
@@ -103,7 +103,7 @@ const base64EncodedString = {
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const integer = {
-    type: 'integer',
+    type: `integer`,
     multipleOf: 1.0,
 };
 
@@ -115,7 +115,7 @@ const positiveNonZeroInteger = Object.assign({ minimum: 1 }, integer);
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const number = {
-    type: 'number',
+    type: `number`,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
@@ -126,32 +126,32 @@ const positiveNonZeroNumber = Object.assign({ minimum: 1 }, number);
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const url = {
-    type: 'string',
-    format: 'uri',
+    type: `string`,
+    format: `uri`,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const alpha = {
-    type: 'string',
+    type: `string`,
     pattern: convertRegexToAjvString(/^[a-zA-Z]*$/),
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const nonEmptyAlpha = {
-    type: 'string',
+    type: `string`,
     minLength: 1,
     pattern: convertRegexToAjvString(/^[a-zA-Z]+$/),
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const ipV4 = {
-    type: 'string',
-    format: 'ipv4',
+    type: `string`,
+    format: `ipv4`,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const boolean = {
-    type: 'boolean',
+    type: `boolean`,
 };
 
 module.exports = {

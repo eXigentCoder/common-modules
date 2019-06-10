@@ -5,10 +5,10 @@ module.exports = async function() {
         setImmediate(() => {
             resolve([
                 {
-                    name: 'bobby07',
+                    name: `bobby07`,
                 },
                 {
-                    name: 'bobby08',
+                    name: `bobby08`,
                 },
             ]);
         });

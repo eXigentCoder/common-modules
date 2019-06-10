@@ -1,8 +1,8 @@
 'use strict';
 
-const { removeFromArrayIfExists } = require('./json-schema-utilities');
-const _ = require('lodash');
-const withVersionInfo = require('../version-info/with-version-info');
+const { removeFromArrayIfExists } = require(`./json-schema-utilities`);
+const _ = require(`lodash`);
+const withVersionInfo = require(`../version-info/with-version-info`);
 
 /** @param {import('./types').JsonSchema} schema */
 module.exports = function filterPropertiesForOutput(schema) {

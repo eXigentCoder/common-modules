@@ -1,5 +1,5 @@
 'use strict';
 
 module.exports = {
-    name: 'bobby00',
+    name: `bobby00`,
 };

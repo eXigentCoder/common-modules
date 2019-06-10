@@ -1,24 +1,24 @@
 'use strict';
 
-const crypto = require('crypto');
-const { getClient, getDb, createAuditors } = require('.');
-const { createInputValidator, createOutputValidator } = require('../validation');
-const { jsonSchemas, addMongoId } = require('../validation-mongodb');
-const generateEntityMetadata = require('../entity-metadata');
-const ObjectId = require('mongodb').ObjectId;
-const { createVersionInfoSetter } = require('../version-info');
-const cloneDeep = require('lodash/cloneDeep');
+const crypto = require(`crypto`);
+const { getClient, getDb, createAuditors } = require(`.`);
+const { createInputValidator, createOutputValidator } = require(`../validation`);
+const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
+const generateEntityMetadata = require(`../entity-metadata`);
+const ObjectId = require(`mongodb`).ObjectId;
+const { createVersionInfoSetter } = require(`../version-info`);
+const cloneDeep = require(`lodash/cloneDeep`);
 
-describe('MongoDB', () => {
-    describe('Auditors', () => {
-        describe('Create', () => {
-            it('should throw an error if the entity has no _id', async () => {
+describe(`MongoDB`, () => {
+    describe(`Auditors`, () => {
+        describe(`Create`, () => {
+            it(`should throw an error if the entity has no _id`, async () => {
                 const { writeCreation, setVersionInfo } = await getAuditors();
                 const context = createContext();
                 const entity = setVersionInfo(validCreatedEntity(), context);
                 await expect(writeCreation(entity, context)).to.be.rejected;
             });
-            it('should succeed', async () => {
+            it(`should succeed`, async () => {
                 const { writeCreation, setVersionInfo } = await getAuditors();
                 const context = createContext();
                 const entity = setVersionInfo(validCreatedEntity(), context);
@@ -26,8 +26,8 @@ describe('MongoDB', () => {
                 await writeCreation(entity, context);
             });
         });
-        describe('Delete', () => {
-            it('should succeed for ObjectId object', async () => {
+        describe(`Delete`, () => {
+            it(`should succeed for ObjectId object`, async () => {
                 const { writeDeletion, setVersionInfo } = await getAuditors();
                 const context = createContext();
                 const entity = setVersionInfo(validCreatedEntity(), context);
@@ -35,8 +35,8 @@ describe('MongoDB', () => {
                 await writeDeletion(entity, context);
             });
         });
-        describe('replace', () => {
-            it('should succeed for ObjectId object', async () => {
+        describe(`replace`, () => {
+            it(`should succeed for ObjectId object`, async () => {
                 const { writeReplacement, setVersionInfo } = await getAuditors();
                 const context = createContext();
                 const entityBefore = setVersionInfo(validCreatedEntity(), context);
@@ -59,8 +59,8 @@ after(async () => {
 /**@returns {Promise<import('./types').Auditors<object> & {setVersionInfo:import('../version-info/types').SetVersionInfo}>} */
 async function getAuditors() {
     const urlConfig = {
-        server: 'localhost',
-        dbName: 'test-common',
+        server: `localhost`,
+        dbName: `test-common`,
     };
     const db = await getDb(urlConfig);
     const inputValidator = createInputValidator(addMongoId);
@@ -77,31 +77,31 @@ function validMetaData() {
     return {
         schemas: {
             core: {
-                type: 'object',
+                type: `object`,
                 properties: {
                     firstName: {
-                        type: 'string',
+                        type: `string`,
                     },
                     lastName: {
-                        type: 'string',
+                        type: `string`,
                     },
                 },
             },
         },
-        name: 'user',
-        identifier: { pathToId: '_id', schema: jsonSchemas.objectId },
-        stringIdentifier: { pathToId: 'username', schema: { type: 'string' } },
-        collectionName: 'users',
+        name: `user`,
+        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
+        stringIdentifier: { pathToId: `username`, schema: { type: `string` } },
+        collectionName: `users`,
         auditChanges: true,
-        baseUrl: 'https://ryankotzen.com',
+        baseUrl: `https://ryankotzen.com`,
     };
 }
 
 function validCreatedEntity() {
     return {
         username: `bob-${randomString()}`,
-        firstName: 'bob',
-        lastName: 'bobson',
+        firstName: `bob`,
+        lastName: `bobson`,
     };
 }
 
@@ -111,11 +111,11 @@ function createContext() {
         identity: {
             id: randomString(),
         },
-        codeVersion: '0.0.1',
-        sourceIp: '127.0.0.1',
-        source: 'tests',
+        codeVersion: `0.0.1`,
+        sourceIp: `127.0.0.1`,
+        source: `tests`,
     };
 }
 function randomString() {
-    return crypto.randomBytes(20).toString('hex');
+    return crypto.randomBytes(20).toString(`hex`);
 }

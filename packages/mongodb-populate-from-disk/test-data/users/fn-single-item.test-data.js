@@ -2,6 +2,6 @@
 
 module.exports = function() {
     return {
-        name: 'bobby03',
+        name: `bobby03`,
     };
 };

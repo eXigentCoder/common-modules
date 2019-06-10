@@ -1,6 +1,6 @@
 'use strict';
 
-const { methodNotAllowed } = require('@hapi/boom');
+const { methodNotAllowed } = require(`@hapi/boom`);
 
 /**
  *

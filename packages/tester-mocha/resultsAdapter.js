@@ -1,6 +1,6 @@
 'use strict';
 
-const isEmptyObject = require('@bit/bit.utils.validation.empty');
+const isEmptyObject = require(`@bit/bit.utils.validation.empty`);
 
 const normalizeError = err => {
     return {

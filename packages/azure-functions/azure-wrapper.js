@@ -1,6 +1,6 @@
 'use strict';
-const { isBoom, boomify } = require('@hapi/boom');
-const { KrimZenNinjaBaseError } = require('../common-errors');
+const { isBoom, boomify } = require(`@hapi/boom`);
+const { KrimZenNinjaBaseError } = require(`../common-errors`);
 module.exports = azureWrapper;
 
 /**

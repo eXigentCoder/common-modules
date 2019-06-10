@@ -1,25 +1,25 @@
 'use strict';
 
-const { getDb, getClient } = require('./connection');
+const { getDb, getClient } = require(`./connection`);
 
-describe('MongoDB', () => {
+describe(`MongoDB`, () => {
     const urlConfig = {
-        server: 'localhost',
-        dbName: 'test-common',
+        server: `localhost`,
+        dbName: `test-common`,
     };
-    describe('getDb', () => {
-        it('should return the created db object', async () => {
+    describe(`getDb`, () => {
+        it(`should return the created db object`, async () => {
             const db = await getDb(urlConfig);
             expect(db).to.be.ok;
         });
-        it('should return the same db object if called twice', async () => {
+        it(`should return the same db object if called twice`, async () => {
             const db = await getDb(urlConfig);
             const db2 = await getDb(urlConfig);
             expect(db).to.eql(db2);
         });
     });
-    describe('getClient', () => {
-        it('should return the created client object', async () => {
+    describe(`getClient`, () => {
+        it(`should return the created client object`, async () => {
             const client = await getClient();
             expect(client).to.be.ok;
         });

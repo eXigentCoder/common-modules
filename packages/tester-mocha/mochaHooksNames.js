@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = ['"before each"', '"before"', '"after each"', '"after"'];
+module.exports = [`"before each"`, `"before"`, `"after each"`, `"after"`];

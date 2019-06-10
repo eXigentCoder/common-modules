@@ -1,9 +1,9 @@
 'use strict';
-const mongo = require('mongodb');
+const mongo = require(`mongodb`);
 
 module.exports = ajv => {
-    ajv.addFormat('mongoId', isValidMongoId);
-    ajv.addKeyword('mongoId', {
+    ajv.addFormat(`mongoId`, isValidMongoId);
+    ajv.addKeyword(`mongoId`, {
         validate: validateAndCoerceToMongoId,
     });
 };

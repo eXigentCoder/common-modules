@@ -1,8 +1,8 @@
 'use strict';
 
-const baseReporter = require('./baseReporter');
-const startsWithOneOf = require('@bit/bit.utils.string.starts-with-one-of');
-const mochaHooksNames = require('./mochaHooksNames');
+const baseReporter = require(`./baseReporter`);
+const startsWithOneOf = require(`@bit/bit.utils.string.starts-with-one-of`);
+const mochaHooksNames = require(`./mochaHooksNames`);
 
 // Return a plain-object representation of `test`, free of cyclic properties etc.
 const clean = test => {
@@ -33,15 +33,15 @@ module.exports = function JSONReporter(runner) {
     let passes = [];
     let generalFailures = [];
 
-    runner.on('test end', function(test) {
+    runner.on(`test end`, function(test) {
         tests.push(test);
     });
 
-    runner.on('pass', function(test) {
+    runner.on(`pass`, function(test) {
         passes.push(test);
     });
 
-    runner.on('fail', function(test) {
+    runner.on(`fail`, function(test) {
         if (startsWithOneOf(test.title, mochaHooksNames)) {
             generalFailures.push(test);
         } else {
@@ -49,11 +49,11 @@ module.exports = function JSONReporter(runner) {
         }
     });
 
-    runner.on('pending', function(test) {
+    runner.on(`pending`, function(test) {
         pending.push(test);
     });
 
-    runner.on('end', function() {
+    runner.on(`end`, function() {
         var obj = {
             stats: results.stats,
             tests: tests.map(clean),

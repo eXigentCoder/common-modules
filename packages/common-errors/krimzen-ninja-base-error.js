@@ -16,13 +16,13 @@ class KrimZenNinjaBaseError extends Error {
         httpStatusCode = 500,
     }) {
         if (!message) {
-            throw new Error('message provided to KrimZenNinjaBaseError was falsy');
+            throw new Error(`message provided to KrimZenNinjaBaseError was falsy`);
         }
         if (!name) {
-            throw new Error('name provided to KrimZenNinjaBaseError was falsy');
+            throw new Error(`name provided to KrimZenNinjaBaseError was falsy`);
         }
         if (!codeSuffix) {
-            throw new Error('codeSuffix provided to KrimZenNinjaBaseError was falsy');
+            throw new Error(`codeSuffix provided to KrimZenNinjaBaseError was falsy`);
         }
         super(message);
         this.name = name;
@@ -37,12 +37,12 @@ class KrimZenNinjaBaseError extends Error {
     toString(level = 0) {
         let message = `${this.name}: ${this.message}`;
         if (this.decorate) {
-            message += ' ' + JSON.stringify(this.decorate, null, 0);
+            message += ` ` + JSON.stringify(this.decorate, null, 0);
         }
         if (this.innerError) {
-            message += '\n';
+            message += `\n`;
             for (let i = 0; i <= level; i++) {
-                message += '\t';
+                message += `\t`;
             }
             // @ts-ignore
             message += this.innerError.toString(level + 1);

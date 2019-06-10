@@ -1,11 +1,11 @@
 'use strict';
 
-const commonSchemas = require('../json-schema');
-const generateId = require('../json-schema/common-module-schema-id-generator');
+const commonSchemas = require(`../json-schema`);
+const generateId = require(`../json-schema/common-module-schema-id-generator`);
 //const jsonSchema = require('ajv/lib/refs/json-schema-draft-07.json');
 
 const objectSchema = {
-    type: 'object',
+    type: `object`,
     properties: {},
     additionalProperties: true,
 };
@@ -13,13 +13,13 @@ const objectSchema = {
 //todo rk, duplication here between typescript and JSON schema, need to generate the TS
 module.exports = function() {
     return {
-        $id: generateId('metadata'),
-        name: 'metadata',
-        type: 'object',
+        $id: generateId(`metadata`),
+        name: `metadata`,
+        type: `object`,
         additionalProperties: false,
         properties: {
             schemas: {
-                type: 'object',
+                type: `object`,
                 additionalProperties: true,
                 properties: {
                     core: objectSchema,
@@ -27,69 +27,69 @@ module.exports = function() {
                     output: objectSchema,
                     replace: objectSchema,
                 },
-                required: ['core'],
+                required: [`core`],
             },
             identifier: {
-                type: 'object',
+                type: `object`,
                 additionalProperties: false,
                 properties: {
                     pathToId: {
-                        type: 'string',
+                        type: `string`,
                     },
                     schema: {
-                        type: 'object',
+                        type: `object`,
                     },
                 },
-                required: ['pathToId', 'schema'],
+                required: [`pathToId`, `schema`],
             },
             stringIdentifier: {
-                type: 'object',
+                type: `object`,
                 additionalProperties: false,
                 properties: {
                     pathToId: {
-                        type: 'string',
+                        type: `string`,
                     },
                     schema: {
-                        type: 'object',
+                        type: `object`,
                     },
                     entitySourcePath: {
-                        type: 'string',
+                        type: `string`,
                     },
                 },
-                required: ['pathToId', 'schema'],
+                required: [`pathToId`, `schema`],
             },
             tenantInfo: {
-                type: 'object',
+                type: `object`,
                 additionalProperties: false,
                 properties: {
                     entityPathToId: {
-                        type: 'string',
+                        type: `string`,
                     },
                     executionContextSourcePath: {
-                        type: 'string',
+                        type: `string`,
                     },
                     title: {
-                        type: 'string',
+                        type: `string`,
                     },
                     schema: {
-                        type: 'object',
+                        type: `object`,
                     },
                 },
-                required: ['entityPathToId', 'executionContextSourcePath', 'title', 'schema'],
+                required: [`entityPathToId`, `executionContextSourcePath`, `title`, `schema`],
             },
             collectionName: commonSchemas.identifier,
             auditCollectionName: commonSchemas.identifier,
             auditChanges: commonSchemas.boolean,
             baseUrl: commonSchemas.url,
             aOrAn: {
-                type: 'string',
-                enum: ['An', 'A'],
+                type: `string`,
+                enum: [`An`, `A`],
             },
             name: commonSchemas.identifier,
             namePlural: commonSchemas.identifier,
             title: commonSchemas.title,
             titlePlural: commonSchemas.title,
         },
-        required: ['schemas', 'identifier', 'collectionName', 'baseUrl'],
+        required: [`schemas`, `identifier`, `collectionName`, `baseUrl`],
     };
 };

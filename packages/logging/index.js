@@ -1,18 +1,18 @@
 'use strict';
 
-const createPino = require('pino');
-require('pino-pretty');
-const { IsRequiredError } = require('../common-errors');
+const createPino = require(`pino`);
+require(`pino-pretty`);
+const { IsRequiredError } = require(`../common-errors`);
 let _pino;
 
 const consoleMap = {
-    fatal: { name: 'fatal' },
-    error: { name: 'error' },
-    warn: { name: 'warn' },
-    log: { name: 'info' },
-    info: { name: 'info' },
-    debug: { name: 'debug' },
-    trace: { name: 'trace' },
+    fatal: { name: `fatal` },
+    error: { name: `error` },
+    warn: { name: `warn` },
+    log: { name: `info` },
+    info: { name: `info` },
+    debug: { name: `debug` },
+    trace: { name: `trace` },
 };
 
 /**
@@ -44,23 +44,23 @@ const logger = {
  */
 function initialise(options, stream) {
     if (!options) {
-        throw new IsRequiredError('options', initialise.name);
+        throw new IsRequiredError(`options`, initialise.name);
     }
     if (!options.name) {
-        throw new IsRequiredError('options.name', initialise.name);
+        throw new IsRequiredError(`options.name`, initialise.name);
     }
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== `production`) {
         if (options.prettyPrint === undefined) {
             options.prettyPrint = {
-                translateTime: 'SYS:standard',
+                translateTime: `SYS:standard`,
             };
         }
         if (options.level === undefined) {
-            options.level = process.env.LEVEL || 'trace';
+            options.level = process.env.LEVEL || `trace`;
         }
     } else {
         if (options.level === undefined) {
-            options.level = process.env.LEVEL || 'info';
+            options.level = process.env.LEVEL || `info`;
         }
     }
     _pino = createPino(options, stream);
@@ -72,7 +72,7 @@ function initialise(options, stream) {
  * @type {OverrideConsole}
  */
 function overrideConsole() {
-    ensureInitialised('overrideConsole');
+    ensureInitialised(`overrideConsole`);
     Object.getOwnPropertyNames(consoleMap).forEach(function(consoleMethodName) {
         const map = consoleMap[consoleMethodName];
         const pinoMethodName = map.name;
@@ -86,7 +86,7 @@ function overrideConsole() {
 
 function ensureInitialised(methodName) {
     if (!_pino) {
-        throw new Error('You must call initialise before calling ' + methodName);
+        throw new Error(`You must call initialise before calling ` + methodName);
     }
 }
 
@@ -97,7 +97,7 @@ function ensureInitialised(methodName) {
  * @type {Child}
  */
 function child() {
-    ensureInitialised('child');
+    ensureInitialised(`child`);
     return _pino.child.apply(_pino, arguments);
 }
 
@@ -106,7 +106,7 @@ function child() {
  * @type {Pino}
  */
 function pino() {
-    ensureInitialised('pino');
+    ensureInitialised(`pino`);
     return _pino;
 }
 

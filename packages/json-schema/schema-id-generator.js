@@ -1,6 +1,6 @@
 'use strict';
-const v8n = require('v8n');
-const url = require('url');
+const v8n = require(`v8n`);
+const url = require(`url`);
 const baseUrlValidator = v8n()
     .string()
     .pattern(/^http(s?):\/\//)

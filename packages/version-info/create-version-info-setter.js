@@ -1,12 +1,12 @@
 'use strict';
 
-const uuid = require('uuid');
-const moment = require('moment');
-const { IsRequiredError } = require('../common-errors');
-const defaultExecutionContextSchema = require('./execution-context-schema');
-const { createInputValidator } = require('../validation/ajv');
-const v8n = require('v8n');
-const get = require('lodash/get');
+const uuid = require(`uuid`);
+const moment = require(`moment`);
+const { IsRequiredError } = require(`../common-errors`);
+const defaultExecutionContextSchema = require(`./execution-context-schema`);
+const { createInputValidator } = require(`../validation/ajv`);
+const v8n = require(`v8n`);
+const get = require(`lodash/get`);
 
 /**
  * Creates an instance of the Version Info Setter
@@ -19,7 +19,7 @@ module.exports = function createVersionInfoSetter(options) {
     options.executionContextSchema =
         options.executionContextSchema || defaultExecutionContextSchema;
     if (!options.metadata) {
-        throw new IsRequiredError('options.metadata', 'createVersionInfoSetter');
+        throw new IsRequiredError(`options.metadata`, `createVersionInfoSetter`);
     }
     v8n()
         .string()
@@ -79,7 +79,7 @@ function updateVersionInfoOnObject(object, context) {
  */
 function validateParams(object, context, options) {
     if (!object) {
-        throw new IsRequiredError('object', 'setVersionInfo');
+        throw new IsRequiredError(`object`, `setVersionInfo`);
     }
     options.validator.ensureValid(options.executionContextSchema.$id, context);
     if (get(object, options.metadata.identifier.pathToId) && !object.versionInfo) {

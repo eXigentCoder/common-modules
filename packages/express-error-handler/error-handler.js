@@ -1,6 +1,6 @@
 'use strict';
-const boom = require('@hapi/boom');
-const { KrimZenNinjaBaseError } = require('../common-errors');
+const boom = require(`@hapi/boom`);
+const { KrimZenNinjaBaseError } = require(`../common-errors`);
 module.exports = function errorHandler() {
     return function _errorHandler(err, req, res, next) {
         if (err.isBoom) {
@@ -36,9 +36,9 @@ module.exports = function errorHandler() {
             return next(boom.boomify(err, { statusCode }));
         }
         console.warn(`Threw a non Error object; ${err}`);
-        if (typeof err === 'string') {
+        if (typeof err === `string`) {
             return next(new boom(err, { statusCode }));
         }
-        return next(new boom('Unknown Error', { statusCode, data: err }));
+        return next(new boom(`Unknown Error`, { statusCode, data: err }));
     };
 };

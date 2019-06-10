@@ -1,6 +1,6 @@
 'use strict';
 
-const _ = require('lodash');
+const _ = require(`lodash`);
 
 /**
  * @typedef {import('./types').JsonSchema} JsonSchema
@@ -11,12 +11,12 @@ const _ = require('lodash');
  * @param {string} entityPath The path as it would appear on an entity which conforms to the schema.
  * @returns {string} The path on the schema
  */
-function getSchemaPathFromEntityPath(entityPath = '') {
+function getSchemaPathFromEntityPath(entityPath = ``) {
     if (!entityPath) {
-        return '';
+        return ``;
     }
-    return entityPath.includes('.')
-        ? `properties.${entityPath.split('.').join('.properties.')}`
+    return entityPath.includes(`.`)
+        ? `properties.${entityPath.split(`.`).join(`.properties.`)}`
         : `properties.${entityPath}`;
 }
 
@@ -25,11 +25,11 @@ function getSchemaPathFromEntityPath(entityPath = '') {
  * @param {string} schemaPath The path to the point on the schema
  * @returns {string} The path to the relevant required array on the schema
  */
-function getRequiredPathFromSchemaPath(schemaPath = '') {
+function getRequiredPathFromSchemaPath(schemaPath = ``) {
     if (!schemaPath) {
-        return 'required';
+        return `required`;
     }
-    if (schemaPath.endsWith('properties')) {
+    if (schemaPath.endsWith(`properties`)) {
         return `${removeLastNNodesOnPath(schemaPath, 1)}.required`;
     }
     return `${schemaPath}.required`;
@@ -41,8 +41,8 @@ function getRequiredPathFromSchemaPath(schemaPath = '') {
  * @returns {string} The new path with the last node removed
  */
 function removeLastNNodesOnPath(path, numberOfNodesToRemove) {
-    const parts = path.split('.');
-    return parts.splice(0, parts.length - numberOfNodesToRemove).join('.');
+    const parts = path.split(`.`);
+    return parts.splice(0, parts.length - numberOfNodesToRemove).join(`.`);
 }
 
 /**
@@ -50,7 +50,7 @@ function removeLastNNodesOnPath(path, numberOfNodesToRemove) {
  * @returns {string} The last node on the path
  */
 function getLastNodeOnPath(path) {
-    const parts = path.split('.');
+    const parts = path.split(`.`);
     return parts.splice(parts.length - 1, 1)[0];
 }
 
@@ -172,11 +172,11 @@ function removeFromRequiredForEntityPath(schema, entityPath, value) {
  */
 function markFullPathAsRequiredForEntityPath(schema, entityPath) {
     const schemaPath = getSchemaPathFromEntityPath(entityPath);
-    const pathParts = schemaPath.split('.').reverse();
-    let partialEntityPath = '';
+    const pathParts = schemaPath.split(`.`).reverse();
+    let partialEntityPath = ``;
     while (pathParts.length !== 0) {
         const part = pathParts.pop();
-        if (part !== 'properties') {
+        if (part !== `properties`) {
             addToRequiredForEntityPath(schema, partialEntityPath, part);
             partialEntityPath = partialEntityPath ? `${partialEntityPath}.${part}` : part;
         }

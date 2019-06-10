@@ -1,8 +1,8 @@
 'use strict';
 
-const ObjectId = require('mongodb').ObjectID;
-const aqp = require('api-query-params');
-const set = require('lodash/set');
+const ObjectId = require(`mongodb`).ObjectID;
+const aqp = require(`api-query-params`);
+const set = require(`lodash/set`);
 /**
  * @typedef {import('./types').Query} Query
  */
@@ -39,17 +39,17 @@ module.exports = function createQueryStringMapper(schema, options = defaultOptio
                     mongoId: val => new ObjectId(val),
                 },
                 castParams: {
-                    _id: 'mongoId',
-                    owner: 'mongoId',
+                    _id: `mongoId`,
+                    owner: `mongoId`,
                 },
             },
             options.agpOptions
         );
         setCastParamsFromSchema(agpOptions, schema.properties);
         let qsToUse;
-        if (typeof queryString === 'string') {
+        if (typeof queryString === `string`) {
             qsToUse = queryString;
-        } else if (queryString && typeof queryString === 'object') {
+        } else if (queryString && typeof queryString === `object`) {
             if (queryString.filter) {
                 queryString.filter = flatten(queryString.filter);
             } else {
@@ -76,14 +76,14 @@ module.exports = function createQueryStringMapper(schema, options = defaultOptio
     };
 };
 
-function setCastParamsFromSchema(agpOptions, properties, prefix = '') {
+function setCastParamsFromSchema(agpOptions, properties, prefix = ``) {
     Object.getOwnPropertyNames(properties).forEach(function(propertyName) {
         const propertyValue = properties[propertyName];
         if (!propertyValue.type) {
             return;
         }
         if (Array.isArray(propertyValue.type)) {
-            const types = propertyValue.type.filter(type => type.toLowerCase() !== 'null');
+            const types = propertyValue.type.filter(type => type.toLowerCase() !== `null`);
             if (types.length === 1) {
                 agpOptions.castParams[`${prefix + propertyName}`] = types[0];
                 return;
@@ -91,7 +91,7 @@ function setCastParamsFromSchema(agpOptions, properties, prefix = '') {
             console.warn(`Multiple types (${types}) found for property ${prefix + propertyName}`);
             return;
         }
-        if (propertyValue.type.toLowerCase() === 'object') {
+        if (propertyValue.type.toLowerCase() === `object`) {
             setCastParamsFromSchema(
                 agpOptions,
                 propertyValue.properties,
@@ -114,19 +114,19 @@ function flatten(obj, opt_out, opt_paths) {
     return Object.getOwnPropertyNames(obj).reduce(function(_out, key) {
         paths.push(key);
         const value = obj[key];
-        if (typeof value === 'object' && !(value instanceof RegExp)) {
-            if (key[0] === '$') {
-                set(_out, paths.join('.'), value);
+        if (typeof value === `object` && !(value instanceof RegExp)) {
+            if (key[0] === `$`) {
+                set(_out, paths.join(`.`), value);
             } else if (
-                typeof value === 'object' &&
-                Object.getOwnPropertyNames(value)[0][0] === '$'
+                typeof value === `object` &&
+                Object.getOwnPropertyNames(value)[0][0] === `$`
             ) {
-                _out[paths.join('.')] = value;
+                _out[paths.join(`.`)] = value;
             } else {
                 flatten(value, _out, paths);
             }
         } else {
-            _out[paths.join('.')] = value;
+            _out[paths.join(`.`)] = value;
         }
         paths.pop();
         return _out;
