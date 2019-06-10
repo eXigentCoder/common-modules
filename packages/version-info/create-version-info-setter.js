@@ -46,9 +46,9 @@ module.exports = function createVersionInfoSetter(options) {
  */
 function addVersionInfoToObject(object, context) {
     object.versionInfo = {
-        dateCreated: moment.utc().toDate(),
+        dateCreated: moment.utc().toISOString(),
         versionTag: uuid.v4(),
-        dateUpdated: moment.utc().toDate(),
+        dateUpdated: moment.utc().toISOString(),
         createdBy: context.identity,
         lastUpdatedBy: context.identity,
         updatedByRequestId: context.requestId,
@@ -65,7 +65,7 @@ function addVersionInfoToObject(object, context) {
  */
 function updateVersionInfoOnObject(object, context) {
     object.versionInfo.versionTag = uuid.v4();
-    object.versionInfo.dateUpdated = moment.utc().toDate();
+    object.versionInfo.dateUpdated = moment.utc().toISOString();
     object.versionInfo.lastUpdatedBy = context.identity;
     object.versionInfo.updatedByRequestId = context.requestId;
     object.versionInfo.updatedInVersion = context.codeVersion;

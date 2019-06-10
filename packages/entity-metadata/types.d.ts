@@ -5,7 +5,7 @@ export interface JsonSchema extends JSONSchema7 {
     mongoId?: boolean;
     faker?: any;
     chance?: any;
-    firebaseTimestamp?: boolean;
+    coerceFromFormat?: boolean;
     errorMessage?: any;
 }
 

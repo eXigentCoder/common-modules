@@ -8,7 +8,7 @@ const set = require(`lodash/set`);
 const { EntityNotFoundError } = require(`../common-errors`);
 const createGetIdentifierQuery = require(`./create-identifier-query`);
 const createMongoDbAuditors = require(`./create-mongodb-auditors`);
-
+const ObjectId = require(`mongodb`).ObjectId;
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
@@ -89,6 +89,8 @@ function getCreate({
         setStringIdentifier(entity);
         setTenant(entity, context);
         setVersionInfo(entity, context);
+        entity._id = new ObjectId();
+        //inputValidator.ensureValid(metadata.schemas.core.$id, entity);
         await collection.insertOne(entity);
         await auditors.writeCreation(entity, context);
         mapOutput(entity);
@@ -173,6 +175,7 @@ function getReplaceById({
         entity.versionInfo = existing.versionInfo;
         setVersionInfo(entity, context);
         setStringIdentifier(entity);
+        //inputValidator.ensureValid(metadata.schemas.core.$id, entity);
         const replaceResult = await collection.findOneAndReplace(filter, entity);
         entity._id = replaceResult.value._id;
         await auditors.writeReplacement(replaceResult.value, entity, context);

@@ -1,6 +1,6 @@
 'use strict';
 
-const { createOutputValidator, createValidator } = require(`./ajv`);
+const { createOutputValidator, createInputValidator, createValidator } = require(`./ajv`);
 const { ValidationError } = require(`../common-errors`);
 describe(`Validation`, () => {
     describe(`Custom keywords in constructor`, () => {
@@ -175,6 +175,29 @@ describe(`Validation`, () => {
                 const validObject = { name: `bob` };
                 expect(outputValidator.validate(simpleSchema.$id, validObject)).to.be.ok;
             });
+        });
+    });
+
+    describe(`inputValidator`, () => {
+        it(`should coerce a string with format date-time to a date`, () => {
+            const simpleSchema = {
+                name: `simple`,
+                additionalProperties: false,
+                properties: {
+                    date: {
+                        type: `string`,
+                        format: `date-time`,
+                        coerceFromFormat: true,
+                    },
+                },
+            };
+            const validate = createInputValidator().compile(simpleSchema);
+            const data = {
+                date: `2019-06-10T12:05:46.202Z`,
+            };
+            const result = validate(data);
+            expect(result).to.be.ok;
+            expect(data.date).to.be.an.instanceOf(Date);
         });
     });
 });

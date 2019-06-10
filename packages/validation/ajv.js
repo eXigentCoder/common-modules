@@ -57,7 +57,7 @@ function createInputValidator(...functions) {
     return createValidator(
         {
             allErrors: true,
-            verbose: false,
+            verbose: true,
             format: `full`,
             jsonPointers: true,
             removeAdditional: false,
@@ -77,7 +77,7 @@ function createOutputValidator(...functions) {
     return createValidator(
         {
             allErrors: true,
-            verbose: false,
+            verbose: true,
             format: `full`,
             jsonPointers: true,
             removeAdditional: `failing`,
@@ -95,11 +95,51 @@ function createOutputValidator(...functions) {
  */
 function createValidator(ajvOptions, ...functions) {
     const validator = new Ajv(ajvOptions);
+    validator.addKeyword(`coerceFromFormat`, {
+        validate: coerceFromFormat,
+    });
     addCustomErrors(validator);
     addEnsureValid(validator);
     functions.forEach(fn => fn(validator));
     //@ts-ignore
     return validator;
+}
+
+function coerceFromFormat(
+    keywordValue,
+    dataValue,
+    schema,
+    currentDataPath,
+    parentDataObject,
+    propName
+) {
+    if (
+        keywordValue === false ||
+        dataValue === null ||
+        dataValue === undefined ||
+        dataValue === `` ||
+        propName === null ||
+        propName === undefined ||
+        parentDataObject === null ||
+        parentDataObject === undefined
+    ) {
+        return true;
+    }
+    if (schema.format === `date-time`) {
+        if (dataValue.toDate && typeof dataValue.toDate === `function`) {
+            parentDataObject[propName] = dataValue.toDate();
+        }
+        if (typeof dataValue === `string`) {
+            const dateValue = new Date(dataValue);
+            // @ts-ignore
+            if (isNaN(dateValue)) {
+                return false;
+            }
+            parentDataObject[propName] = dateValue;
+        }
+    }
+
+    return true;
 }
 
 module.exports = { createInputValidator, createOutputValidator, createValidator };

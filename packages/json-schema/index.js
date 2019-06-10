@@ -78,7 +78,7 @@ const oneOrMoreEmailAddresses = {
 const dateTime = {
     type: `string`,
     format: `date-time`,
-    firebaseTimestamp: true,
+    coerceFromFormat: true,
 };
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
