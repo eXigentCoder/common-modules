@@ -1,9 +1,10 @@
 'use strict';
 
-const Ajv = require('ajv');
-const addCustomErrors = require('ajv-errors');
-const betterAjvErrors = require('better-ajv-errors');
-const ValidationError = require('../common-errors/validation-error/validation-error');
+const Ajv = require(`ajv`);
+const addCustomErrors = require(`ajv-errors`);
+const betterAjvErrors = require(`better-ajv-errors`);
+const ValidationError = require(`../common-errors/validation-error/validation-error`);
+const util = require(`util`);
 
 /**
  * @typedef {(schemaId:string, data:object)=>void} EnsureValid
@@ -25,25 +26,25 @@ function addEnsureValid(validator) {
         if (!valid) {
             const schema = validator.getSchema(schemaId);
             if (data === null || data === undefined) {
-                throwStandardErrors();
+                throw new ValidationError(getErrorMessage(), null, schema);
             }
             /** @type {import('better-ajv-errors').IInputOptions} */
             const options = {
-                format: 'js',
+                format: `js`,
             };
             let betterErrors;
             try {
                 betterErrors = betterAjvErrors(schema, data, validator.errors, options);
             } catch (err) {
                 console.error(err);
-                throwStandardErrors();
+                throw new ValidationError(getErrorMessage(), null, schema, data);
             }
-            throw new ValidationError(validator.errorsText(validator.errors), betterErrors);
+            throw new ValidationError(getErrorMessage(), betterErrors, schema, data);
         }
-
-        function throwStandardErrors() {
-            const errorsText = validator.errorsText(validator.errors);
-            throw new ValidationError(errorsText);
+        function getErrorMessage() {
+            return `Data does not match schema "${schemaId}": ${validator.errorsText(
+                validator.errors
+            )}`;
         }
     }
 }
@@ -58,7 +59,7 @@ function createInputValidator(...functions) {
         {
             allErrors: true,
             verbose: false,
-            format: 'full',
+            format: `full`,
             jsonPointers: true,
             removeAdditional: false,
             useDefaults: true,
@@ -78,9 +79,9 @@ function createOutputValidator(...functions) {
         {
             allErrors: true,
             verbose: false,
-            format: 'full',
+            format: `full`,
             jsonPointers: true,
-            removeAdditional: 'failing',
+            removeAdditional: `failing`,
             useDefaults: true,
             coerceTypes: true,
         },

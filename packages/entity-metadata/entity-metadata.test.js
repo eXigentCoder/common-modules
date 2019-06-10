@@ -1,13 +1,17 @@
 'use strict';
 
-const generateEntityMetadata = require('./index');
-const { createInputValidator, createOutputValidator } = require('../validation/ajv');
-const { ValidationError, IsRequiredError } = require('../common-errors');
+const generateEntityMetadata = require(`./index`);
+const { createInputValidator, createOutputValidator } = require(`../validation/ajv`);
+const { ValidationError, IsRequiredError } = require(`../common-errors`);
 
-describe('Entity Metadata', () => {
-    describe('Generate Entity Metadata', () => {
-        const inputValidator = createInputValidator();
-        const outputValidator = createOutputValidator();
+describe(`Entity Metadata`, () => {
+    describe(`Generate Entity Metadata`, () => {
+        let inputValidator;
+        let outputValidator;
+        beforeEach(() => {
+            inputValidator = createInputValidator();
+            outputValidator = createOutputValidator();
+        });
         /** @returns {import('./types').EntityMetadata} */
         function validMetaData() {
             return {
@@ -15,88 +19,88 @@ describe('Entity Metadata', () => {
                     core: {
                         properties: {
                             username: {
-                                type: 'string',
+                                type: `string`,
                             },
                         },
                     },
                 },
-                name: 'user',
-                identifier: { pathToId: 'id', schema: { type: 'string' } },
-                collectionName: 'users',
-                baseUrl: 'https://ryankotzen.com',
+                name: `user`,
+                identifier: { pathToId: `id`, schema: { type: `string` } },
+                collectionName: `users`,
+                baseUrl: `https://ryankotzen.com`,
             };
         }
-        it('should throw an error if no arguments', () => {
+        it(`should throw an error if no arguments`, () => {
             // @ts-ignore
             expect(() => generateEntityMetadata()).to.throw();
         });
-        it('should throw an error if no metadata', () => {
+        it(`should throw an error if no metadata`, () => {
             expect(() => generateEntityMetadata(null, inputValidator, outputValidator)).to.throw();
         });
-        it('should throw an error if metadata is an empty object', () => {
+        it(`should throw an error if metadata is an empty object`, () => {
             // @ts-ignore
             expect(() => generateEntityMetadata({}, inputValidator, outputValidator)).to.throw();
         });
-        it('should throw an error if metadata is missing the identifier property', () => {
+        it(`should throw an error if metadata is missing the identifier property`, () => {
             const inputMetadata = validMetaData();
             delete inputMetadata.identifier;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(ValidationError);
         });
-        it('should throw an error if metadata.identifier is missing the name property', () => {
+        it(`should throw an error if metadata.identifier is missing the name property`, () => {
             const inputMetadata = validMetaData();
             delete inputMetadata.identifier.pathToId;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(ValidationError);
         });
-        it('should throw an error if metadata.identifier is missing the schema property', () => {
+        it(`should throw an error if metadata.identifier is missing the schema property`, () => {
             const inputMetadata = validMetaData();
             delete inputMetadata.identifier.schema;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(ValidationError);
         });
-        it('should throw an error if metadata is missing the schemas property', () => {
+        it(`should throw an error if metadata is missing the schemas property`, () => {
             const inputMetadata = validMetaData();
             delete inputMetadata.schemas;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(ValidationError);
         });
-        it('should throw an error if metadata.schemas is missing the core property', () => {
+        it(`should throw an error if metadata.schemas is missing the core property`, () => {
             const inputMetadata = validMetaData();
             delete inputMetadata.schemas.core;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(ValidationError);
         });
-        it('should throw an error if metadata is missing the name property', () => {
+        it(`should throw an error if metadata is missing the name property`, () => {
             const inputMetadata = validMetaData();
             delete inputMetadata.name;
             expect(() =>
                 generateEntityMetadata(inputMetadata, inputValidator, outputValidator)
             ).to.throw(IsRequiredError);
         });
-        it('should not throw an error if provided with valid arguments', () => {
+        it(`should not throw an error if provided with valid arguments`, () => {
             expect(() =>
                 generateEntityMetadata(validMetaData(), inputValidator, outputValidator)
             ).to.not.throw();
         });
-        it('should work for a very basic metadat input', () => {
+        it(`should work for a very basic metadat input`, () => {
             const inputMetadata = validMetaData();
 
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             expect(metadata).to.be.ok;
             expect(metadata.schemas.core.$id).to.be.ok;
         });
-        it('should add $id to non core schemas', () => {
+        it(`should add $id to non core schemas`, () => {
             const inputMetadata = validMetaData();
             inputMetadata.schemas.create = {
                 properties: {
                     username: {
-                        type: 'string',
+                        type: `string`,
                     },
                 },
             };
@@ -104,12 +108,12 @@ describe('Entity Metadata', () => {
             expect(metadata).to.be.ok;
             expect(metadata.schemas.create.$id).to.be.ok;
         });
-        it('Create schemas should not containe the identifier', () => {
+        it(`Create schemas should not containe the identifier`, () => {
             const inputMetadata = validMetaData();
             inputMetadata.schemas.create = {
                 properties: {
                     username: {
-                        type: 'string',
+                        type: `string`,
                     },
                 },
             };

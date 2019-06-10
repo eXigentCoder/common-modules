@@ -1,13 +1,13 @@
 'use strict';
 
-const { ValidationError, TenantError } = require('../common-errors');
-const { createOutputMapper } = require('../validation');
-const { createVersionInfoSetter } = require('../version-info');
-const get = require('lodash/get');
-const set = require('lodash/set');
-const { EntityNotFoundError } = require('../common-errors');
-const createGetIdentifierQuery = require('./create-identifier-query');
-const createMongoDbAuditors = require('./create-mongodb-auditors');
+const { ValidationError, TenantError } = require(`../common-errors`);
+const { createOutputMapper } = require(`../validation`);
+const { createVersionInfoSetter } = require(`../version-info`);
+const get = require(`lodash/get`);
+const set = require(`lodash/set`);
+const { EntityNotFoundError } = require(`../common-errors`);
+const createGetIdentifierQuery = require(`./create-identifier-query`);
+const createMongoDbAuditors = require(`./create-mongodb-auditors`);
 
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
@@ -142,6 +142,7 @@ function getReplaceById({
     auditors,
     getIdentifierQuery,
     addTenantToFilter,
+    setStringIdentifier,
 }) {
     return async function replaceById(id, _entity, context) {
         ensureEntityIsObject(_entity, metadata);
@@ -171,6 +172,7 @@ function getReplaceById({
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
         entity.versionInfo = existing.versionInfo;
         setVersionInfo(entity, context);
+        setStringIdentifier(entity);
         const replaceResult = await collection.findOneAndReplace(filter, entity);
         entity._id = replaceResult.value._id;
         await auditors.writeReplacement(replaceResult.value, entity, context);
@@ -233,7 +235,7 @@ function createStringIdentifierSetter(metadata) {
 }
 
 function ensureEntityIsObject(entity, metadata) {
-    if (entity === null || typeof entity !== 'object') {
+    if (entity === null || typeof entity !== `object`) {
         throw new ValidationError(
             `The ${metadata.title} value provided was not an object, type was :${typeof entity}`
         );
