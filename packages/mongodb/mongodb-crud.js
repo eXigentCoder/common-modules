@@ -176,7 +176,7 @@ function getReplaceById({
         entity.versionInfo = existing.versionInfo;
         setVersionInfo(entity, context);
         setStringIdentifier(entity);
-        //inputValidator.ensureValid(metadata.schemas.core.$id, entity);
+        inputValidator.ensureValid(metadata.schemas.core.$id, entity);
         const replaceResult = await collection.findOneAndReplace(filter, entity);
         entity._id = replaceResult.value._id;
         await auditors.writeReplacement(replaceResult.value, entity, context);

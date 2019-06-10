@@ -64,6 +64,7 @@ function addVersionInfoToObject(object, context) {
  * @returns {import('./types').VersionedObject} The object with version info added to it
  */
 function updateVersionInfoOnObject(object, context) {
+    object.versionInfo.dateCreated = object.versionInfo.dateCreated.toISOString();
     object.versionInfo.versionTag = uuid.v4();
     object.versionInfo.dateUpdated = moment.utc().toISOString();
     object.versionInfo.lastUpdatedBy = context.identity;

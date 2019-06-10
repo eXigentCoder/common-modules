@@ -125,6 +125,9 @@ describe(`Version Info`, () => {
         it(`should be able to add version info to an existing object with versionInfo`, () => {
             const existingObject = {};
             setVersionInfo(existingObject, validContext);
+            existingObject.versionInfo.dateCreated = new Date(
+                existingObject.versionInfo.dateCreated
+            );
             setVersionInfo(existingObject, validContext);
         });
     });

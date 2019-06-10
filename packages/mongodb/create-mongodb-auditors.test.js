@@ -42,6 +42,7 @@ describe(`MongoDB`, () => {
                 const entityBefore = setVersionInfo(validCreatedEntity(), context);
                 entityBefore._id = new ObjectId();
                 const entityAfter = cloneDeep(entityBefore);
+                entityAfter.versionInfo.dateCreated = new Date(entityAfter.versionInfo.dateCreated);
                 setVersionInfo(entityAfter, createContext());
                 await writeReplacement(entityBefore, entityAfter, context);
             });
