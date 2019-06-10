@@ -90,7 +90,8 @@ function getCreate({
         setTenant(entity, context);
         setVersionInfo(entity, context);
         entity._id = new ObjectId();
-        //inputValidator.ensureValid(metadata.schemas.core.$id, entity);
+        inputValidator.ensureValid(metadata.schemas.core.$id, entity);
+        entity._id = new ObjectId(entity._id);
         await collection.insertOne(entity);
         await auditors.writeCreation(entity, context);
         mapOutput(entity);
