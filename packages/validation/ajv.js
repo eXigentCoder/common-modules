@@ -4,7 +4,6 @@ const Ajv = require(`ajv`);
 const addCustomErrors = require(`ajv-errors`);
 const betterAjvErrors = require(`better-ajv-errors`);
 const ValidationError = require(`../common-errors/validation-error/validation-error`);
-const util = require(`util`);
 
 /**
  * @typedef {(schemaId:string, data:object)=>void} EnsureValid

@@ -10,6 +10,7 @@ module.exports = function filterPropertiesForCreation(schema, metadata) {
     if (!schema) {
         throw new Error(`Schema is a required field`);
     }
+    removeSchemaAndRequired(schema, `versionInfo`);
     removeSchemaAndRequired(schema, metadata.identifier.pathToId);
     if (metadata.tenantInfo) {
         removeSchemaAndRequired(schema, metadata.tenantInfo.entityPathToId);

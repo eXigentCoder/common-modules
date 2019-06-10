@@ -149,7 +149,7 @@ function addToRequiredForEntityPath(schema, entityPath, value) {
  * @param {string[]|string} value The required fields array to set
  * @returns {void}
  */
-function removeFromRequiredForEntityPath(schema, entityPath, value) {
+function removeFromRequired(schema, entityPath, value) {
     const schemaPath = getSchemaPathFromEntityPath(entityPath);
     const requiredPath = getRequiredPathFromSchemaPath(schemaPath);
     /** @type {string[]} */
@@ -226,7 +226,7 @@ function ensurePropsAndRequired(schema) {
 function removeSchemaAndRequired(schema, path) {
     const tenantFieldName = getLastNodeOnPath(path);
     const pathExcludingId = removeLastNNodesOnPath(path, 1);
-    removeFromRequiredForEntityPath(schema, pathExcludingId, tenantFieldName);
+    removeFromRequired(schema, pathExcludingId, tenantFieldName);
     deleteSchemaForEntityPath(schema, path);
 }
 
@@ -274,7 +274,7 @@ module.exports = {
     getRequiredForEntityPath,
     setRequiredForEntityPath,
     addToRequiredForEntityPath,
-    removeFromRequiredForEntityPath,
+    removeFromRequired,
     //entity related
     removePropertyFromEntity,
 

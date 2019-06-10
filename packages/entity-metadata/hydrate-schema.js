@@ -4,7 +4,8 @@ const {
     addFullRequiredSchema,
     addSchema,
 } = require(`./json-schema-utilities`);
-
+const withVersionInfo = require(`../version-info/with-version-info`);
+const merge = require(`lodash/merge`);
 /**
  * @param {import('./types').JsonSchema} schema
  * @param {import('./types').EntityMetadata} metadata
@@ -49,7 +50,9 @@ function addTenantInfo(schema, tenantInfo) {
     addFullRequiredSchema(schema, tenantInfo.entityPathToId, tenantInfo.schema);
 }
 
-function addVersionInfo(schema) {}
+function addVersionInfo(schema) {
+    return merge(schema, withVersionInfo());
+}
 
 // function addStatusInfo(schema) {
 //     ensurePropsAndRequired(schema);
