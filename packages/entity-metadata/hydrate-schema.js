@@ -3,7 +3,7 @@ const {
     ensurePropsAndRequired,
     addFullRequiredSchema,
     addSchema,
-} = require('./json-schema-utilities');
+} = require(`./json-schema-utilities`);
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -14,6 +14,7 @@ function hydrateSchema(schema, metadata) {
     addIdentifier(schema, metadata);
     addStringIdentifier(schema, metadata);
     addTenantInfo(schema, metadata.tenantInfo);
+    addVersionInfo(schema);
     // addStatusInfo(schema);
     // addOwnerInfo(schema);
 }
@@ -47,6 +48,8 @@ function addTenantInfo(schema, tenantInfo) {
     }
     addFullRequiredSchema(schema, tenantInfo.entityPathToId, tenantInfo.schema);
 }
+
+function addVersionInfo(schema) {}
 
 // function addStatusInfo(schema) {
 //     ensurePropsAndRequired(schema);
@@ -124,4 +127,10 @@ function addTenantInfo(schema, tenantInfo) {
 //     schema.required.push('ownerDate');
 //     schema.required.push('ownerLog');
 // }
-module.exports = { hydrateSchema, addIdentifier, addStringIdentifier, addTenantInfo };
+module.exports = {
+    hydrateSchema,
+    addIdentifier,
+    addStringIdentifier,
+    addTenantInfo,
+    addVersionInfo,
+};
