@@ -71,8 +71,7 @@ describe(`MongoDB`, () => {
 
         it(`Should generate be able to generate properties from a queryString string`, () => {
             const mapper = createQueryStringMapper(schema);
-            let queryString =
-                `skip=1&limit=3&sort=-name&fields=name&filter={"$or":[{"name":"bob"},{"name":"bobson"}]}`;
+            let queryString = `skip=1&limit=3&sort=-name&fields=name&filter={"$or":[{"name":"bob"},{"name":"bobson"}]}`;
             const result = mapper(queryString);
             expect(result).to.be.ok;
             expect(result.filter.$or).to.be.an(`array`);
@@ -327,6 +326,27 @@ describe(`MongoDB`, () => {
             const result = mapper(queryString);
             expect(result).to.be.ok;
             expect(result.filter.value).to.eql(true);
+        });
+
+        it(`Should work for nested string properties`, () => {
+            const multiType = {
+                name: `users`,
+                properties: {
+                    value1: {
+                        type: `object`,
+                        properties: {
+                            value2: {
+                                type: [`string`],
+                            },
+                        },
+                    },
+                },
+            };
+            const mapper = createQueryStringMapper(multiType);
+            const queryString = `value1.value2=2`;
+            const result = mapper(queryString);
+            expect(result).to.be.ok;
+            expect(result.filter[`value1.value2`]).to.eql(`2`);
         });
     });
 });
