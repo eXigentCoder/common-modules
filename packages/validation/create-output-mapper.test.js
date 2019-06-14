@@ -1,6 +1,6 @@
 'use strict';
 
-const { createOutputValidator, createOutputMapper } = require(`./`);
+const { createOutputValidator, createOutputMapper } = require(`.`);
 describe(`Validation`, () => {
     describe(`Create Output Mapper`, () => {
         it(`should successfully run after creation`, () => {

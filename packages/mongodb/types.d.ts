@@ -2,6 +2,7 @@ import { Db, IndexOptions, Collection } from 'mongodb';
 import { Validator } from '../validation/ajv';
 import { ExecutionContext } from '../version-info/types';
 import { EntityMetadata } from '../entity-metadata/types';
+import { Enforcer } from 'casbin';
 /** Default options used to paginate search queries */
 export interface PaginationDefaults {
     /** The number of items to include in a page when no overriding value is provided */
@@ -19,6 +20,7 @@ export interface CreateUtilityParams {
     db: Db;
     auditors?: Auditors;
     paginationDefaults?: PaginationDefaults;
+    enforcer?: Enforcer;
 }
 
 export interface Utilities {
@@ -35,6 +37,7 @@ export interface Utilities {
     paginationDefaults: PaginationDefaults;
     setTenant: SetTenant;
     addTenantToFilter: AddTenantToFilter;
+    enforcer?: Enforcer;
 }
 
 export interface Crud<T> {

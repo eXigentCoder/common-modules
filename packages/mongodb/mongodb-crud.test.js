@@ -1,14 +1,15 @@
 'use strict';
 
 const { ValidationError, TenantError } = require(`../common-errors`);
-const { getClient, getDb, getCrud, createQueryStringMapper } = require(`.`);
+const { getClient, getDb, getCrud, createQueryStringMapper, buildMongoUrl } = require(`.`);
 const generateEntityMetadata = require(`../entity-metadata`);
 const { createInputValidator, createOutputValidator } = require(`../validation`);
 const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
 const schemas = require(`../json-schema`);
 const crypto = require(`crypto`);
 const ObjectId = require(`mongodb`).ObjectId;
-//todo rk needs to be more extensive. string identifier and normal identifier.
+const { newEnforcer, newModel } = require(`casbin`);
+const MongooseAdapter = require(`@elastic.io/casbin-mongoose-adapter`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {
@@ -83,6 +84,25 @@ describe(`MongoDB`, () => {
                 const context = createContext();
                 context.identity.tenant.id = ``;
                 await expect(create(entity, context)).to.be.rejectedWith(TenantError);
+            });
+            it(`Should use the enforcer for authorization if one is provided`, async () => {
+                const connectionString = buildMongoUrl(urlConfig);
+                const role = `user-admin`;
+                const userId = `alice`;
+                const adapter = await MongooseAdapter.newAdapter(connectionString, {
+                    dbName: urlConfig.dbName,
+                    useNewUrlParser: true,
+                });
+                const enforcer = await newEnforcer(`./packages/mongodb/model.conf`, adapter);
+                await enforcer.addPolicy(userId, `users`, `create`);
+                await enforcer.addPolicy(role, `users`, `create`);
+                await enforcer.addGroupingPolicy(userId, role);
+
+                const { create } = await getPopulatedCrud(stringIdNoTenant, enforcer);
+                const entity = validEntity();
+                const context = createContext(userId);
+                const result = await create(entity, context);
+                await expect(result).to.be.ok;
             });
         });
         describe(`Delete By Id`, () => {
@@ -326,16 +346,18 @@ after(async () => {
     }
 });
 
+const urlConfig = {
+    server: `localhost`,
+    dbName: `test-common`,
+};
 /**
  * @param {()=>import('../entity-metadata/types').EntityMetadata} getMetadata a function to get the metadata
- * @returns {Promise<import('./mongodb-crud').GetCrud &{queryMapper:(queryString: string|object) => import('./types').Query}>}
+ * @param {import('casbin').Enforcer} [enforcer]
+ * @returns {Promise<import('./mongodb-crud').GetCrud & { queryMapper:(queryString: string|object) => import('./types').Query }>}
  */
-async function getPopulatedCrud(getMetadata) {
-    const urlConfig = {
-        server: `localhost`,
-        dbName: `test-common`,
-    };
+async function getPopulatedCrud(getMetadata, enforcer) {
     const db = await getDb(urlConfig);
+
     const inputValidator = createInputValidator(addMongoId);
     const outputValidator = createOutputValidator(addMongoId);
     const metadata = generateEntityMetadata(getMetadata(), inputValidator, outputValidator);
@@ -345,8 +367,19 @@ async function getPopulatedCrud(getMetadata) {
         inputValidator,
         metadata,
         outputValidator,
+        enforcer,
     });
     return Object.assign(crud, { queryMapper });
+}
+
+function getRbacModel() {
+    const model = newModel();
+    model.addDef(`r`, `r`, `sub, obj, act`);
+    model.addDef(`p`, `p`, `sub, obj, act`);
+    model.addDef(`g`, `g`, `_, _`);
+    model.addDef(`e`, `e`, `some(where (p.eft == allow))`);
+    model.addDef(`m`, `m`, `g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act`);
+    return model;
 }
 
 /** @returns {import('../entity-metadata/types').EntityMetadata} */
@@ -435,11 +468,11 @@ function validEntity() {
 }
 
 /** @returns {import('../version-info/types').ExecutionContext} */
-function createContext() {
+function createContext(id) {
     return {
         requestId: randomString(),
         identity: {
-            id: randomString(),
+            id: id || randomString(),
             tenant: {
                 id: randomString(),
             },

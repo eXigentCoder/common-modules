@@ -1,7 +1,7 @@
 'use strict';
 
 const { getDb, getClient } = require(`../mongodb/connection`);
-const { populateDbFromDisk } = require(`./`);
+const { populateDbFromDisk } = require(`.`);
 
 const path = require(`path`);
 describe(`MongoDB Populate From Disk`, () => {

@@ -24,6 +24,7 @@ async function getUtils({
     outputValidator,
     db,
     auditors,
+    enforcer,
     paginationDefaults = {
         itemsPerPage: 20,
         sort: {},
@@ -44,6 +45,7 @@ async function getUtils({
         auditors: auditors || (await createMongoDbAuditors(metadata, db)),
         setTenant: createSetTenant(metadata),
         addTenantToFilter: createAddTenantToFilter(metadata),
+        enforcer,
     };
 }
 
@@ -51,12 +53,13 @@ async function getUtils({
  * @param {CreateUtilityParams} createUtilityParams The input utilities to create the function
  * @returns {Promise<GetCrud>} A promise which resolves to the CRUD methods
  */
-async function getCrud({ metadata, inputValidator, outputValidator, db }) {
+async function getCrud({ metadata, inputValidator, outputValidator, db, enforcer }) {
     const utilities = await getUtils({
         metadata,
         inputValidator,
         outputValidator,
         db,
+        enforcer,
     });
     return {
         create: getCreate(utilities),
@@ -81,8 +84,19 @@ function getCreate({
     inputValidator,
     auditors,
     setTenant,
+    enforcer,
 }) {
     return async function create(_entity, context) {
+        if (enforcer) {
+            const allowed = await enforcer.enforce(
+                context.identity.id,
+                metadata.namePlural,
+                `create`
+            );
+            if (!allowed) {
+                throw new Error(`Access denied!`);
+            }
+        }
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         inputValidator.ensureValid(metadata.schemas.create.$id, entity);

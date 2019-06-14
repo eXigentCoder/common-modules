@@ -18,7 +18,10 @@ async function getDb(urlConfig, options) {
         debug(`Using cached database instance`);
         return _db;
     }
-    await connect(urlConfig, options);
+    await connect(
+        urlConfig,
+        options
+    );
     return _db;
 }
 
@@ -67,4 +70,5 @@ function buildMongoUrl(urlConfig) {
 module.exports = {
     getClient,
     getDb,
+    buildMongoUrl,
 };

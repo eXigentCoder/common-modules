@@ -1,4 +1,4 @@
-import { JSONSchema7 } from '@types/json-schema';
+import { JSONSchema7 } from 'json-schema';
 export { Validator } from '../validation/ajv';
 
 export interface JsonSchema extends JSONSchema7 {
