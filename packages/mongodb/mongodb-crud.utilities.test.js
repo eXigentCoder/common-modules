@@ -1,0 +1,195 @@
+'use strict';
+
+const { getClient, getDb, getCrud, createQueryStringMapper } = require(`.`);
+const generateEntityMetadata = require(`../entity-metadata`);
+const { createInputValidator, createOutputValidator } = require(`../validation`);
+const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
+const schemas = require(`../json-schema`);
+const crypto = require(`crypto`);
+const { newModel } = require(`casbin`);
+
+describe(`MongoDB`, () => {
+    describe(`CRUD`, () => {
+        describe(`Utilities`, () => {
+            describe(`setStringIdentifier`, () => {
+                it(`Should set the identifier from the source`, async () => {
+                    const { utilities } = await getPopulatedCrud(stringIdNoTenant);
+                    const { setStringIdentifier } = utilities;
+                    const entity = validEntity();
+                    expect(entity.name).to.not.be.ok;
+                    setStringIdentifier(entity);
+                    expect(entity.name).to.be.ok;
+                });
+                it(`Should not replace one if it already exists`, async () => {
+                    const { utilities } = await getPopulatedCrud(stringIdNoTenant);
+                    const { setStringIdentifier } = utilities;
+                    const setName = `bob`;
+                    const entity = validEntity();
+                    expect(entity.name).to.not.be.ok;
+                    entity.name = setName;
+                    setStringIdentifier(entity);
+                    expect(entity.name).to.equal(setName);
+                });
+            });
+        });
+    });
+});
+
+after(async () => {
+    const client = await getClient();
+    if (client) {
+        await client.close();
+    }
+});
+
+const urlConfig = {
+    server: `localhost`,
+    dbName: `test-common`,
+};
+/**
+ * @param {()=>import('../entity-metadata/types').EntityMetadata} getMetadata a function to get the metadata
+ * @param {import('casbin').Enforcer} [enforcer]
+ * @returns {Promise<import('./mongodb-crud').GetCrud & { queryMapper:(queryString: string|object) => import('./types').Query }>}
+ */
+async function getPopulatedCrud(getMetadata, enforcer) {
+    const db = await getDb(urlConfig);
+
+    const inputValidator = createInputValidator(addMongoId);
+    const outputValidator = createOutputValidator(addMongoId);
+    const metadata = generateEntityMetadata(getMetadata(), inputValidator, outputValidator);
+    const queryMapper = createQueryStringMapper(metadata.schemas.core);
+    const crud = await getCrud({
+        db,
+        inputValidator,
+        metadata,
+        outputValidator,
+        enforcer,
+    });
+    return Object.assign(crud, { queryMapper });
+}
+
+function getRbacModel() {
+    const model = newModel();
+    model.addDef(`r`, `r`, `sub, obj, act`);
+    model.addDef(`p`, `p`, `sub, obj, act`);
+    model.addDef(`g`, `g`, `_, _`);
+    model.addDef(`e`, `e`, `some(where (p.eft == allow))`);
+    model.addDef(`m`, `m`, `g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act`);
+    return model;
+}
+
+/** @returns {import('../entity-metadata/types').EntityMetadata} */
+function noStringIdNoTenant() {
+    return {
+        schemas: {
+            core: {
+                properties: {
+                    username: {
+                        type: `string`,
+                    },
+                },
+                additionalProperties: false,
+            },
+        },
+        name: `user`,
+
+        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
+        collectionName: `crud-users`,
+        baseUrl: `https://ryankotzen.com`,
+    };
+}
+
+/** @returns {import('../entity-metadata/types').EntityMetadata} */
+function stringIdNoTenant() {
+    return {
+        schemas: {
+            core: {
+                properties: {
+                    username: {
+                        type: `string`,
+                    },
+                },
+                additionalProperties: false,
+            },
+        },
+        name: `user`,
+        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
+        stringIdentifier: {
+            pathToId: `name`,
+            schema: schemas.identifier,
+            entitySourcePath: `username`,
+        },
+        collectionName: `crud-users`,
+        baseUrl: `https://ryankotzen.com`,
+    };
+}
+
+/** @returns {import('../entity-metadata/types').EntityMetadata} */
+function stringIdTenant() {
+    return {
+        schemas: {
+            core: {
+                properties: {
+                    username: {
+                        type: `string`,
+                    },
+                },
+                additionalProperties: false,
+            },
+        },
+        name: `user`,
+        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
+        stringIdentifier: {
+            pathToId: `name`,
+            schema: schemas.identifier,
+            entitySourcePath: `username`,
+        },
+        tenantInfo: {
+            entityPathToId: `tenantId`,
+            executionContextSourcePath: `identity.tenant.id`,
+            title: `Team`,
+            schema: {
+                type: `string`,
+            },
+        },
+        collectionName: `crud-users`,
+        baseUrl: `https://ryankotzen.com`,
+    };
+}
+
+function validEntity() {
+    return {
+        username: `bob-${randomString()}`,
+    };
+}
+
+/** @returns {import('../version-info/types').ExecutionContext} */
+function createContext(id) {
+    return {
+        requestId: randomString(),
+        identity: {
+            id: id || randomString(),
+            tenant: {
+                id: randomString(),
+            },
+        },
+        codeVersion: `0.0.1`,
+        sourceIp: `127.0.0.1`,
+        source: `tests`,
+    };
+}
+function randomString() {
+    return crypto.randomBytes(20).toString(`hex`);
+}
+
+module.exports = {
+    getPopulatedCrud,
+    getRbacModel,
+    noStringIdNoTenant,
+    stringIdNoTenant,
+    stringIdTenant,
+    validEntity,
+    createContext,
+    randomString,
+    urlConfig,
+};

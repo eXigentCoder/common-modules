@@ -23,7 +23,7 @@ module.exports = class ValidationError extends KrimZenNinjaBaseError {
         }
     ) {
         if (!message) {
-            throw new IsRequiredError(`errorMessage`, `ValidationError`, `constructor`);
+            throw new IsRequiredError(`message`, `ValidationError`, `constructor`);
         }
         decorate.errors = errors;
         decorate.schema = schema;

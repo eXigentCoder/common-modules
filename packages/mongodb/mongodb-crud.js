@@ -1,6 +1,6 @@
 'use strict';
 
-const { ValidationError, TenantError } = require(`../common-errors`);
+const { ValidationError, TenantError, NotAuthorizedError } = require(`../common-errors`);
 const { createOutputMapper } = require(`../validation`);
 const { createVersionInfoSetter } = require(`../version-info`);
 const get = require(`lodash/get`);
@@ -87,16 +87,7 @@ function getCreate({
     enforcer,
 }) {
     return async function create(_entity, context) {
-        if (enforcer) {
-            const allowed = await enforcer.enforce(
-                context.identity.id,
-                metadata.namePlural,
-                `create`
-            );
-            if (!allowed) {
-                throw new Error(`Access denied!`);
-            }
-        }
+        await checkAuthorization(enforcer, metadata, context, `create`);
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         inputValidator.ensureValid(metadata.schemas.create.$id, entity);
@@ -112,13 +103,29 @@ function getCreate({
         return entity;
     };
 }
+async function checkAuthorization(enforcer, metadata, context, action) {
+    if (enforcer) {
+        const allowed = await enforcer.enforce(context.identity.id, metadata.namePlural, action);
+        if (!allowed) {
+            throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+        }
+    }
+}
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").GetById<object>} A function to get entities by their identifiers
  */
-function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTenantToFilter }) {
+function getGetById({
+    collection,
+    mapOutput,
+    getIdentifierQuery,
+    metadata,
+    addTenantToFilter,
+    enforcer,
+}) {
     return async function getById(id, context) {
+        await checkAuthorization(enforcer, metadata, context, `retrieve`);
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
         const item = await collection.findOne(filter);
@@ -134,8 +141,16 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTe
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").DeleteById<object>} A function to delete entities by their identifier
  */
-function getDeleteById({ collection, getIdentifierQuery, metadata, auditors, addTenantToFilter }) {
+function getDeleteById({
+    collection,
+    getIdentifierQuery,
+    metadata,
+    auditors,
+    addTenantToFilter,
+    enforcer,
+}) {
     return async function deleteById(id, context) {
+        await checkAuthorization(enforcer, metadata, context, `delete`);
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
         const result = await collection.findOneAndDelete(filter);
@@ -160,8 +175,10 @@ function getReplaceById({
     getIdentifierQuery,
     addTenantToFilter,
     setStringIdentifier,
+    enforcer,
 }) {
     return async function replaceById(id, _entity, context) {
+        await checkAuthorization(enforcer, metadata, context, `update`);
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         // comes from outside, can't be trusted
@@ -203,8 +220,16 @@ function getReplaceById({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").Search<object>} A function to search for entities
  */
-function getSearch({ collection, mapOutput, paginationDefaults, addTenantToFilter }) {
+function getSearch({
+    collection,
+    mapOutput,
+    paginationDefaults,
+    addTenantToFilter,
+    metadata,
+    enforcer,
+}) {
     return async function search(query, context) {
+        await checkAuthorization(enforcer, metadata, context, `retrieve`);
         // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
         addTenantToFilter(filter, context);
