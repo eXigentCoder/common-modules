@@ -63,11 +63,13 @@
   "dependencies": {
     "@bit/bit.utils.string.starts-with-one-of": "1.0.0",
     "@bit/bit.utils.validation.empty": "1.0.0",
+    "@elastic.io/casbin-mongoose-adapter": "1.0.0",
     "@hapi/boom": "7.4.2",
     "ajv": "6.10.0",
     "ajv-errors": "1.0.1",
     "api-query-params": "4.13.0",
     "better-ajv-errors": "0.6.4",
+    "casbin": "3.0.0",
     "debug": "4.1.1",
     "express": "4.17.1",
     "faker": "4.1.0",
