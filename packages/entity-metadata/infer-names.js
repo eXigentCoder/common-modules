@@ -31,5 +31,5 @@ function inferName(metadata) {
 
 /** @param {import("./types").EntityMetadata} metadata */
 function inferNamePlural(metadata) {
-    metadata.namePlural = metadata.namePlural || _.startCase(metadata.titlePlural);
+    metadata.namePlural = metadata.namePlural || _.kebabCase(metadata.titlePlural);
 }
