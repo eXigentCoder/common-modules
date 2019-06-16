@@ -47,16 +47,17 @@ const urlConfig = {
     dbName: `test-common`,
 };
 /**
- * @param {()=>import('../entity-metadata/types').EntityMetadata} getMetadata a function to get the metadata
+ * @typedef {()=>import('../entity-metadata/types').EntityMetadata} GetMetadata;
+ * @param {import('../entity-metadata/types').EntityMetadata | GetMetadata} getMetadata a function to get the metadata
  * @param {import('casbin').Enforcer} [enforcer]
  * @returns {Promise<import('./mongodb-crud').GetCrud & { queryMapper:(queryString: string|object) => import('./types').Query }>}
  */
 async function getPopulatedCrud(getMetadata, enforcer) {
     const db = await getDb(urlConfig);
-
     const inputValidator = createInputValidator(addMongoId);
     const outputValidator = createOutputValidator(addMongoId);
-    const metadata = generateEntityMetadata(getMetadata(), inputValidator, outputValidator);
+    const inputMetadata = typeof getMetadata === `function` ? getMetadata() : getMetadata;
+    const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
     const queryMapper = createQueryStringMapper(metadata.schemas.core);
     const crud = await getCrud({
         db,
@@ -92,7 +93,6 @@ function noStringIdNoTenant() {
             },
         },
         name: `user`,
-
         identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
         collectionName: `crud-users`,
         baseUrl: `https://ryankotzen.com`,
@@ -101,49 +101,18 @@ function noStringIdNoTenant() {
 
 /** @returns {import('../entity-metadata/types').EntityMetadata} */
 function stringIdNoTenant() {
-    return {
-        schemas: {
-            core: {
-                properties: {
-                    username: {
-                        type: `string`,
-                    },
-                },
-                additionalProperties: false,
-            },
-        },
-        name: `user`,
-        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
+    return Object.assign({}, noStringIdNoTenant(), {
         stringIdentifier: {
             pathToId: `name`,
             schema: schemas.identifier,
             entitySourcePath: `username`,
         },
-        collectionName: `crud-users`,
-        baseUrl: `https://ryankotzen.com`,
-    };
+    });
 }
 
 /** @returns {import('../entity-metadata/types').EntityMetadata} */
 function stringIdTenant() {
-    return {
-        schemas: {
-            core: {
-                properties: {
-                    username: {
-                        type: `string`,
-                    },
-                },
-                additionalProperties: false,
-            },
-        },
-        name: `user`,
-        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
-        stringIdentifier: {
-            pathToId: `name`,
-            schema: schemas.identifier,
-            entitySourcePath: `username`,
-        },
+    return Object.assign({}, stringIdNoTenant(), {
         tenantInfo: {
             entityPathToId: `tenantId`,
             executionContextSourcePath: `identity.tenant.id`,
@@ -152,9 +121,26 @@ function stringIdTenant() {
                 type: `string`,
             },
         },
-        collectionName: `crud-users`,
-        baseUrl: `https://ryankotzen.com`,
-    };
+    });
+}
+
+/** @returns {import('../entity-metadata/types').EntityMetadata} */
+function stringIdNoTenantOwnership({
+    initialOwner = `creator`,
+    allowedActions = [`create`, `retrieve`, `delete`, `update`],
+    idSchema = undefined,
+    pathToId = undefined,
+} = {}) {
+    return Object.assign({}, stringIdNoTenant(), {
+        authorization: {
+            ownership: {
+                initialOwner,
+                allowedActions,
+                idSchema,
+                pathToId,
+            },
+        },
+    });
 }
 
 function validEntity() {
@@ -192,4 +178,5 @@ module.exports = {
     createContext,
     randomString,
     urlConfig,
+    stringIdNoTenantOwnership,
 };

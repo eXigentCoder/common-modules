@@ -90,32 +90,6 @@ describe(`MongoDB`, () => {
                 context.identity.tenant.id = ``;
                 await expect(create(entity, context)).to.be.rejectedWith(TenantError);
             });
-            it(`Should use the enforcer for authorization if one is provided`, async function() {
-                this.timeout(5000);
-                const connectionString = buildMongoUrl(urlConfig);
-                const role = `user-admin`;
-                const userId = `alice`;
-                const adapter = await MongooseAdapter.newAdapter(connectionString, {
-                    dbName: urlConfig.dbName,
-                    useNewUrlParser: true,
-                });
-                const enforcer = await newEnforcer(getRbacModel(), adapter);
-                await enforcer.addPolicy(userId, `users`, `create`);
-                await enforcer.addPolicy(role, `users`, `create`);
-                await enforcer.addGroupingPolicy(userId, role);
-
-                const { create } = await getPopulatedCrud(stringIdNoTenant, enforcer);
-                const entity = validEntity();
-                const context = createContext(userId);
-                const result = await create(entity, context);
-                await expect(result).to.be.ok;
-                const anAuthorizedContext = createContext();
-                await expect(create(entity, anAuthorizedContext)).to.be.rejectedWith(
-                    NotAuthorizedError
-                );
-                //add in when PR accepted
-                //adapter.close();
-            });
         });
     });
 });

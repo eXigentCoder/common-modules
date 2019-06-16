@@ -9,6 +9,7 @@ const { EntityNotFoundError } = require(`../common-errors`);
 const createGetIdentifierQuery = require(`./create-identifier-query`);
 const createMongoDbAuditors = require(`./create-mongodb-auditors`);
 const ObjectId = require(`mongodb`).ObjectId;
+const createSetOwnerIfApplicable = require(`./set-owner-if-applicable`);
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
@@ -45,6 +46,7 @@ async function getUtils({
         auditors: auditors || (await createMongoDbAuditors(metadata, db)),
         setTenant: createSetTenant(metadata),
         addTenantToFilter: createAddTenantToFilter(metadata),
+        setOwnerIfApplicable: createSetOwnerIfApplicable(metadata),
         enforcer,
     };
 }
@@ -85,31 +87,25 @@ function getCreate({
     auditors,
     setTenant,
     enforcer,
+    setOwnerIfApplicable,
 }) {
     return async function create(_entity, context) {
-        await checkAuthorization(enforcer, metadata, context, `create`);
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         inputValidator.ensureValid(metadata.schemas.create.$id, entity);
         setStringIdentifier(entity);
         setTenant(entity, context);
         setVersionInfo(entity, context);
+        setOwnerIfApplicable(entity, context);
         entity._id = new ObjectId();
         inputValidator.ensureValid(metadata.schemas.core.$id, entity);
         entity._id = new ObjectId(entity._id);
+        await checkAuthorization(enforcer, metadata, context, `create`, entity);
         await collection.insertOne(entity);
         await auditors.writeCreation(entity, context);
         mapOutput(entity);
         return entity;
     };
-}
-async function checkAuthorization(enforcer, metadata, context, action) {
-    if (enforcer) {
-        const allowed = await enforcer.enforce(context.identity.id, metadata.namePlural, action);
-        if (!allowed) {
-            throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
-        }
-    }
 }
 
 /**
@@ -125,13 +121,13 @@ function getGetById({
     enforcer,
 }) {
     return async function getById(id, context) {
-        await checkAuthorization(enforcer, metadata, context, `retrieve`);
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
         const item = await collection.findOne(filter);
         if (!item) {
             throw new EntityNotFoundError(metadata.title, id);
         }
+        await checkAuthorization(enforcer, metadata, context, `retrieve`, item);
         mapOutput(item);
         return item;
     };
@@ -150,9 +146,13 @@ function getDeleteById({
     enforcer,
 }) {
     return async function deleteById(id, context) {
-        await checkAuthorization(enforcer, metadata, context, `delete`);
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
+        const existingItem = await collection.findOne(filter);
+        if (!existingItem) {
+            throw new EntityNotFoundError(metadata.title, id);
+        }
+        await checkAuthorization(enforcer, metadata, context, `delete`, existingItem);
         const result = await collection.findOneAndDelete(filter);
         if (!result.value) {
             throw new EntityNotFoundError(metadata.title, id);
@@ -178,7 +178,6 @@ function getReplaceById({
     enforcer,
 }) {
     return async function replaceById(id, _entity, context) {
-        await checkAuthorization(enforcer, metadata, context, `update`);
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         // comes from outside, can't be trusted
@@ -192,6 +191,7 @@ function getReplaceById({
         if (!existing) {
             throw new EntityNotFoundError(metadata.title, JSON.stringify(filter));
         }
+        await checkAuthorization(enforcer, metadata, context, `update`, existing);
         if (metadata.tenantInfo) {
             const existingTenantId = get(existing, metadata.tenantInfo.entityPathToId);
             if (!existingTenantId) {
@@ -229,6 +229,7 @@ function getSearch({
     enforcer,
 }) {
     return async function search(query, context) {
+        //TODO :
         await checkAuthorization(enforcer, metadata, context, `retrieve`);
         // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
@@ -254,6 +255,44 @@ function getSearch({
 }
 
 module.exports = { getUtils, getCrud };
+
+// --------------============== [ Todo these utilities should probably all be their own files]
+
+/**
+ * @param {import('casbin').Enforcer} [enforcer] The Casbin enforcer to use with the policies if provided
+ * @param {EntityMetadata} metadata The entities metadata object
+ * @param {import('../version-info/types').ExecutionContext} context The execution context for this action
+ * @param {string} action the name of the action
+ * @param {any} currentEntity The current entity to check ownership against
+ * @returns {Promise<void>}
+ */
+async function checkAuthorization(enforcer, metadata, context, action, currentEntity) {
+    if (!metadata.authorization) {
+        return;
+    }
+    const currentUserId = context.identity.id;
+    let aclAllowed = false;
+    let ownershipAllowed = false;
+    let allowed = false;
+    if (enforcer) {
+        aclAllowed = await enforcer.enforce(currentUserId, metadata.namePlural, action);
+    }
+    if (metadata.authorization.ownership) {
+        let actionAllowed =
+            metadata.authorization.ownership.allowedActions.indexOf(action) >= 0 ||
+            metadata.authorization.ownership.allowedActions.indexOf(`*`) >= 0;
+        let isOwner = get(currentEntity, `owner.id`, ``) === currentUserId;
+        ownershipAllowed = actionAllowed && isOwner;
+    }
+    if (metadata.authorization.interaction === `or`) {
+        allowed = aclAllowed || ownershipAllowed;
+    } else {
+        allowed = aclAllowed && ownershipAllowed;
+    }
+    if (!allowed) {
+        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+    }
+}
 
 /**
  * @param {EntityMetadata} metadata The entity metadata containing the rules for the string identifier

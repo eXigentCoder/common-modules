@@ -38,6 +38,7 @@ export interface Utilities {
     setTenant: SetTenant;
     addTenantToFilter: AddTenantToFilter;
     enforcer?: Enforcer;
+    setOwnerIfApplicable: SetOwnerIfApplicable;
 }
 
 export interface Crud<T> {
@@ -74,6 +75,7 @@ export type SetTenant = (entity: any, context: ExecutionContext) => void;
 export type CreateAddTenantToFilter = (metatada: EntityMetadata) => AddTenantToFilter;
 export type AddTenantToFilter = (query: Query, context: ExecutionContext) => void;
 export type GetUtils = (params: CreateUtilityParams) => Promise<Utilities>;
+export type SetOwnerIfApplicable = (entity: any, context: ExecutionContext) => void;
 
 export interface UrlConfig {
     username?: string;

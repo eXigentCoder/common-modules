@@ -77,6 +77,49 @@ module.exports = function() {
                 },
                 required: [`entityPathToId`, `executionContextSourcePath`, `title`, `schema`],
             },
+            authorization: {
+                type: `object`,
+                additionalProperties: false,
+                properties: {
+                    policies: {
+                        type: `array`,
+                        items: {
+                            type: `array`,
+                            items: { type: `string`, additionalItems: false },
+                        },
+                        uniqueItems: true,
+                    },
+                    ownership: {
+                        type: `object`,
+                        properties: {
+                            initialOwner: {
+                                type: `string`,
+                                enum: [`creator`, `setFromEntity`, `setFromContext`],
+                                default: `creator`,
+                            },
+                            pathToId: {
+                                type: `string`,
+                            },
+                            allowedActions: {
+                                type: `array`,
+                                items: {
+                                    type: `string`,
+                                },
+                                uniqueItems: true,
+                            },
+                            idSchema: objectSchema,
+                        },
+                        additionalProperties: false,
+                        required: [`initialOwner`, `allowedActions`],
+                    },
+                    interaction: {
+                        type: `string`,
+                        enum: [`or`, `and`],
+                        default: `or`,
+                    },
+                },
+                required: [`interaction`],
+            },
             collectionName: commonSchemas.identifier,
             auditCollectionName: commonSchemas.identifier,
             auditChanges: commonSchemas.boolean,

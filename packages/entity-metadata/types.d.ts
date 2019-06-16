@@ -38,6 +38,19 @@ export interface TenantInfo {
     schema: JsonSchema;
 }
 
+export interface Ownership {
+    initialOwner: `creator` | `setFromEntity` | `setFromContext`;
+    pathToId?: string;
+    allowedActions: string[];
+    idSchema?: JsonSchema;
+}
+
+export interface Authorization {
+    policies?: Array<string[]>;
+    ownership?: Ownership;
+    interaction?: 'or' | 'and';
+}
+
 export interface EntityMetadata {
     schemas: { [key: string]: JsonSchema } & MainSchemas;
     name?: string;
@@ -53,4 +66,5 @@ export interface EntityMetadata {
     baseUrl: string;
     titleToStringIdentifier?: (title: string) => string;
     tenantInfo?: TenantInfo;
+    authorization?: Authorization;
 }
