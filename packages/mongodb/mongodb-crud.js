@@ -183,6 +183,7 @@ function getReplaceById({
         // comes from outside, can't be trusted
         delete entity.versionInfo;
         delete entity._id;
+        delete entity.owner;
         const filter = getIdentifierQuery(id);
         if (metadata.tenantInfo) {
             addTenantToFilter(filter, context);
@@ -205,6 +206,7 @@ function getReplaceById({
         }
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
         entity.versionInfo = existing.versionInfo;
+        entity.owner = existing.owner;
         setVersionInfo(entity, context);
         setStringIdentifier(entity);
         inputValidator.ensureValid(metadata.schemas.core.$id, entity);

@@ -93,6 +93,40 @@ describe(`MongoDB`, () => {
                 expect(replaced).to.be.ok;
                 await deleteById(created._id, context);
             });
+            it(`Should not allow you to remove the owner info`, async () => {
+                const userId = `alice`;
+                const inputMetadata = stringIdNoTenantOwnership({
+                    idSchema: { type: `string` },
+                    allowedActions: [`*`],
+                });
+                const { replaceById, create } = await getPopulatedCrud(inputMetadata);
+                const entity = validEntity();
+                const context = createContext(userId);
+                const created = await create(entity, context);
+                expect(created.owner).to.be.ok;
+                const toUpdate = JSON.parse(JSON.stringify(created));
+                delete toUpdate.owner;
+                const replaced = await replaceById(toUpdate._id, toUpdate, context);
+                expect(replaced.owner).to.be.ok;
+                expect(replaced.owner).to.eql(created.owner);
+            });
+            it(`Should not allow you to change the owner info`, async () => {
+                const userId = `alice`;
+                const inputMetadata = stringIdNoTenantOwnership({
+                    idSchema: { type: `string` },
+                    allowedActions: [`*`],
+                });
+                const { replaceById, create } = await getPopulatedCrud(inputMetadata);
+                const entity = validEntity();
+                const context = createContext(userId);
+                const created = await create(entity, context);
+                expect(created.owner).to.be.ok;
+                const toUpdate = JSON.parse(JSON.stringify(created));
+                toUpdate.owner.id = `bob`;
+                const replaced = await replaceById(toUpdate._id, toUpdate, context);
+                expect(replaced.owner).to.be.ok;
+                expect(replaced.owner).to.eql(created.owner);
+            });
         });
     });
 });
