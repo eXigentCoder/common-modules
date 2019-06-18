@@ -229,11 +229,8 @@ function getSearch({
     enforcer,
 }) {
     return async function search(query, context) {
-        //TODO :
-        await checkAuthorization(enforcer, metadata, context, `retrieve`);
         // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
-        addTenantToFilter(filter, context);
         // @ts-ignore
         if (query.filter === null || query.filter === undefined) {
             filter = query;
@@ -242,6 +239,8 @@ function getSearch({
             sort = undefined;
             projection = undefined;
         }
+        addTenantToFilter(filter, context);
+        await checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, context, `retrieve`);
         const items = await collection
             .find(filter)
             .skip(skip || 0)
@@ -292,6 +291,29 @@ async function checkAuthorization(enforcer, metadata, context, action, currentEn
     if (!allowed) {
         throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
     }
+}
+
+async function checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, context, action) {
+    if (!metadata.authorization) {
+        return;
+    }
+    const currentUserId = context.identity.id;
+    if (enforcer) {
+        let aclAllowed = await enforcer.enforce(currentUserId, metadata.namePlural, action);
+        if (aclAllowed) {
+            return;
+        }
+    }
+    if (!metadata.authorization.ownership) {
+        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+    }
+    let actionAllowed =
+        metadata.authorization.ownership.allowedActions.indexOf(action) >= 0 ||
+        metadata.authorization.ownership.allowedActions.indexOf(`*`) >= 0;
+    if (!actionAllowed) {
+        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+    }
+    filter[`owner.id`] = currentUserId;
 }
 
 /**

@@ -4,6 +4,7 @@ const { NotAuthorizedError } = require(`../common-errors`);
 const { buildMongoUrl } = require(`.`);
 const { newEnforcer } = require(`casbin`);
 const MongooseAdapter = require(`@elastic.io/casbin-mongoose-adapter`);
+const ObjectId = require(`mongodb`).ObjectId;
 
 const {
     getPopulatedCrud,
@@ -80,10 +81,13 @@ describe(`MongoDB`, () => {
                 await expect(created).to.be.ok;
                 const item = await getById(created._id, context);
                 await expect(item).to.be.ok;
-                const searchResults = await search({ filter: { _id: created._id } }, context);
+                const searchResults = await search(
+                    { filter: { _id: new ObjectId(created._id) } },
+                    context
+                );
                 await expect(searchResults).to.be.ok;
                 await expect(searchResults[0]).to.eql(created);
-                const toUpdate = JSON.parse(JSON.stringify(create));
+                const toUpdate = JSON.parse(JSON.stringify(created));
                 toUpdate.username += `updated`;
                 const replaced = await replaceById(created._id, toUpdate, context);
                 expect(replaced).to.be.ok;
