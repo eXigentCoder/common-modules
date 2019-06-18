@@ -125,6 +125,14 @@ module.exports = function() {
                         },
                         uniqueItems: true,
                     },
+                    groups: {
+                        type: `array`,
+                        items: {
+                            type: `array`,
+                            items: { type: `string`, additionalItems: false },
+                        },
+                        uniqueItems: true,
+                    },
                     ownership: { $ref: `#/definitions/ownership` },
                     interaction: {
                         type: `string`,

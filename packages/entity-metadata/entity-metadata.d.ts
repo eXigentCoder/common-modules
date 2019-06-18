@@ -64,6 +64,7 @@ export interface TenantInfo {
 }
 export interface Authorization {
     policies?: string[][];
+    groups?: string[][];
     ownership?: Ownership;
     interaction: 'or' | 'and';
 }

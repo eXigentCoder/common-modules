@@ -32,6 +32,18 @@ async function getUtils({
         projection: {},
     },
 }) {
+    if (enforcer) {
+        if (metadata.authorization.groups) {
+            for (const group of metadata.authorization.groups) {
+                await enforcer.addGroupingPolicy(...group);
+            }
+        }
+        if (metadata.authorization.policies) {
+            for (const policy of metadata.authorization.policies) {
+                await enforcer.addPolicy(...policy);
+            }
+        }
+    }
     return {
         db,
         metadata,

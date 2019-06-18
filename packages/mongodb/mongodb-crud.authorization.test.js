@@ -30,11 +30,38 @@ describe(`MongoDB`, () => {
                         useNewUrlParser: true,
                     });
                     const enforcer = await newEnforcer(getRbacModel(), adapter);
-                    //TODO test these added via the metadata
                     await enforcer.addPolicy(userId, `users`, `create`);
                     await enforcer.addPolicy(role, `users`, `create`);
                     await enforcer.addGroupingPolicy(userId, role);
                     const inputMetadata = Object.assign(stringIdNoTenant(), { authorization: {} });
+                    const { create } = await getPopulatedCrud(inputMetadata, enforcer);
+                    const entity = validEntity();
+                    const context = createContext(userId);
+                    const result = await create(entity, context);
+                    await expect(result).to.be.ok;
+                    const unauthorizedContext = createContext();
+                    await expect(create(entity, unauthorizedContext)).to.be.rejectedWith(
+                        NotAuthorizedError
+                    );
+                    //add in when PR accepted
+                    //adapter.close();
+                });
+                it(`Should use the policies on the metadata if provided`, async function() {
+                    this.timeout(5000);
+                    const connectionString = buildMongoUrl(urlConfig);
+                    const userId = `bobson`;
+                    const adapter = await MongooseAdapter.newAdapter(connectionString, {
+                        dbName: urlConfig.dbName,
+                        useNewUrlParser: true,
+                    });
+                    const enforcer = await newEnforcer(getRbacModel(), adapter);
+                    const role = `user-admin`;
+                    const inputMetadata = Object.assign(stringIdNoTenant(), {
+                        authorization: {
+                            policies: [[role, `users`, `create`]],
+                            groups: [[userId, role]],
+                        },
+                    });
                     const { create } = await getPopulatedCrud(inputMetadata, enforcer);
                     const entity = validEntity();
                     const context = createContext(userId);
