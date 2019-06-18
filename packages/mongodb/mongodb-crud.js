@@ -206,7 +206,9 @@ function getReplaceById({
         }
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
         entity.versionInfo = existing.versionInfo;
-        entity.owner = existing.owner;
+        if (existing.owner) {
+            entity.owner = existing.owner;
+        }
         setVersionInfo(entity, context);
         setStringIdentifier(entity);
         inputValidator.ensureValid(metadata.schemas.core.$id, entity);

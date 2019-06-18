@@ -34,8 +34,8 @@ describe(`MongoDB`, () => {
                     await enforcer.addPolicy(userId, `users`, `create`);
                     await enforcer.addPolicy(role, `users`, `create`);
                     await enforcer.addGroupingPolicy(userId, role);
-
-                    const { create } = await getPopulatedCrud(stringIdNoTenant, enforcer);
+                    const inputMetadata = Object.assign(stringIdNoTenant(), { authorization: {} });
+                    const { create } = await getPopulatedCrud(inputMetadata, enforcer);
                     const entity = validEntity();
                     const context = createContext(userId);
                     const result = await create(entity, context);
