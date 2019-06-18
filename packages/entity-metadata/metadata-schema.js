@@ -2,19 +2,13 @@
 
 const commonSchemas = require(`../json-schema`);
 const generateId = require(`../json-schema/common-module-schema-id-generator`);
-//const jsonSchema = require('ajv/lib/refs/json-schema-draft-07.json');
+//const jsonSchema = require(`ajv/lib/refs/json-schema-draft-07.json`);
 
-const objectSchema = {
-    type: `object`,
-    properties: {},
-    additionalProperties: true,
-};
-
-//todo rk, duplication here between typescript and JSON schema, need to generate the TS
+/** @returns {import("./types").JsonSchema} */
 module.exports = function() {
     return {
         $id: generateId(`metadata`),
-        name: `metadata`,
+        title: `Entity Metadata`,
         type: `object`,
         additionalProperties: false,
         properties: {
@@ -22,13 +16,32 @@ module.exports = function() {
                 type: `object`,
                 additionalProperties: true,
                 properties: {
-                    core: objectSchema,
-                    create: objectSchema,
-                    output: objectSchema,
-                    replace: objectSchema,
+                    core: { $ref: `#/definitions/jsonSchema` },
+                    create: { $ref: `#/definitions/jsonSchema` },
+                    output: { $ref: `#/definitions/jsonSchema` },
+                    replace: { $ref: `#/definitions/jsonSchema` },
                 },
                 required: [`core`],
             },
+            identifier: { $ref: `#/definitions/identifier` },
+            stringIdentifier: { $ref: `#/definitions/stringIdentifier` },
+            tenantInfo: { $ref: `#/definitions/tenantInfo` },
+            authorization: { $ref: `#/definitions/authorization` },
+            collectionName: commonSchemas.identifier,
+            auditCollectionName: commonSchemas.identifier,
+            auditChanges: commonSchemas.boolean,
+            baseUrl: commonSchemas.url,
+            aOrAn: {
+                type: `string`,
+                enum: [`An`, `A`],
+            },
+            name: commonSchemas.identifier,
+            namePlural: commonSchemas.identifier,
+            title: commonSchemas.title,
+            titlePlural: commonSchemas.title,
+        },
+        required: [`schemas`, `identifier`, `collectionName`, `baseUrl`],
+        definitions: {
             identifier: {
                 type: `object`,
                 additionalProperties: false,
@@ -77,6 +90,29 @@ module.exports = function() {
                 },
                 required: [`entityPathToId`, `executionContextSourcePath`, `title`, `schema`],
             },
+            ownership: {
+                type: `object`,
+                properties: {
+                    initialOwner: {
+                        type: `string`,
+                        enum: [`creator`, `setFromEntity`, `setFromContext`],
+                        default: `creator`,
+                    },
+                    pathToId: {
+                        type: `string`,
+                    },
+                    allowedActions: {
+                        type: `array`,
+                        items: {
+                            type: `string`,
+                        },
+                        uniqueItems: true,
+                    },
+                    idSchema: { $ref: `#/definitions/jsonSchema` },
+                },
+                additionalProperties: false,
+                required: [`initialOwner`, `allowedActions`],
+            },
             authorization: {
                 type: `object`,
                 additionalProperties: false,
@@ -89,29 +125,7 @@ module.exports = function() {
                         },
                         uniqueItems: true,
                     },
-                    ownership: {
-                        type: `object`,
-                        properties: {
-                            initialOwner: {
-                                type: `string`,
-                                enum: [`creator`, `setFromEntity`, `setFromContext`],
-                                default: `creator`,
-                            },
-                            pathToId: {
-                                type: `string`,
-                            },
-                            allowedActions: {
-                                type: `array`,
-                                items: {
-                                    type: `string`,
-                                },
-                                uniqueItems: true,
-                            },
-                            idSchema: objectSchema,
-                        },
-                        additionalProperties: false,
-                        required: [`initialOwner`, `allowedActions`],
-                    },
+                    ownership: { $ref: `#/definitions/ownership` },
                     interaction: {
                         type: `string`,
                         enum: [`or`, `and`],
@@ -120,19 +134,11 @@ module.exports = function() {
                 },
                 required: [`interaction`],
             },
-            collectionName: commonSchemas.identifier,
-            auditCollectionName: commonSchemas.identifier,
-            auditChanges: commonSchemas.boolean,
-            baseUrl: commonSchemas.url,
-            aOrAn: {
-                type: `string`,
-                enum: [`An`, `A`],
+            jsonSchema: {
+                type: `object`,
+                properties: {},
+                additionalProperties: true,
             },
-            name: commonSchemas.identifier,
-            namePlural: commonSchemas.identifier,
-            title: commonSchemas.title,
-            titlePlural: commonSchemas.title,
         },
-        required: [`schemas`, `identifier`, `collectionName`, `baseUrl`],
     };
 };
