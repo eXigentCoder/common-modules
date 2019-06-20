@@ -3,6 +3,6 @@
     "mocha.requires": ["./test-init.js"],
     "mocha.options": {
         "exit": true,
-        "timeout": 50000
+        "timeout": 5000
     }
 }
