@@ -63,7 +63,7 @@
   "dependencies": {
     "@bit/bit.utils.string.starts-with-one-of": "1.0.0",
     "@bit/bit.utils.validation.empty": "1.0.0",
-    "@elastic.io/casbin-mongoose-adapter": "1.0.0",
+    "@elastic.io/casbin-mongoose-adapter": "git+https://github.com/elasticio/casbin-mongoose-adapter.git",
     "@hapi/boom": "7.4.2",
     "ajv": "6.10.0",
     "ajv-errors": "1.0.1",

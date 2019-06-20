@@ -43,8 +43,7 @@ describe(`MongoDB`, () => {
                     await expect(create(entity, unauthorizedContext)).to.be.rejectedWith(
                         NotAuthorizedError
                     );
-                    //add in when PR accepted
-                    //adapter.close();
+                    await adapter.close();
                 });
                 it(`Should use the policies on the metadata if provided`, async function() {
                     this.timeout(5000);
@@ -71,8 +70,7 @@ describe(`MongoDB`, () => {
                     await expect(create(entity, unauthorizedContext)).to.be.rejectedWith(
                         NotAuthorizedError
                     );
-                    //add in when PR accepted
-                    //adapter.close();
+                    await adapter.close();
                 });
             });
         });
