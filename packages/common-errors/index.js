@@ -5,6 +5,7 @@ const ValidationError = require(`./validation-error/validation-error`);
 const EntityNotFoundError = require(`./entity-not-found-error/entity-not-found-error`);
 const KrimZenNinjaBaseError = require(`./krimzen-ninja-base-error`);
 const TenantError = require(`./tenant-error/tenant-error`);
+const NotAuthorizedError = require(`./not-authorized-error/not-authorized-error`);
 
 module.exports = {
     IsRequiredError,
@@ -12,4 +13,5 @@ module.exports = {
     EntityNotFoundError,
     KrimZenNinjaBaseError,
     TenantError,
+    NotAuthorizedError,
 };

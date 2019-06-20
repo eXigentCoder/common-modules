@@ -1,5 +1,6 @@
-import { JSONSchema7 } from '@types/json-schema';
+import { JSONSchema7 } from 'json-schema';
 export { Validator } from '../validation/ajv';
+export * from './entity-metadata';
 
 export interface JsonSchema extends JSONSchema7 {
     mongoId?: boolean;
@@ -7,50 +8,4 @@ export interface JsonSchema extends JSONSchema7 {
     chance?: any;
     coerceFromFormat?: boolean;
     errorMessage?: any;
-}
-
-interface MainSchemas {
-    core: JsonSchema;
-    output?: JsonSchema;
-    create?: JsonSchema;
-    replace?: JsonSchema;
-}
-
-export interface Identifier {
-    pathToId: string;
-    schema: JsonSchema;
-}
-
-export interface StringIdentifier {
-    pathToId: string;
-    schema: JsonSchema;
-    entitySourcePath?: string;
-}
-
-export interface TenantInfo {
-    /** The path as to where to set the tenantId on the entity */
-    entityPathToId: string;
-    /** The path to the source for the tenantId on the ExecutionContext */
-    executionContextSourcePath: string;
-    /** The display name as a user would see it for what the tenant is e.g. Team or Organisation */
-    title: string;
-    /** The schema used to validate the tenantId */
-    schema: JsonSchema;
-}
-
-export interface EntityMetadata {
-    schemas: { [key: string]: JsonSchema } & MainSchemas;
-    name?: string;
-    namePlural?: string;
-    title?: string;
-    titlePlural?: string;
-    aOrAn?: string;
-    identifier: Identifier;
-    stringIdentifier?: StringIdentifier;
-    collectionName: string;
-    auditCollectionName?: string;
-    auditChanges?: boolean;
-    baseUrl: string;
-    titleToStringIdentifier?: (title: string) => string;
-    tenantInfo?: TenantInfo;
 }

@@ -6,6 +6,8 @@ const {
 } = require(`./json-schema-utilities`);
 const withVersionInfo = require(`../version-info/with-version-info`);
 const merge = require(`lodash/merge`);
+const ownershipSchema = require(`./ownership-schema`);
+
 /**
  * @param {import('./types').JsonSchema} schema
  * @param {import('./types').EntityMetadata} metadata
@@ -16,8 +18,8 @@ function hydrateSchema(schema, metadata) {
     addStringIdentifier(schema, metadata);
     addTenantInfo(schema, metadata.tenantInfo);
     addVersionInfo(schema);
+    addOwnerInfo(schema, metadata);
     // addStatusInfo(schema);
-    // addOwnerInfo(schema);
 }
 
 /**
@@ -50,8 +52,21 @@ function addTenantInfo(schema, tenantInfo) {
     addFullRequiredSchema(schema, tenantInfo.entityPathToId, tenantInfo.schema);
 }
 
+/**
+ * @param {import('./types').JsonSchema} schema
+ */
 function addVersionInfo(schema) {
     return merge(schema, withVersionInfo());
+}
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').EntityMetadata} metadata
+ */
+function addOwnerInfo(schema, metadata) {
+    if (!metadata.authorization || !metadata.authorization.ownership) {
+        return;
+    }
+    addFullRequiredSchema(schema, `owner`, ownershipSchema(metadata));
 }
 
 // function addStatusInfo(schema) {
@@ -93,43 +108,6 @@ function addVersionInfo(schema) {
 //     schema.required.push('statusLog');
 // }
 
-// function addOwnerInfo(schema) {
-//     ensurePropsAndRequired(schema);
-//     if (!schema.ownership) {
-//         return;
-//     }
-//     schema.properties.owner = {
-//         type: 'string',
-//         format: 'mongoId',
-//         mongoId: true,
-//         minLength: 24,
-//         maxLength: 24,
-//     };
-//     schema.properties.ownerDate = {
-//         type: 'string',
-//         format: 'date-time',
-//         faker: 'date.past',
-//     };
-//     schema.properties.ownerLog = {
-//         type: 'array',
-//         items: {
-//             type: 'object',
-//             properties: {
-//                 owner: schema.properties.owner,
-//                 ownerDate: schema.properties.ownerDate,
-//                 data: {
-//                     type: ['object', 'string'], //todo?
-//                 },
-//             },
-//             required: ['owner', 'ownerDate', 'data'], //todo - data check schema anyof?
-//             additionalProperties: false,
-//         },
-//         additionalItems: false,
-//     };
-//     schema.required.push('owner');
-//     schema.required.push('ownerDate');
-//     schema.required.push('ownerLog');
-// }
 module.exports = {
     hydrateSchema,
     addIdentifier,

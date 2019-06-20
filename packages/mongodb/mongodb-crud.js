@@ -1,6 +1,6 @@
 'use strict';
 
-const { ValidationError, TenantError } = require(`../common-errors`);
+const { ValidationError, TenantError, NotAuthorizedError } = require(`../common-errors`);
 const { createOutputMapper } = require(`../validation`);
 const { createVersionInfoSetter } = require(`../version-info`);
 const get = require(`lodash/get`);
@@ -9,6 +9,8 @@ const { EntityNotFoundError } = require(`../common-errors`);
 const createGetIdentifierQuery = require(`./create-identifier-query`);
 const createMongoDbAuditors = require(`./create-mongodb-auditors`);
 const ObjectId = require(`mongodb`).ObjectId;
+const createSetOwnerIfApplicable = require(`./set-owner-if-applicable`);
+const defaultTitleToStringIdentifier = require(`./title-to-string-identifier`);
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
@@ -24,12 +26,27 @@ async function getUtils({
     outputValidator,
     db,
     auditors,
+    enforcer,
+    titleToStringIdentifier,
     paginationDefaults = {
         itemsPerPage: 20,
         sort: {},
         projection: {},
     },
 }) {
+    if (enforcer) {
+        if (metadata.authorization.groups) {
+            for (const group of metadata.authorization.groups) {
+                await enforcer.addGroupingPolicy(...group);
+            }
+        }
+        if (metadata.authorization.policies) {
+            for (const policy of metadata.authorization.policies) {
+                await enforcer.addPolicy(...policy);
+            }
+        }
+    }
+    titleToStringIdentifier = titleToStringIdentifier || defaultTitleToStringIdentifier;
     return {
         db,
         metadata,
@@ -39,11 +56,14 @@ async function getUtils({
         setVersionInfo: createVersionInfoSetter({ metadata, validator: inputValidator }),
         collection: db.collection(metadata.collectionName),
         mapOutput: createOutputMapper(metadata.schemas.output.$id, outputValidator),
-        setStringIdentifier: createStringIdentifierSetter(metadata),
+        setStringIdentifier: createStringIdentifierSetter(metadata, titleToStringIdentifier),
         getIdentifierQuery: createGetIdentifierQuery(metadata),
         auditors: auditors || (await createMongoDbAuditors(metadata, db)),
         setTenant: createSetTenant(metadata),
         addTenantToFilter: createAddTenantToFilter(metadata),
+        setOwnerIfApplicable: createSetOwnerIfApplicable(metadata),
+        enforcer,
+        titleToStringIdentifier,
     };
 }
 
@@ -51,12 +71,13 @@ async function getUtils({
  * @param {CreateUtilityParams} createUtilityParams The input utilities to create the function
  * @returns {Promise<GetCrud>} A promise which resolves to the CRUD methods
  */
-async function getCrud({ metadata, inputValidator, outputValidator, db }) {
+async function getCrud({ metadata, inputValidator, outputValidator, db, enforcer }) {
     const utilities = await getUtils({
         metadata,
         inputValidator,
         outputValidator,
         db,
+        enforcer,
     });
     return {
         create: getCreate(utilities),
@@ -81,6 +102,8 @@ function getCreate({
     inputValidator,
     auditors,
     setTenant,
+    enforcer,
+    setOwnerIfApplicable,
 }) {
     return async function create(_entity, context) {
         ensureEntityIsObject(_entity, metadata);
@@ -89,9 +112,11 @@ function getCreate({
         setStringIdentifier(entity);
         setTenant(entity, context);
         setVersionInfo(entity, context);
+        setOwnerIfApplicable(entity, context);
         entity._id = new ObjectId();
         inputValidator.ensureValid(metadata.schemas.core.$id, entity);
         entity._id = new ObjectId(entity._id);
+        await checkAuthorization(enforcer, metadata, context, `create`, entity);
         await collection.insertOne(entity);
         await auditors.writeCreation(entity, context);
         mapOutput(entity);
@@ -103,7 +128,14 @@ function getCreate({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").GetById<object>} A function to get entities by their identifiers
  */
-function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTenantToFilter }) {
+function getGetById({
+    collection,
+    mapOutput,
+    getIdentifierQuery,
+    metadata,
+    addTenantToFilter,
+    enforcer,
+}) {
     return async function getById(id, context) {
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
@@ -111,6 +143,7 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTe
         if (!item) {
             throw new EntityNotFoundError(metadata.title, id);
         }
+        await checkAuthorization(enforcer, metadata, context, `retrieve`, item);
         mapOutput(item);
         return item;
     };
@@ -120,10 +153,22 @@ function getGetById({ collection, mapOutput, getIdentifierQuery, metadata, addTe
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").DeleteById<object>} A function to delete entities by their identifier
  */
-function getDeleteById({ collection, getIdentifierQuery, metadata, auditors, addTenantToFilter }) {
+function getDeleteById({
+    collection,
+    getIdentifierQuery,
+    metadata,
+    auditors,
+    addTenantToFilter,
+    enforcer,
+}) {
     return async function deleteById(id, context) {
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
+        const existingItem = await collection.findOne(filter);
+        if (!existingItem) {
+            throw new EntityNotFoundError(metadata.title, id);
+        }
+        await checkAuthorization(enforcer, metadata, context, `delete`, existingItem);
         const result = await collection.findOneAndDelete(filter);
         if (!result.value) {
             throw new EntityNotFoundError(metadata.title, id);
@@ -146,6 +191,7 @@ function getReplaceById({
     getIdentifierQuery,
     addTenantToFilter,
     setStringIdentifier,
+    enforcer,
 }) {
     return async function replaceById(id, _entity, context) {
         ensureEntityIsObject(_entity, metadata);
@@ -153,6 +199,7 @@ function getReplaceById({
         // comes from outside, can't be trusted
         delete entity.versionInfo;
         delete entity._id;
+        delete entity.owner;
         const filter = getIdentifierQuery(id);
         if (metadata.tenantInfo) {
             addTenantToFilter(filter, context);
@@ -161,6 +208,7 @@ function getReplaceById({
         if (!existing) {
             throw new EntityNotFoundError(metadata.title, JSON.stringify(filter));
         }
+        await checkAuthorization(enforcer, metadata, context, `update`, existing);
         if (metadata.tenantInfo) {
             const existingTenantId = get(existing, metadata.tenantInfo.entityPathToId);
             if (!existingTenantId) {
@@ -174,6 +222,9 @@ function getReplaceById({
         }
         inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
         entity.versionInfo = existing.versionInfo;
+        if (existing.owner) {
+            entity.owner = existing.owner;
+        }
         setVersionInfo(entity, context);
         setStringIdentifier(entity);
         inputValidator.ensureValid(metadata.schemas.core.$id, entity);
@@ -189,11 +240,17 @@ function getReplaceById({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("./types").Search<object>} A function to search for entities
  */
-function getSearch({ collection, mapOutput, paginationDefaults, addTenantToFilter }) {
+function getSearch({
+    collection,
+    mapOutput,
+    paginationDefaults,
+    addTenantToFilter,
+    metadata,
+    enforcer,
+}) {
     return async function search(query, context) {
         // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
-        addTenantToFilter(filter, context);
         // @ts-ignore
         if (query.filter === null || query.filter === undefined) {
             filter = query;
@@ -202,6 +259,8 @@ function getSearch({ collection, mapOutput, paginationDefaults, addTenantToFilte
             sort = undefined;
             projection = undefined;
         }
+        addTenantToFilter(filter, context);
+        await checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, context, `retrieve`);
         const items = await collection
             .find(filter)
             .skip(skip || 0)
@@ -216,11 +275,72 @@ function getSearch({ collection, mapOutput, paginationDefaults, addTenantToFilte
 
 module.exports = { getUtils, getCrud };
 
+// --------------============== [ Todo these utilities should probably all be their own files]
+
+/**
+ * @param {import('casbin').Enforcer} [enforcer] The Casbin enforcer to use with the policies if provided
+ * @param {EntityMetadata} metadata The entities metadata object
+ * @param {import('../version-info/types').ExecutionContext} context The execution context for this action
+ * @param {string} action the name of the action
+ * @param {any} currentEntity The current entity to check ownership against
+ * @returns {Promise<void>}
+ */
+async function checkAuthorization(enforcer, metadata, context, action, currentEntity) {
+    if (!metadata.authorization) {
+        return;
+    }
+    const currentUserId = context.identity.id;
+    let aclAllowed = false;
+    let ownershipAllowed = false;
+    let allowed = false;
+    if (enforcer) {
+        aclAllowed = await enforcer.enforce(currentUserId, metadata.namePlural, action);
+    }
+    if (metadata.authorization.ownership) {
+        let actionAllowed =
+            metadata.authorization.ownership.allowedActions.indexOf(action) >= 0 ||
+            metadata.authorization.ownership.allowedActions.indexOf(`*`) >= 0;
+        let isOwner = get(currentEntity, `owner.id`, ``) === currentUserId;
+        ownershipAllowed = actionAllowed && isOwner;
+    }
+    if (metadata.authorization.interaction === `or`) {
+        allowed = aclAllowed || ownershipAllowed;
+    } else {
+        allowed = aclAllowed && ownershipAllowed;
+    }
+    if (!allowed) {
+        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+    }
+}
+
+async function checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, context, action) {
+    if (!metadata.authorization) {
+        return;
+    }
+    const currentUserId = context.identity.id;
+    if (enforcer) {
+        let aclAllowed = await enforcer.enforce(currentUserId, metadata.namePlural, action);
+        if (aclAllowed) {
+            return;
+        }
+    }
+    if (!metadata.authorization.ownership) {
+        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+    }
+    let actionAllowed =
+        metadata.authorization.ownership.allowedActions.indexOf(action) >= 0 ||
+        metadata.authorization.ownership.allowedActions.indexOf(`*`) >= 0;
+    if (!actionAllowed) {
+        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+    }
+    filter[`owner.id`] = currentUserId;
+}
+
 /**
  * @param {EntityMetadata} metadata The entity metadata containing the rules for the string identifier
  * @returns {import('./types').SetStringIdentifier} The function to set the string identifier on an object
  */
-function createStringIdentifierSetter(metadata) {
+function createStringIdentifierSetter(metadata, titleToStringIdentifier) {
     return function setStringIdentifier(item) {
         if (!metadata.stringIdentifier) {
             return;
@@ -230,7 +350,7 @@ function createStringIdentifierSetter(metadata) {
             if (currentValue) {
                 return;
             }
-            const newValue = metadata.titleToStringIdentifier(
+            const newValue = titleToStringIdentifier(
                 get(item, metadata.stringIdentifier.entitySourcePath)
             );
             set(item, metadata.stringIdentifier.pathToId, newValue);

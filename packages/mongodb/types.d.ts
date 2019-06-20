@@ -2,6 +2,7 @@ import { Db, IndexOptions, Collection } from 'mongodb';
 import { Validator } from '../validation/ajv';
 import { ExecutionContext } from '../version-info/types';
 import { EntityMetadata } from '../entity-metadata/types';
+import { Enforcer } from 'casbin';
 /** Default options used to paginate search queries */
 export interface PaginationDefaults {
     /** The number of items to include in a page when no overriding value is provided */
@@ -19,6 +20,8 @@ export interface CreateUtilityParams {
     db: Db;
     auditors?: Auditors;
     paginationDefaults?: PaginationDefaults;
+    enforcer?: Enforcer;
+    titleToStringIdentifier?: TitleToStringIdentifier;
 }
 
 export interface Utilities {
@@ -35,6 +38,9 @@ export interface Utilities {
     paginationDefaults: PaginationDefaults;
     setTenant: SetTenant;
     addTenantToFilter: AddTenantToFilter;
+    enforcer?: Enforcer;
+    setOwnerIfApplicable: SetOwnerIfApplicable;
+    titleToStringIdentifier: TitleToStringIdentifier;
 }
 
 export interface Crud<T> {
@@ -71,6 +77,8 @@ export type SetTenant = (entity: any, context: ExecutionContext) => void;
 export type CreateAddTenantToFilter = (metatada: EntityMetadata) => AddTenantToFilter;
 export type AddTenantToFilter = (query: Query, context: ExecutionContext) => void;
 export type GetUtils = (params: CreateUtilityParams) => Promise<Utilities>;
+export type SetOwnerIfApplicable = (entity: any, context: ExecutionContext) => void;
+export type TitleToStringIdentifier = (title: string) => string;
 
 export interface UrlConfig {
     username?: string;

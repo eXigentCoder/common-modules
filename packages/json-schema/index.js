@@ -76,7 +76,7 @@ const oneOrMoreEmailAddresses = {
 
 /** @type {import("../entity-metadata/types").JsonSchema}*/
 const dateTime = {
-    type: `string`,
+    type: [`string`, `object`],
     format: `date-time`,
     coerceFromFormat: true,
 };

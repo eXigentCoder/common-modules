@@ -8,20 +8,28 @@ describe(`JSON Schemas`, () => {
             const validator = createInputValidator();
             const validate = validator.compile(commonSchemas.dateTime);
             it(`should not allow null`, function() {
-                const dateString = null;
-                expect(validate(dateString)).to.not.be.ok;
+                const dateVal = null;
+                expect(validate(dateVal)).to.not.be.ok;
             });
             it(`should not allow an empty string`, function() {
-                const dateString = ``;
-                expect(validate(dateString)).to.not.be.ok;
+                const dateVal = ``;
+                expect(validate(dateVal)).to.not.be.ok;
             });
             it(`should not allow a non empty string that is not a date`, function() {
-                const dateString = `asd`;
-                expect(validate(dateString)).to.not.be.ok;
+                const dateVal = `asd`;
+                expect(validate(dateVal)).to.not.be.ok;
             });
             it(`should allow an ISOString`, function() {
                 const dateString = new Date().toISOString();
                 expect(validate(dateString)).to.be.ok;
+            });
+            it(`should allow a valid date object`, () => {
+                const date = new Date(`2019-06-10T12:05:46.202Z`);
+                expect(validate(date)).to.be.ok;
+            });
+            it(`should not allow an object which isn't a date`, function() {
+                const dateVal = {};
+                expect(validate(dateVal)).to.not.be.ok;
             });
         });
 

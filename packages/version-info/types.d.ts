@@ -1,4 +1,4 @@
-import { EntityMetadata, Validator } from '../entity-metadata/';
+import { EntityMetadata, Validator } from '../entity-metadata';
 import { JsonSchema } from '../entity-metadata/types';
 
 export interface Identity {

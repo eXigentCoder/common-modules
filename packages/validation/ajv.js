@@ -123,6 +123,12 @@ function coerceFromFormat(
         parentDataObject === null ||
         parentDataObject === undefined
     ) {
+        if (schema.format === `date-time`) {
+            if (typeof dataValue === `object` && isNaN(dataValue)) {
+                return false;
+            }
+        }
+
         return true;
     }
     if (schema.format === `date-time`) {
