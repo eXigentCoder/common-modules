@@ -2,7 +2,7 @@
 
 const titleToStringIdentifier = require(`./title-to-string-identifier`);
 
-describe(`Entity Metadata`, () => {
+describe(`MongoDB`, () => {
     describe(`title-to-string-identifier`, () => {
         it(`should throw an error for null`, () => {
             expect(() => titleToStringIdentifier(null)).to.throw();

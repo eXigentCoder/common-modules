@@ -9,7 +9,6 @@ const filterPropertiesForCreation = require(`./filter-properties-for-creation`);
 const filterPropertiesForReplace = require(`./filter-properties-for-replace`);
 const { generateId } = require(`../json-schema/schema-id-generator`);
 const getMetadataSchema = require(`./metadata-schema`);
-const defaultTitleToStringIdentifierFn = require(`./title-to-string-identifier`);
 
 module.exports = generateEntityMetadata;
 /**
@@ -23,8 +22,6 @@ module.exports = generateEntityMetadata;
  */
 function generateEntityMetadata(metadata, inputValidator, outputValidator) {
     validate(metadata, inputValidator);
-    metadata.titleToStringIdentifier =
-        metadata.titleToStringIdentifier || defaultTitleToStringIdentifierFn;
     metadata.schemas = JSON.parse(JSON.stringify(metadata.schemas));
     inferNames(metadata);
     setAOrAn(metadata);

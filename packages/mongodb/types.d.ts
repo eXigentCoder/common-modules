@@ -21,6 +21,7 @@ export interface CreateUtilityParams {
     auditors?: Auditors;
     paginationDefaults?: PaginationDefaults;
     enforcer?: Enforcer;
+    titleToStringIdentifier?: TitleToStringIdentifier;
 }
 
 export interface Utilities {
@@ -39,6 +40,7 @@ export interface Utilities {
     addTenantToFilter: AddTenantToFilter;
     enforcer?: Enforcer;
     setOwnerIfApplicable: SetOwnerIfApplicable;
+    titleToStringIdentifier: TitleToStringIdentifier;
 }
 
 export interface Crud<T> {
@@ -76,6 +78,7 @@ export type CreateAddTenantToFilter = (metatada: EntityMetadata) => AddTenantToF
 export type AddTenantToFilter = (query: Query, context: ExecutionContext) => void;
 export type GetUtils = (params: CreateUtilityParams) => Promise<Utilities>;
 export type SetOwnerIfApplicable = (entity: any, context: ExecutionContext) => void;
+export type TitleToStringIdentifier = (title: string) => string;
 
 export interface UrlConfig {
     username?: string;

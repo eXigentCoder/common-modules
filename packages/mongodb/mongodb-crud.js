@@ -10,6 +10,7 @@ const createGetIdentifierQuery = require(`./create-identifier-query`);
 const createMongoDbAuditors = require(`./create-mongodb-auditors`);
 const ObjectId = require(`mongodb`).ObjectId;
 const createSetOwnerIfApplicable = require(`./set-owner-if-applicable`);
+const defaultTitleToStringIdentifier = require(`./title-to-string-identifier`);
 /**
  * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('./types').CreateUtilityParams} CreateUtilityParams
@@ -26,6 +27,7 @@ async function getUtils({
     db,
     auditors,
     enforcer,
+    titleToStringIdentifier,
     paginationDefaults = {
         itemsPerPage: 20,
         sort: {},
@@ -44,6 +46,7 @@ async function getUtils({
             }
         }
     }
+    titleToStringIdentifier = titleToStringIdentifier || defaultTitleToStringIdentifier;
     return {
         db,
         metadata,
@@ -53,13 +56,14 @@ async function getUtils({
         setVersionInfo: createVersionInfoSetter({ metadata, validator: inputValidator }),
         collection: db.collection(metadata.collectionName),
         mapOutput: createOutputMapper(metadata.schemas.output.$id, outputValidator),
-        setStringIdentifier: createStringIdentifierSetter(metadata),
+        setStringIdentifier: createStringIdentifierSetter(metadata, titleToStringIdentifier),
         getIdentifierQuery: createGetIdentifierQuery(metadata),
         auditors: auditors || (await createMongoDbAuditors(metadata, db)),
         setTenant: createSetTenant(metadata),
         addTenantToFilter: createAddTenantToFilter(metadata),
         setOwnerIfApplicable: createSetOwnerIfApplicable(metadata),
         enforcer,
+        titleToStringIdentifier,
     };
 }
 
@@ -336,7 +340,7 @@ async function checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, 
  * @param {EntityMetadata} metadata The entity metadata containing the rules for the string identifier
  * @returns {import('./types').SetStringIdentifier} The function to set the string identifier on an object
  */
-function createStringIdentifierSetter(metadata) {
+function createStringIdentifierSetter(metadata, titleToStringIdentifier) {
     return function setStringIdentifier(item) {
         if (!metadata.stringIdentifier) {
             return;
@@ -346,7 +350,7 @@ function createStringIdentifierSetter(metadata) {
             if (currentValue) {
                 return;
             }
-            const newValue = metadata.titleToStringIdentifier(
+            const newValue = titleToStringIdentifier(
                 get(item, metadata.stringIdentifier.entitySourcePath)
             );
             set(item, metadata.stringIdentifier.pathToId, newValue);
