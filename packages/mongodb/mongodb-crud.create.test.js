@@ -1,9 +1,6 @@
 'use strict';
 
-const { ValidationError, TenantError, NotAuthorizedError } = require(`../common-errors`);
-const { buildMongoUrl } = require(`.`);
-const { newEnforcer } = require(`casbin`);
-const MongooseAdapter = require(`@elastic.io/casbin-mongoose-adapter`);
+const { ValidationError, TenantError } = require(`../common-errors`);
 
 const {
     getPopulatedCrud,
@@ -12,8 +9,6 @@ const {
     stringIdNoTenant,
     stringIdTenant,
     validEntity,
-    urlConfig,
-    getRbacModel,
 } = require(`./mongodb-crud.utilities.test`);
 
 describe(`MongoDB`, () => {
