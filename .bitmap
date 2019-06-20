@@ -752,5 +752,23 @@
         "origin": "AUTHORED",
         "exported": true
     },
+    "casbin-model": {
+        "files": [
+            {
+                "relativePath": "packages/casbin-model/casbin-model.test.js",
+                "test": true,
+                "name": "casbin-model.test.js"
+            },
+            {
+                "relativePath": "packages/casbin-model/index.js",
+                "test": false,
+                "name": "index.js"
+            }
+        ],
+        "mainFile": "packages/casbin-model/index.js",
+        "trackDir": "packages/casbin-model",
+        "origin": "AUTHORED",
+        "exported": false
+    },
     "version": "14.1.1"
 }
