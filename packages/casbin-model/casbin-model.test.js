@@ -14,18 +14,19 @@ const crypto = require(`crypto`);
 describe(`Casbin Model`, () => {
     const allow = `allow`;
     const deny = `deny`;
-    let db, model, adapter;
+    let db, model, adapter, connectionString;
     before(async () => {
         db = await getDb(urlConfig);
         model = createModel();
-        const connectionString = buildMongoUrl(urlConfig);
+        connectionString = buildMongoUrl(urlConfig);
+    });
+    beforeEach(async () => {
+        await dropExistingData(db, false);
+
         adapter = await MongooseAdapter.newAdapter(connectionString, {
             dbName: urlConfig.dbName,
             useNewUrlParser: true,
         });
-    });
-    beforeEach(async () => {
-        await dropExistingData(db, false);
     });
     it(`Should allow you to specify that a specific user can perform an action on a resource`, async () => {
         const userId = randomString();
@@ -85,7 +86,7 @@ describe(`Casbin Model`, () => {
         expect(allowed).to.equal(true);
     });
 
-    after(async () => {
+    afterEach(async () => {
         await adapter.close();
     });
 });
