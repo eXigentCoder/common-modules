@@ -131,6 +131,16 @@
                 "name": "krimzen-ninja-base-error.test.js"
             },
             {
+                "relativePath": "packages/common-errors/not-authorized-error/not-authorized-error.js",
+                "test": false,
+                "name": "not-authorized-error.js"
+            },
+            {
+                "relativePath": "packages/common-errors/not-authorized-error/not-authorized-error.test.js",
+                "test": true,
+                "name": "not-authorized-error.test.js"
+            },
+            {
                 "relativePath": "packages/common-errors/tenant-error/tenant-error.js",
                 "test": false,
                 "name": "tenant-error.js"
@@ -164,99 +174,104 @@
     "exigentcoder.common-modules/entity-metadata@0.18.0": {
         "files": [
             {
-                "name": "ensure-schema-set.js",
                 "relativePath": "packages/entity-metadata/ensure-schema-set.js",
-                "test": false
+                "test": false,
+                "name": "ensure-schema-set.js"
             },
             {
-                "name": "ensure-schema-set.test.js",
                 "relativePath": "packages/entity-metadata/ensure-schema-set.test.js",
-                "test": true
+                "test": true,
+                "name": "ensure-schema-set.test.js"
             },
             {
-                "name": "entity-metadata.test.js",
+                "relativePath": "packages/entity-metadata/entity-metadata.d.ts",
+                "test": false,
+                "name": "entity-metadata.d.ts"
+            },
+            {
                 "relativePath": "packages/entity-metadata/entity-metadata.test.js",
-                "test": true
+                "test": true,
+                "name": "entity-metadata.test.js"
             },
             {
-                "name": "filter-properties-for-creation.js",
                 "relativePath": "packages/entity-metadata/filter-properties-for-creation.js",
-                "test": false
+                "test": false,
+                "name": "filter-properties-for-creation.js"
             },
             {
-                "name": "filter-properties-for-output.js",
                 "relativePath": "packages/entity-metadata/filter-properties-for-output.js",
-                "test": false
+                "test": false,
+                "name": "filter-properties-for-output.js"
             },
             {
-                "name": "filter-properties-for-replace.js",
                 "relativePath": "packages/entity-metadata/filter-properties-for-replace.js",
-                "test": false
+                "test": false,
+                "name": "filter-properties-for-replace.js"
             },
             {
-                "name": "hydrate-schema.js",
                 "relativePath": "packages/entity-metadata/hydrate-schema.js",
-                "test": false
+                "test": false,
+                "name": "hydrate-schema.js"
             },
             {
-                "name": "hydrate-schema.test.js",
                 "relativePath": "packages/entity-metadata/hydrate-schema.test.js",
-                "test": true
+                "test": true,
+                "name": "hydrate-schema.test.js"
             },
             {
-                "name": "index.js",
                 "relativePath": "packages/entity-metadata/index.js",
-                "test": false
+                "test": false,
+                "name": "index.js"
             },
             {
-                "name": "infer-names.js",
                 "relativePath": "packages/entity-metadata/infer-names.js",
-                "test": false
+                "test": false,
+                "name": "infer-names.js"
             },
             {
-                "name": "json-schema-utilities.js",
                 "relativePath": "packages/entity-metadata/json-schema-utilities.js",
-                "test": false
+                "test": false,
+                "name": "json-schema-utilities.js"
             },
             {
-                "name": "json-schema-utilities.test.js",
                 "relativePath": "packages/entity-metadata/json-schema-utilities.test.js",
-                "test": false
+                "test": true,
+                "name": "json-schema-utilities.test.js"
             },
             {
-                "name": "metadata-schema.js",
                 "relativePath": "packages/entity-metadata/metadata-schema.js",
-                "test": false
+                "test": false,
+                "name": "metadata-schema.js"
             },
             {
-                "name": "set-and-validate-id.js",
+                "relativePath": "packages/entity-metadata/ownership-schema.js",
+                "test": false,
+                "name": "ownership-schema.js"
+            },
+            {
+                "relativePath": "packages/entity-metadata/schema-to-typescript.test.js",
+                "test": true,
+                "name": "schema-to-typescript.test.js"
+            },
+            {
                 "relativePath": "packages/entity-metadata/set-and-validate-id.js",
-                "test": false
+                "test": false,
+                "name": "set-and-validate-id.js"
             },
             {
-                "name": "set-and-validate-id.test.js",
                 "relativePath": "packages/entity-metadata/set-and-validate-id.test.js",
-                "test": true
+                "test": true,
+                "name": "set-and-validate-id.test.js"
             },
             {
-                "name": "set-and-validate-title.js",
                 "relativePath": "packages/entity-metadata/set-and-validate-title.js",
-                "test": false
+                "test": false,
+                "name": "set-and-validate-title.js"
             },
             {
-                "name": "set-and-validate-title.test.js",
                 "relativePath": "packages/entity-metadata/set-and-validate-title.test.js",
-                "test": false
-            },
-            {
-                "name": "title-to-string-identifier.js",
-                "relativePath": "packages/entity-metadata/title-to-string-identifier.js",
-                "test": false
-            },
-            {
-                "name": "title-to-string-identifier.test.js",
-                "relativePath": "packages/entity-metadata/title-to-string-identifier.test.js",
-                "test": true
+                "test": true,
+                "name": "set-and-validate-title.test.js"
             },
             {
                 "relativePath": "packages/entity-metadata/types.d.ts",
@@ -265,6 +280,7 @@
             }
         ],
         "mainFile": "packages/entity-metadata/index.js",
+        "trackDir": "packages/entity-metadata",
         "origin": "AUTHORED",
         "exported": true
     },
@@ -316,14 +332,44 @@
                 "name": "index.js"
             },
             {
+                "relativePath": "packages/mongodb/mongodb-crud.authorization.test.js",
+                "test": true,
+                "name": "mongodb-crud.authorization.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-crud.create.test.js",
+                "test": true,
+                "name": "mongodb-crud.create.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-crud.delete.test.js",
+                "test": true,
+                "name": "mongodb-crud.delete.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-crud.get-by-id.test.js",
+                "test": true,
+                "name": "mongodb-crud.get-by-id.test.js"
+            },
+            {
                 "relativePath": "packages/mongodb/mongodb-crud.js",
                 "test": false,
                 "name": "mongodb-crud.js"
             },
             {
-                "relativePath": "packages/mongodb/mongodb-crud.test.js",
+                "relativePath": "packages/mongodb/mongodb-crud.replace-by-id.test.js",
                 "test": true,
-                "name": "mongodb-crud.test.js"
+                "name": "mongodb-crud.replace-by-id.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-crud.search.test.js",
+                "test": true,
+                "name": "mongodb-crud.search.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/mongodb-crud.utilities.test.js",
+                "test": true,
+                "name": "mongodb-crud.utilities.test.js"
             },
             {
                 "relativePath": "packages/mongodb/query-string-to-mongo-query.js",
@@ -334,6 +380,26 @@
                 "relativePath": "packages/mongodb/query-string-to-mongo-query.test.js",
                 "test": true,
                 "name": "query-string-to-mongo-query.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/set-owner-if-applicable.js",
+                "test": false,
+                "name": "set-owner-if-applicable.js"
+            },
+            {
+                "relativePath": "packages/mongodb/set-owner-if-applicable.test.js",
+                "test": true,
+                "name": "set-owner-if-applicable.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/title-to-string-identifier.js",
+                "test": false,
+                "name": "title-to-string-identifier.js"
+            },
+            {
+                "relativePath": "packages/mongodb/title-to-string-identifier.test.js",
+                "test": true,
+                "name": "title-to-string-identifier.test.js"
             },
             {
                 "relativePath": "packages/mongodb/types.d.ts",

@@ -28,4 +28,40 @@ https://discourse.bit.dev/t/can-i-modify-a-build-test-environments/28
 # Semver
 
 This project follows [Semver](https://semver.org/) guidelines for version numbering
-#
+
+# Nothing to export
+
+Sometimes you get an error saying there is nothing to export and when you run `npm run bit-add` you get an error like `error: the components packages/entity-metadata does not contain a main file.` to fix this you need to run a manual add individually one at a time in some sort of order before running the export. Run `bit status` to see which module has untracked files.
+Example output:
+
+```
+λ bit status
+modified components
+(use "bit tag --all [version]" to lock a version with all your changes)
+(use "bit diff" to compare changes)
+
+     > common-errors ... ok
+     > entity-metadata ...  issues found
+       untracked file dependencies (use "bit add <file>" to track untracked files as components):
+          packages/entity-metadata/types.d.ts -> packages/entity-metadata/entity-metadata.d.ts
+
+     > json-schema ... ok
+     > mongodb-populate-from-disk ... ok
+     > mongodb ... ok
+     > validation ... ok
+     > version-info ... ok
+
+
+components pending to be tagged automatically (when their dependencies are tagged)
+     > exigentcoder.common-modules/azure-functions ... ok
+see troubleshooting at https://docs.bit.dev/docs/troubleshooting-isolating.html
+```
+
+In this instance I had to run: 
+> `bit add packages/entity-metadata --tests packages/{PARENT}/**/*.test.js -m packages/entity-metadata/index.js --id entity-metadata`
+
+the -m flag may not be needed.
+
+After fixing it I ran:
+
+> `npm run patch` to republish
