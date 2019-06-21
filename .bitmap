@@ -249,6 +249,16 @@
     "exigentcoder.common-modules/mongodb@0.19.6": {
         "files": [
             {
+                "relativePath": "packages/mongodb/auditors/create-mongodb-auditors.js",
+                "test": false,
+                "name": "create-mongodb-auditors.js"
+            },
+            {
+                "relativePath": "packages/mongodb/auditors/create-mongodb-auditors.test.js",
+                "test": true,
+                "name": "create-mongodb-auditors.test.js"
+            },
+            {
                 "relativePath": "packages/mongodb/connection.js",
                 "test": false,
                 "name": "connection.js"
@@ -259,34 +269,74 @@
                 "name": "connection.test.js"
             },
             {
-                "relativePath": "packages/mongodb/create-identifier-query.js",
+                "relativePath": "packages/mongodb/crud/mongodb-crud.authorization.test.js",
+                "test": true,
+                "name": "mongodb-crud.authorization.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/mongodb-crud.create.test.js",
+                "test": true,
+                "name": "mongodb-crud.create.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/mongodb-crud.delete.test.js",
+                "test": true,
+                "name": "mongodb-crud.delete.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/mongodb-crud.get-by-id.test.js",
+                "test": true,
+                "name": "mongodb-crud.get-by-id.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/mongodb-crud.js",
+                "test": false,
+                "name": "mongodb-crud.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/mongodb-crud.replace-by-id.test.js",
+                "test": true,
+                "name": "mongodb-crud.replace-by-id.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/mongodb-crud.search.test.js",
+                "test": true,
+                "name": "mongodb-crud.search.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/mongodb-crud.utilities.test.js",
+                "test": true,
+                "name": "mongodb-crud.utilities.test.js"
+            },
+            {
+                "relativePath": "packages/mongodb/crud/utilities/create-identifier-query.js",
                 "test": false,
                 "name": "create-identifier-query.js"
             },
             {
-                "relativePath": "packages/mongodb/create-identifier-query.test.js",
+                "relativePath": "packages/mongodb/crud/utilities/create-identifier-query.test.js",
                 "test": true,
                 "name": "create-identifier-query.test.js"
             },
             {
-                "relativePath": "packages/mongodb/create-indexes.js",
+                "relativePath": "packages/mongodb/crud/utilities/set-owner-if-applicable.js",
                 "test": false,
-                "name": "create-indexes.js"
+                "name": "set-owner-if-applicable.js"
             },
             {
-                "relativePath": "packages/mongodb/create-indexes.test.js",
+                "relativePath": "packages/mongodb/crud/utilities/set-owner-if-applicable.test.js",
                 "test": true,
-                "name": "create-indexes.test.js"
+                "name": "set-owner-if-applicable.test.js"
             },
             {
-                "relativePath": "packages/mongodb/create-mongodb-auditors.js",
+                "relativePath": "packages/mongodb/crud/utilities/title-to-string-identifier.js",
                 "test": false,
-                "name": "create-mongodb-auditors.js"
+                "name": "title-to-string-identifier.js"
             },
             {
-                "relativePath": "packages/mongodb/create-mongodb-auditors.test.js",
+                "relativePath": "packages/mongodb/crud/utilities/title-to-string-identifier.test.js",
                 "test": true,
-                "name": "create-mongodb-auditors.test.js"
+                "name": "title-to-string-identifier.test.js"
             },
             {
                 "relativePath": "packages/mongodb/index.js",
@@ -294,79 +344,29 @@
                 "name": "index.js"
             },
             {
-                "relativePath": "packages/mongodb/mongodb-crud.authorization.test.js",
-                "test": true,
-                "name": "mongodb-crud.authorization.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb/mongodb-crud.create.test.js",
-                "test": true,
-                "name": "mongodb-crud.create.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb/mongodb-crud.delete.test.js",
-                "test": true,
-                "name": "mongodb-crud.delete.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb/mongodb-crud.get-by-id.test.js",
-                "test": true,
-                "name": "mongodb-crud.get-by-id.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb/mongodb-crud.js",
+                "relativePath": "packages/mongodb/indexes/create-indexes.js",
                 "test": false,
-                "name": "mongodb-crud.js"
+                "name": "create-indexes.js"
             },
             {
-                "relativePath": "packages/mongodb/mongodb-crud.replace-by-id.test.js",
+                "relativePath": "packages/mongodb/indexes/create-indexes.test.js",
                 "test": true,
-                "name": "mongodb-crud.replace-by-id.test.js"
+                "name": "create-indexes.test.js"
             },
             {
-                "relativePath": "packages/mongodb/mongodb-crud.search.test.js",
-                "test": true,
-                "name": "mongodb-crud.search.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb/mongodb-crud.utilities.test.js",
-                "test": true,
-                "name": "mongodb-crud.utilities.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb/query-string-to-mongo-query.js",
+                "relativePath": "packages/mongodb/query-string-mapper/query-string-to-mongo-query.js",
                 "test": false,
                 "name": "query-string-to-mongo-query.js"
             },
             {
-                "relativePath": "packages/mongodb/query-string-to-mongo-query.test.js",
+                "relativePath": "packages/mongodb/query-string-mapper/query-string-to-mongo-query.test.js",
                 "test": true,
                 "name": "query-string-to-mongo-query.test.js"
-            },
-            {
-                "relativePath": "packages/mongodb/set-owner-if-applicable.js",
-                "test": false,
-                "name": "set-owner-if-applicable.js"
-            },
-            {
-                "relativePath": "packages/mongodb/set-owner-if-applicable.test.js",
-                "test": true,
-                "name": "set-owner-if-applicable.test.js"
             },
             {
                 "relativePath": "packages/mongodb/test-utilities.js",
                 "test": false,
                 "name": "test-utilities.js"
-            },
-            {
-                "relativePath": "packages/mongodb/title-to-string-identifier.js",
-                "test": false,
-                "name": "title-to-string-identifier.js"
-            },
-            {
-                "relativePath": "packages/mongodb/title-to-string-identifier.test.js",
-                "test": true,
-                "name": "title-to-string-identifier.test.js"
             },
             {
                 "relativePath": "packages/mongodb/types.d.ts",
@@ -563,9 +563,7 @@
         ],
         "mainFile": "packages/express-error-handler/index.js",
         "origin": "AUTHORED",
-        "dependencies": [
-            "exigentcoder.common-modules/common-errors@0.19.6"
-        ],
+        "dependencies": ["exigentcoder.common-modules/common-errors@0.19.6"],
         "exported": true
     },
     "exigentcoder.common-modules/validation-mongodb@0.19.6": {
