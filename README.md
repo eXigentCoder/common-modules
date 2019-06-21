@@ -21,9 +21,9 @@ bit remove exigentcoder.shared-components --remote
 
 https://discourse.bit.dev/t/can-i-modify-a-build-test-environments/28
 
-> bit tag exigentcoder.common-modules/tester-mocha --patch
-> bit export exigentcoder.common-modules tester-mocha
-> bit import exigentcoder.common-modules/testers/mocha --tester
+> `bit tag exigentcoder.common-modules/tester-mocha --patch`
+> `bit export exigentcoder.common-modules tester-mocha`
+> `bit import exigentcoder.common-modules/tester-mocha --tester`
 
 # Semver
 

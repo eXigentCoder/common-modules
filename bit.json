@@ -1,6 +1,6 @@
 {
     "env": {
-        "tester": "exigentcoder.common-modules/testers/mocha@5.0.8"
+        "tester": "exigentcoder.common-modules/tester-mocha@0.19.5"
     },
     "componentsDefaultDirectory": "packages/{name}",
     "packageManager": "npm"

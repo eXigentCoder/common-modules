@@ -1,9 +1,9 @@
 'use strict';
 
-const { createModel, defaultPolicy } = require(`./`);
+const { createModel, defaultPolicy } = require(`.`);
 const { newEnforcer } = require(`casbin`);
 const MongooseAdapter = require(`@elastic.io/casbin-mongoose-adapter`);
-const { buildMongoUrl, getDb } = require(`../mongodb/`);
+const { buildMongoUrl, getDb } = require(`../mongodb`);
 const { dropExistingData } = require(`../mongodb-populate-from-disk`);
 const urlConfig = {
     server: `localhost`,
@@ -87,7 +87,9 @@ describe(`Casbin Model`, () => {
     });
 
     afterEach(async () => {
-        await adapter.close();
+        if (adapter) {
+            await adapter.close();
+        }
     });
 });
 
