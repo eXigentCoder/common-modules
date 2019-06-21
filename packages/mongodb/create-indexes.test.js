@@ -1,6 +1,6 @@
 'use strict';
 
-const { getDb, getClient } = require(`./connection`);
+const { getDb, close } = require(`./connection`);
 const createIndexes = require(`./create-indexes`);
 
 describe(`MongoDB`, () => {
@@ -28,8 +28,5 @@ describe(`MongoDB`, () => {
     });
 });
 after(async () => {
-    const client = await getClient();
-    if (client) {
-        await client.close();
-    }
+    await close();
 });

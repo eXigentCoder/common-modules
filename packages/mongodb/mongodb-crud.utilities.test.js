@@ -1,6 +1,6 @@
 'use strict';
 
-const { getClient, getDb, getCrud, createQueryStringMapper } = require(`.`);
+const { close, getDb, getCrud, createQueryStringMapper } = require(`.`);
 const generateEntityMetadata = require(`../entity-metadata`);
 const { createInputValidator, createOutputValidator } = require(`../validation`);
 const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
@@ -36,10 +36,7 @@ describe(`MongoDB`, () => {
 });
 
 after(async () => {
-    const client = await getClient();
-    if (client) {
-        await client.close();
-    }
+    await close();
 });
 
 const urlConfig = {

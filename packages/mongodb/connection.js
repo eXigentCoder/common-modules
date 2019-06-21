@@ -28,7 +28,7 @@ async function getDb(urlConfig, options) {
 /**
  * @returns {import('mongodb').MongoClient}  The mongo client with connections
  */
-function getClient() {
+function getConnectedClient() {
     if (_db && _client && _db.serverConfig.isConnected()) {
         return _client;
     }
@@ -67,8 +67,18 @@ function buildMongoUrl(urlConfig) {
     return `mongodb://${urlConfig.server}`;
 }
 
+async function close() {
+    const client = getConnectedClient();
+    if (client) {
+        _db = null;
+        _client = null;
+    }
+    client.close();
+}
+
 module.exports = {
-    getClient,
+    getConnectedClient,
     getDb,
     buildMongoUrl,
+    close,
 };
