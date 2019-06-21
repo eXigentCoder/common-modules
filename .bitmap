@@ -563,7 +563,9 @@
         ],
         "mainFile": "packages/express-error-handler/index.js",
         "origin": "AUTHORED",
-        "dependencies": ["exigentcoder.common-modules/common-errors@0.19.6"],
+        "dependencies": [
+            "exigentcoder.common-modules/common-errors@0.19.6"
+        ],
         "exported": true
     },
     "exigentcoder.common-modules/validation-mongodb@0.19.6": {
