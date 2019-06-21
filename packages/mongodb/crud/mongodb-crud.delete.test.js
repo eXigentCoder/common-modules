@@ -8,7 +8,7 @@ const {
     stringIdNoTenant,
     stringIdTenant,
     validEntity,
-} = require(`./test-utilities`);
+} = require(`../test-utilities`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {

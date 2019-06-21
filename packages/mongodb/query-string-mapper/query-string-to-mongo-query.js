@@ -4,7 +4,7 @@ const ObjectId = require(`mongodb`).ObjectID;
 const aqp = require(`api-query-params`);
 const set = require(`lodash/set`);
 /**
- * @typedef {import('./types').Query} Query
+ * @typedef {import('../types').Query} Query
  */
 
 const defaultOptions = {
@@ -15,7 +15,7 @@ const defaultOptions = {
 };
 /**
  * @param {object} schema The schema representing the object in the db
- * @param {import('./types').QueryStringMapperOptions} options The options to use when creating the query string mapper
+ * @param {import('../types').QueryStringMapperOptions} options The options to use when creating the query string mapper
  * @returns {(queryString: string|object) => Query} The resultant query to run against MongoDB
  */
 module.exports = function createQueryStringMapper(schema, options = defaultOptions) {

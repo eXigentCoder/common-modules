@@ -110,7 +110,7 @@ describe(`MongoDB`, () => {
         });
 
         it(`Should allow you to set the default options`, () => {
-            /**@type {import('./types').QueryStringMapperOptions} */
+            /**@type {import('../types').QueryStringMapperOptions} */
             const options = {
                 skip: 3,
                 limit: 0,

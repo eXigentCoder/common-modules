@@ -1,7 +1,7 @@
 'use strict';
 
-const { NotAuthorizedError } = require(`../common-errors`);
-const { buildMongoUrl } = require(`.`);
+const { NotAuthorizedError } = require(`../../common-errors`);
+const { buildMongoUrl } = require(`..`);
 const { newEnforcer } = require(`casbin`);
 const MongooseAdapter = require(`@elastic.io/casbin-mongoose-adapter`);
 const ObjectId = require(`mongodb`).ObjectId;
@@ -14,7 +14,7 @@ const {
     urlConfig,
     getRbacModel,
     stringIdNoTenantOwnership,
-} = require(`./test-utilities`);
+} = require(`../test-utilities`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {

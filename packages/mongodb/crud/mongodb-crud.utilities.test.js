@@ -1,6 +1,6 @@
 'use strict';
 
-const { getPopulatedCrud, validEntity, stringIdNoTenant } = require(`./test-utilities`);
+const { getPopulatedCrud, validEntity, stringIdNoTenant } = require(`../test-utilities`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {

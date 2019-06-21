@@ -1,11 +1,11 @@
 'use strict';
 
 const moment = require(`moment`);
-const { IsRequiredError } = require(`../common-errors`);
+const { IsRequiredError } = require(`../../../common-errors`);
 const get = require(`lodash/get`);
 /**
- * @param {import("../entity-metadata/types").EntityMetadata} metadata
- * @returns {import("./types").SetOwnerIfApplicable}
+ * @param {import("../../../entity-metadata/types").EntityMetadata} metadata
+ * @returns {import("../../types").SetOwnerIfApplicable}
  */
 function createSetOwnerIfApplicable(metadata) {
     /** @type {import("./types").SetOwnerIfApplicable} */

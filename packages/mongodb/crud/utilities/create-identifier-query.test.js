@@ -1,10 +1,10 @@
 'use strict';
-const generateEntityMetadata = require(`../entity-metadata`);
-const { createInputValidator, createOutputValidator } = require(`../validation`);
-const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
+const generateEntityMetadata = require(`../../../entity-metadata`);
+const { createInputValidator, createOutputValidator } = require(`../../../validation`);
+const { jsonSchemas, addMongoId } = require(`../../../validation-mongodb`);
 const createGetIdentifierQuery = require(`./create-identifier-query`);
 const ObjectId = require(`mongodb`).ObjectId;
-const { ValidationError } = require(`../common-errors`);
+const { ValidationError } = require(`../../../common-errors`);
 
 describe(`MongoDB`, () => {
     describe(`createGetIdentifierQuery`, () => {
@@ -92,7 +92,7 @@ describe(`MongoDB`, () => {
     });
 });
 
-/** @returns {import('../entity-metadata').EntityMetadata} */
+/** @returns {import('../../../entity-metadata').EntityMetadata} */
 function validMetaDataNoStringIdentifer() {
     return {
         schemas: {
@@ -111,7 +111,7 @@ function validMetaDataNoStringIdentifer() {
         baseUrl: `https://ryankotzen.com`,
     };
 }
-/** @returns {import('../entity-metadata').EntityMetadata} */
+/** @returns {import('../../../entity-metadata').EntityMetadata} */
 function validMetaDataWithStringIdentifer() {
     return {
         schemas: {

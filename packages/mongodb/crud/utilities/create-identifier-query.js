@@ -2,9 +2,9 @@
 
 const ObjectId = require(`mongodb`).ObjectID;
 const util = require(`util`);
-const { ValidationError } = require(`../common-errors`);
+const { ValidationError } = require(`../../../common-errors`);
 /**
- * @typedef {import('../entity-metadata').EntityMetadata} EntityMetadata
+ * @typedef {import('../../../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {(identifier: string|object) => object} GetIdentifierQuery
  *
  * @param {EntityMetadata} metadata The entity metadata containing the rules for identifiers

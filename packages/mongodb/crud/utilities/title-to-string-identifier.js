@@ -2,7 +2,7 @@
 const v8n = require(`v8n`);
 const kebabCase = require(`lodash/kebabCase`);
 
-/** @type {import("./types").TitleToStringIdentifier} */
+/** @type {import("../../types").TitleToStringIdentifier} */
 module.exports = function titleToStringIdentifier(title) {
     v8n()
         .string()

@@ -1,6 +1,6 @@
 'use strict';
 
-const { ValidationError, TenantError } = require(`../common-errors`);
+const { ValidationError, TenantError } = require(`../../common-errors`);
 
 const {
     getPopulatedCrud,
@@ -9,7 +9,7 @@ const {
     stringIdNoTenant,
     stringIdTenant,
     validEntity,
-} = require(`./test-utilities`);
+} = require(`../test-utilities`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {

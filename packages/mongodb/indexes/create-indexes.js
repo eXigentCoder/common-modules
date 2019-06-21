@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @typedef {import('./types').Index} Index
+ * @typedef {import('../types').Index} Index
  * @typedef {import('mongodb').IndexOptions} IndexOptions
  * @typedef {import('mongodb').Db} Db
  */

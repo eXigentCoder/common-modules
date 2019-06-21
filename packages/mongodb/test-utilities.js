@@ -16,7 +16,7 @@ const urlConfig = {
  * @typedef {()=>import('../entity-metadata/types').EntityMetadata} GetMetadata;
  * @param {import('../entity-metadata/types').EntityMetadata | GetMetadata} getMetadata a function to get the metadata
  * @param {import('casbin').Enforcer} [enforcer]
- * @returns {Promise<import('./mongodb-crud').GetCrud & { queryMapper:(queryString: string|object) => import('./types').Query }>}
+ * @returns {Promise<import('./crud/mongodb-crud').GetCrud & { queryMapper:(queryString: string|object) => import('./types').Query }>}
  */
 async function getPopulatedCrud(getMetadata, enforcer) {
     const db = await getDb(urlConfig);

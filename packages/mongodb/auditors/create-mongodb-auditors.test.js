@@ -1,12 +1,12 @@
 'use strict';
 
 const crypto = require(`crypto`);
-const { getDb, createAuditors } = require(`.`);
-const { createInputValidator, createOutputValidator } = require(`../validation`);
-const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
-const generateEntityMetadata = require(`../entity-metadata`);
+const { getDb, createAuditors } = require(`..`);
+const { createInputValidator, createOutputValidator } = require(`../../validation`);
+const { jsonSchemas, addMongoId } = require(`../../validation-mongodb`);
+const generateEntityMetadata = require(`../../entity-metadata`);
 const ObjectId = require(`mongodb`).ObjectId;
-const { createVersionInfoSetter } = require(`../version-info`);
+const { createVersionInfoSetter } = require(`../../version-info`);
 const cloneDeep = require(`lodash/cloneDeep`);
 
 describe(`MongoDB`, () => {
@@ -50,7 +50,7 @@ describe(`MongoDB`, () => {
     });
 });
 
-/**@returns {Promise<import('./types').Auditors<object> & {setVersionInfo:import('../version-info/types').SetVersionInfo}>} */
+/**@returns {Promise<import('../types').Auditors<object> & {setVersionInfo:import('../../version-info/types').SetVersionInfo}>} */
 async function getAuditors() {
     const urlConfig = {
         server: `localhost`,
@@ -66,7 +66,7 @@ async function getAuditors() {
     return Object.assign(auditors, { setVersionInfo });
 }
 
-/** @returns {import('../entity-metadata').EntityMetadata} */
+/** @returns {import('../../entity-metadata').EntityMetadata} */
 function validMetaData() {
     return {
         schemas: {

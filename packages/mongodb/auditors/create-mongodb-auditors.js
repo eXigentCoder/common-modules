@@ -2,29 +2,29 @@
 
 const ObjectId = require(`mongodb`).ObjectId;
 const cloneDeep = require(`lodash/cloneDeep`);
-const { IsRequiredError } = require(`../common-errors`);
+const { IsRequiredError } = require(`../../common-errors`);
 const moment = require(`moment`);
 const get = require(`lodash/get`);
-const { removePropertyFromEntity } = require(`../entity-metadata/json-schema-utilities`);
+const { removePropertyFromEntity } = require(`../../entity-metadata/json-schema-utilities`);
 /**
- * @param {import('../entity-metadata').EntityMetadata} metadata
+ * @param {import('../../entity-metadata').EntityMetadata} metadata
  * @param {import('mongodb').Db} db
- * @returns {Promise<import("./types").Auditors<object>>}
+ * @returns {Promise<import("../types").Auditors<object>>}
  */
 module.exports = async function createMongoDbAuditors(metadata, db) {
     const auditCollection = db.collection(metadata.auditCollectionName);
 
-    /** @type {import("./types").WriteCreation<object>} */
+    /** @type {import("../types").WriteCreation<object>} */
     async function writeCreation(entityAfterCreation, context) {
         await writeAuditEntry(entityAfterCreation, context, `replace`);
     }
 
-    /** @type {import("./types").WriteDeletion<object>} */
+    /** @type {import("../types").WriteDeletion<object>} */
     async function writeDeletion(deletedObject, context) {
         await writeAuditEntry(deletedObject, context, `replace`);
     }
 
-    /** @type {import("./types").WriteReplacement<object>} */
+    /** @type {import("../types").WriteReplacement<object>} */
     async function writeReplacement(oldEntity, newEntity, context) {
         await writeAuditEntry(newEntity, context, `replace`);
     }

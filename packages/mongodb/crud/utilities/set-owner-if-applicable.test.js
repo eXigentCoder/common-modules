@@ -1,7 +1,7 @@
 'use strict';
 
 const createSetOwnerIfApplicable = require(`./set-owner-if-applicable`);
-const { stringIdNoTenantOwnership, validEntity, createContext } = require(`./test-utilities`);
+const { stringIdNoTenantOwnership, validEntity, createContext } = require(`../../test-utilities`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {
