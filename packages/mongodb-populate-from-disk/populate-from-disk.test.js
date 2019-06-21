@@ -1,6 +1,6 @@
 'use strict';
 
-const { getDb, getClient, close } = require(`../mongodb/connection`);
+const { getDb } = require(`../mongodb/connection`);
 const { populateDbFromDisk } = require(`.`);
 
 const path = require(`path`);
@@ -26,7 +26,4 @@ describe(`MongoDB Populate From Disk`, () => {
             await populateDbFromDisk(db, options);
         });
     });
-});
-after(async () => {
-    await close();
 });

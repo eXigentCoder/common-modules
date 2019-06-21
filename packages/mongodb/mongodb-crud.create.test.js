@@ -9,7 +9,7 @@ const {
     stringIdNoTenant,
     stringIdTenant,
     validEntity,
-} = require(`./mongodb-crud.utilities.test`);
+} = require(`./test-utilities`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {

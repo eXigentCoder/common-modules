@@ -18,6 +18,8 @@ async function getDb(urlConfig, options) {
         debug(`Using cached database instance`);
         return _db;
     }
+    _db = null;
+    _client = null;
     await connect(
         urlConfig,
         options
@@ -32,6 +34,8 @@ function getConnectedClient() {
     if (_db && _client && _db.serverConfig.isConnected()) {
         return _client;
     }
+    _db = null;
+    _client = null;
     return null;
 }
 
@@ -69,11 +73,10 @@ function buildMongoUrl(urlConfig) {
 
 async function close() {
     const client = getConnectedClient();
-    if (client) {
-        _db = null;
-        _client = null;
+    if (!client) {
+        return;
     }
-    client.close();
+    await client.close();
 }
 
 module.exports = {

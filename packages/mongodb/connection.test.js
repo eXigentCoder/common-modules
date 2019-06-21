@@ -1,6 +1,6 @@
 'use strict';
 
-const { getDb, getClient, close } = require(`./connection`);
+const { getDb, getConnectedClient } = require(`./connection`);
 
 describe(`MongoDB`, () => {
     const urlConfig = {
@@ -18,13 +18,11 @@ describe(`MongoDB`, () => {
             expect(db).to.eql(db2);
         });
     });
-    describe(`getClient`, () => {
+    describe(`getConnectedClient`, () => {
         it(`should return the created client object`, async () => {
-            const client = await getClient();
+            await getDb(urlConfig);
+            const client = await getConnectedClient();
             expect(client).to.be.ok;
         });
     });
-});
-after(async () => {
-    await close();
 });

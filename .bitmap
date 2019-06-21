@@ -354,6 +354,11 @@
                 "name": "set-owner-if-applicable.test.js"
             },
             {
+                "relativePath": "packages/mongodb/test-utilities.js",
+                "test": false,
+                "name": "test-utilities.js"
+            },
+            {
                 "relativePath": "packages/mongodb/title-to-string-identifier.js",
                 "test": false,
                 "name": "title-to-string-identifier.js"

@@ -14,7 +14,7 @@ const {
     urlConfig,
     getRbacModel,
     stringIdNoTenantOwnership,
-} = require(`./mongodb-crud.utilities.test`);
+} = require(`./test-utilities`);
 
 describe(`MongoDB`, () => {
     describe(`CRUD`, () => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { getDb, close } = require(`./connection`);
+const { getDb } = require(`./connection`);
 const createIndexes = require(`./create-indexes`);
 
 describe(`MongoDB`, () => {
@@ -26,7 +26,4 @@ describe(`MongoDB`, () => {
             await createIndexes(db, collectionName, indexes);
         });
     });
-});
-after(async () => {
-    await close();
 });

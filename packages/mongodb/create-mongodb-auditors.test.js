@@ -1,7 +1,7 @@
 'use strict';
 
 const crypto = require(`crypto`);
-const { close, getDb, createAuditors } = require(`.`);
+const { getDb, createAuditors } = require(`.`);
 const { createInputValidator, createOutputValidator } = require(`../validation`);
 const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
 const generateEntityMetadata = require(`../entity-metadata`);
@@ -48,10 +48,6 @@ describe(`MongoDB`, () => {
             });
         });
     });
-});
-
-after(async () => {
-    await close();
 });
 
 /**@returns {Promise<import('./types').Auditors<object> & {setVersionInfo:import('../version-info/types').SetVersionInfo}>} */
