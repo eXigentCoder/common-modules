@@ -98,16 +98,15 @@ function getCreate(utilities) {
     const {
         setVersionInfo,
         collection,
-        mapOutput,
         metadata,
         setStringIdentifier,
         inputValidator,
         auditors,
         setTenant,
-        enforcer,
         setOwnerIfApplicable,
     } = utilities;
     return async function create(_entity, executionContext, hooks) {
+        /**@type {import('../types').HookContext} */
         const hookContext = {
             executionContext,
             input: _entity,
@@ -116,20 +115,7 @@ function getCreate(utilities) {
         };
         await runStepWithHooks(`validate`, validate, hooks, hookContext);
         await runStepWithHooks(`setMetadata`, setMetadata, hooks, hookContext);
-        await runStepWithHooks(
-            `authorize`,
-            async ctx => {
-                await checkAuthorization(
-                    enforcer,
-                    metadata,
-                    executionContext,
-                    `create`,
-                    ctx.entity
-                );
-            },
-            hooks,
-            hookContext
-        );
+        await runStepWithHooks(`authorize`, auth(`create`), hooks, hookContext);
         await runStepWithHooks(
             `insert`,
             async ctx => {
@@ -146,15 +132,7 @@ function getCreate(utilities) {
             hooks,
             hookContext
         );
-        await runStepWithHooks(
-            `mapOutput`,
-            async ctx => {
-                mapOutput(ctx.entity);
-            },
-            hooks,
-            hookContext
-        );
-
+        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
         return hookContext.entity;
     };
 
@@ -183,21 +161,13 @@ function getCreate(utilities) {
  * @returns {import("../types").GetById<object>} A function to get entities by their identifiers
  */
 function getGetById(utilities) {
-    const {
-        collection,
-        mapOutput,
-        getIdentifierQuery,
-        metadata,
-        addTenantToFilter,
-        enforcer,
-    } = utilities;
+    const { collection, getIdentifierQuery, metadata, addTenantToFilter } = utilities;
     return async function getById(id, executionContext, hooks) {
+        /**@type {import('../types').HookContext} */
         const hookContext = {
             executionContext,
             id,
             utilities,
-            filter: null,
-            item: null,
         };
         await runStepWithHooks(
             `getFilter`,
@@ -211,9 +181,116 @@ function getGetById(utilities) {
         await runStepWithHooks(
             `getItem`,
             async ctx => {
-                ctx.item = await collection.findOne(ctx.filter);
-                if (!ctx.item) {
+                ctx.entity = await collection.findOne(ctx.filter);
+                if (!ctx.entity) {
                     throw new EntityNotFoundError(metadata.title, id);
+                }
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(`authorize`, auth(`retrieve`), hooks, hookContext);
+        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
+        return hookContext.entity;
+    };
+}
+
+/**
+ * @param {Utilities} utilities The input utilities to create the function
+ * @returns {import("../types").DeleteById<object>} A function to delete entities by their identifier
+ */
+function getDeleteById(utilities) {
+    const { collection, getIdentifierQuery, metadata, auditors, addTenantToFilter } = utilities;
+    return async function deleteById(id, executionContext, hooks) {
+        /**@type {import('../types').HookContext} */
+        const hookContext = {
+            executionContext,
+            id,
+            utilities,
+        };
+        await runStepWithHooks(
+            `getFilter`,
+            async ctx => {
+                ctx.filter = getIdentifierQuery(id);
+                addTenantToFilter(ctx.filter, executionContext);
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `getItem`,
+            async ctx => {
+                ctx.entity = await collection.findOne(ctx.filter);
+                if (!ctx.entity) {
+                    throw new EntityNotFoundError(metadata.title, id);
+                }
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(`authorize`, auth(`delete`), hooks, hookContext);
+        await runStepWithHooks(
+            `delete`,
+            async ctx => {
+                ctx.result = await collection.findOneAndDelete(ctx.filter);
+                if (!ctx.result.value) {
+                    throw new EntityNotFoundError(metadata.title, id);
+                }
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `writeAudit`,
+            async ctx => {
+                await auditors.writeDeletion(ctx.result.value, executionContext);
+            },
+            hooks,
+            hookContext
+        );
+    };
+}
+/**
+ * @param {Utilities} utilities The input utilities to create the function
+ * @returns {import("../types").ReplaceById<object>} A function to replace documents based off of their _id
+ */
+function getReplaceById(utilities) {
+    const {
+        setVersionInfo,
+        collection,
+        mapOutput: _mapOutput,
+        metadata,
+        inputValidator,
+        auditors,
+        getIdentifierQuery,
+        addTenantToFilter,
+        setStringIdentifier,
+        enforcer,
+    } = utilities;
+    return async function replaceById(id, _entity, executionContext, hooks) {
+        /**@type {import('../types').HookContext} */
+        const hookContext = {
+            executionContext,
+            input: _entity,
+            id,
+            utilities,
+        };
+        await runStepWithHooks(`sanitize`, sanitize, hooks, hookContext);
+        await runStepWithHooks(
+            `getFilter`,
+            async ctx => {
+                ctx.filter = getIdentifierQuery(id);
+                addTenantToFilter(ctx.filter, executionContext);
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `getExistingItem`,
+            async ctx => {
+                ctx.existing = await collection.findOne(ctx.filter);
+                if (!ctx.existing) {
+                    throw new EntityNotFoundError(metadata.title, JSON.stringify(ctx.filter));
                 }
             },
             hooks,
@@ -226,112 +303,92 @@ function getGetById(utilities) {
                     enforcer,
                     metadata,
                     executionContext,
-                    `retrieve`,
-                    ctx.item
+                    `update`,
+                    ctx.existing
                 );
+            },
+            hooks,
+            hookContext
+        );
+
+        await runStepWithHooks(
+            `checkAndSetTenantInfo`,
+            async ctx => {
+                if (metadata.tenantInfo) {
+                    const existingTenantId = get(ctx.existing, metadata.tenantInfo.entityPathToId);
+                    if (!existingTenantId) {
+                        throw new Error(
+                            `existingTenantId was null at path "${
+                                metadata.tenantInfo.entityPathToId
+                            }" for ${metadata.title} with id ${ctx.id}`
+                        );
+                    }
+                    set(ctx.entity, metadata.tenantInfo.entityPathToId, existingTenantId);
+                }
             },
             hooks,
             hookContext
         );
         await runStepWithHooks(
-            `mapOutput`,
+            `validate`,
             async ctx => {
-                mapOutput(ctx.item);
+                inputValidator.ensureValid(metadata.schemas.replace.$id, ctx.entity);
             },
             hooks,
             hookContext
         );
-        return hookContext.item;
-    };
-}
+        await runStepWithHooks(
+            `copySystemProps`,
+            async ctx => {
+                ctx.entity.versionInfo = ctx.existing.versionInfo;
+                if (ctx.existing.owner) {
+                    ctx.entity.owner = ctx.existing.owner;
+                }
+                setVersionInfo(ctx.entity, executionContext);
+                setStringIdentifier(ctx.entity);
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `validateCore`,
+            async ctx => {
+                inputValidator.ensureValid(metadata.schemas.core.$id, ctx.entity);
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `replace`,
+            async ctx => {
+                ctx.result = await collection.findOneAndReplace(ctx.filter, ctx.entity);
+                ctx.entity._id = ctx.result.value._id;
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `writeAudit`,
+            async ctx => {
+                await auditors.writeReplacement(ctx.result.value, ctx.entity, executionContext);
+            },
+            hooks,
+            hookContext
+        );
 
-/**
- * @param {Utilities} utilities The input utilities to create the function
- * @returns {import("../types").DeleteById<object>} A function to delete entities by their identifier
- */
-function getDeleteById(utilities) {
-    const {
-        collection,
-        getIdentifierQuery,
-        metadata,
-        auditors,
-        addTenantToFilter,
-        enforcer,
-    } = utilities;
-    return async function deleteById(id, executionContext) {
-        const filter = getIdentifierQuery(id);
-        addTenantToFilter(filter, executionContext);
-        const existingItem = await collection.findOne(filter);
-        if (!existingItem) {
-            throw new EntityNotFoundError(metadata.title, id);
-        }
-        await checkAuthorization(enforcer, metadata, executionContext, `delete`, existingItem);
-        const result = await collection.findOneAndDelete(filter);
-        if (!result.value) {
-            throw new EntityNotFoundError(metadata.title, id);
-        }
-        await auditors.writeDeletion(result.value, executionContext);
-        return;
+        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
+        return hookContext.entity;
     };
-}
-/**
- * @param {Utilities} utilities The input utilities to create the function
- * @returns {import("../types").ReplaceById<object>} A function to replace documents based off of their _id
- */
-function getReplaceById(utilities) {
-    const {
-        setVersionInfo,
-        collection,
-        mapOutput,
-        metadata,
-        inputValidator,
-        auditors,
-        getIdentifierQuery,
-        addTenantToFilter,
-        setStringIdentifier,
-        enforcer,
-    } = utilities;
-    return async function replaceById(id, _entity, executionContext) {
-        ensureEntityIsObject(_entity, metadata);
-        const entity = JSON.parse(JSON.stringify(_entity));
+    /** @param {import('../types').HookContext} hookContext */
+    function sanitize(hookContext) {
+        const { input } = hookContext;
+        ensureEntityIsObject(input, metadata);
+        hookContext.entity = JSON.parse(JSON.stringify(input));
         // comes from outside, can't be trusted
-        delete entity.versionInfo;
-        delete entity._id;
-        delete entity.owner;
-        const filter = getIdentifierQuery(id);
-        if (metadata.tenantInfo) {
-            addTenantToFilter(filter, executionContext);
-        }
-        const existing = await collection.findOne(filter);
-        if (!existing) {
-            throw new EntityNotFoundError(metadata.title, JSON.stringify(filter));
-        }
-        await checkAuthorization(enforcer, metadata, executionContext, `update`, existing);
-        if (metadata.tenantInfo) {
-            const existingTenantId = get(existing, metadata.tenantInfo.entityPathToId);
-            if (!existingTenantId) {
-                throw new Error(
-                    `existingTenantId was null at path "${
-                        metadata.tenantInfo.entityPathToId
-                    }" for ${metadata.title} with id ${entity._id}`
-                );
-            }
-            set(entity, metadata.tenantInfo.entityPathToId, existingTenantId);
-        }
-        inputValidator.ensureValid(metadata.schemas.replace.$id, entity);
-        entity.versionInfo = existing.versionInfo;
-        if (existing.owner) {
-            entity.owner = existing.owner;
-        }
-        setVersionInfo(entity, executionContext);
-        setStringIdentifier(entity);
-        inputValidator.ensureValid(metadata.schemas.core.$id, entity);
-        const replaceResult = await collection.findOneAndReplace(filter, entity);
-        entity._id = replaceResult.value._id;
-        await auditors.writeReplacement(replaceResult.value, entity, executionContext);
-        mapOutput(entity);
-        return entity;
-    };
+        delete hookContext.entity.versionInfo;
+        delete hookContext.entity._id;
+        delete hookContext.entity.owner;
+    }
 }
 
 /**
@@ -341,7 +398,7 @@ function getReplaceById(utilities) {
 function getSearch(utilities) {
     const {
         collection,
-        mapOutput,
+        mapOutput: _mapOutput,
         paginationDefaults,
         addTenantToFilter,
         metadata,
@@ -373,12 +430,35 @@ function getSearch(utilities) {
             .sort(sort || paginationDefaults.sort)
             .project(projection || paginationDefaults.projection)
             .toArray();
-        mapOutput(items);
+        _mapOutput(items);
         return items;
     };
 }
 
 module.exports = { getUtils, getCrud };
+
+// --------------============== [ Todo shared steps]
+/**
+ * @param {string} action
+ * @returns {Function}
+ */
+function auth(action) {
+    /** @param {import('../types').HookContext} hookContext */
+    return async hookContext => {
+        await checkAuthorization(
+            hookContext.utilities.enforcer,
+            hookContext.utilities.metadata,
+            hookContext.executionContext,
+            action,
+            hookContext.entity
+        );
+    };
+}
+
+/** @param {import('../types').HookContext} hookContext */
+async function mapOutput(hookContext) {
+    hookContext.utilities.mapOutput(hookContext.entity);
+}
 
 // --------------============== [ Todo these utilities should probably all be their own files]
 

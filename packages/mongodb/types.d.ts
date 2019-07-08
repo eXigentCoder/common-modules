@@ -51,11 +51,24 @@ export interface Crud<T> {
     search: Search<T>;
 }
 
-export type Create<T> = (entity: T, context: ExecutionContext) => Promise<T>;
-export type GetById<T> = (id: string, context: ExecutionContext) => Promise<T>;
-export type DeleteById<T> = (id: string, context: ExecutionContext) => Promise<void>;
-export type ReplaceById<T> = (id: string, entity: T, context: ExecutionContext) => Promise<T>;
-export type Search<T> = (query: Query | Object, context: ExecutionContext) => Promise<T[]>;
+interface Hooks {
+    [key: string]: Function;
+}
+
+export type Create<T> = (entity: T, context: ExecutionContext, hooks: Hooks) => Promise<T>;
+export type GetById<T> = (id: string, context: ExecutionContext, hooks: Hooks) => Promise<T>;
+export type DeleteById<T> = (id: string, context: ExecutionContext, hooks: Hooks) => Promise<void>;
+export type ReplaceById<T> = (
+    id: string,
+    entity: T,
+    context: ExecutionContext,
+    hooks: Hooks
+) => Promise<T>;
+export type Search<T> = (
+    query: Query | Object,
+    context: ExecutionContext,
+    hooks: Hooks
+) => Promise<T[]>;
 
 export interface Auditors<T> {
     writeCreation: WriteCreation<T>;
@@ -144,8 +157,13 @@ export interface AgpOptions {
 
 export interface HookContext {
     executionContext: ExecutionContext;
+    /** The raw input that was passed in */
     input?: any;
+    /** The id of the entity as passed in */
     id?: string;
     utilities: Utilities;
+    /** The entity currently being worked with*/
+    entity?: any;
+    /** Any additional properties */
     [key: string]: any;
 }
