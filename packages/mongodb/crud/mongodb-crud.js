@@ -107,72 +107,75 @@ function getCreate(utilities) {
         enforcer,
         setOwnerIfApplicable,
     } = utilities;
-    return async function create(_entity, context, hooks) {
-        let entity;
+    return async function create(_entity, executionContext, hooks) {
         const hookContext = {
-            context,
-            input: entity,
+            executionContext,
+            input: _entity,
             utilities,
+            entity: null,
         };
-        await runStepWithHooks(
-            `validate`,
-            () => {
-                ensureEntityIsObject(_entity, metadata);
-                entity = JSON.parse(JSON.stringify(_entity));
-                inputValidator.ensureValid(metadata.schemas.create.$id, entity);
-            },
-            hooks,
-            hookContext
-        );
-        await runStepWithHooks(
-            `setMetadata`,
-            () => {
-                setStringIdentifier(entity);
-                setTenant(entity, context);
-                setVersionInfo(entity, context);
-                setOwnerIfApplicable(entity, context);
-                entity._id = new ObjectId();
-                inputValidator.ensureValid(metadata.schemas.core.$id, entity);
-                entity._id = new ObjectId(entity._id);
-            },
-            hooks,
-            hookContext
-        );
+        await runStepWithHooks(`validate`, validate, hooks, hookContext);
+        await runStepWithHooks(`setMetadata`, setMetadata, hooks, hookContext);
         await runStepWithHooks(
             `authorize`,
-            async () => {
-                await checkAuthorization(enforcer, metadata, context, `create`, entity);
+            async ctx => {
+                await checkAuthorization(
+                    enforcer,
+                    metadata,
+                    executionContext,
+                    `create`,
+                    ctx.entity
+                );
             },
             hooks,
             hookContext
         );
         await runStepWithHooks(
             `insert`,
-            async () => {
-                await collection.insertOne(entity);
+            async ctx => {
+                await collection.insertOne(ctx.entity);
             },
             hooks,
             hookContext
         );
         await runStepWithHooks(
             `writeAudit`,
-            async () => {
-                await auditors.writeCreation(entity, context);
+            async ctx => {
+                await auditors.writeCreation(ctx.entity, executionContext);
             },
             hooks,
             hookContext
         );
         await runStepWithHooks(
             `mapOutput`,
-            async () => {
-                mapOutput(entity);
+            async ctx => {
+                mapOutput(ctx.entity);
             },
             hooks,
             hookContext
         );
 
-        return entity;
+        return hookContext.entity;
     };
+
+    /** @param {import('../types').HookContext} hookContext */
+    function validate(hookContext) {
+        const { input } = hookContext;
+        ensureEntityIsObject(input, metadata);
+        hookContext.entity = JSON.parse(JSON.stringify(input));
+        inputValidator.ensureValid(metadata.schemas.create.$id, hookContext.entity);
+    }
+
+    /** @param {import('../types').HookContext} hookContext */
+    function setMetadata({ entity, executionContext }) {
+        setStringIdentifier(entity);
+        setTenant(entity, executionContext);
+        setVersionInfo(entity, executionContext);
+        setOwnerIfApplicable(entity, executionContext);
+        entity._id = new ObjectId();
+        inputValidator.ensureValid(metadata.schemas.core.$id, entity);
+        entity._id = new ObjectId(entity._id);
+    }
 }
 
 /**
@@ -188,16 +191,57 @@ function getGetById(utilities) {
         addTenantToFilter,
         enforcer,
     } = utilities;
-    return async function getById(id, context) {
-        const filter = getIdentifierQuery(id);
-        addTenantToFilter(filter, context);
-        const item = await collection.findOne(filter);
-        if (!item) {
-            throw new EntityNotFoundError(metadata.title, id);
-        }
-        await checkAuthorization(enforcer, metadata, context, `retrieve`, item);
-        mapOutput(item);
-        return item;
+    return async function getById(id, executionContext, hooks) {
+        const hookContext = {
+            executionContext,
+            id,
+            utilities,
+            filter: null,
+            item: null,
+        };
+        await runStepWithHooks(
+            `getFilter`,
+            async ctx => {
+                ctx.filter = getIdentifierQuery(id);
+                addTenantToFilter(ctx.filter, executionContext);
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `getItem`,
+            async ctx => {
+                ctx.item = await collection.findOne(ctx.filter);
+                if (!ctx.item) {
+                    throw new EntityNotFoundError(metadata.title, id);
+                }
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `authorize`,
+            async ctx => {
+                await checkAuthorization(
+                    enforcer,
+                    metadata,
+                    executionContext,
+                    `retrieve`,
+                    ctx.item
+                );
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `mapOutput`,
+            async ctx => {
+                mapOutput(ctx.item);
+            },
+            hooks,
+            hookContext
+        );
+        return hookContext.item;
     };
 }
 
@@ -214,19 +258,19 @@ function getDeleteById(utilities) {
         addTenantToFilter,
         enforcer,
     } = utilities;
-    return async function deleteById(id, context) {
+    return async function deleteById(id, executionContext) {
         const filter = getIdentifierQuery(id);
-        addTenantToFilter(filter, context);
+        addTenantToFilter(filter, executionContext);
         const existingItem = await collection.findOne(filter);
         if (!existingItem) {
             throw new EntityNotFoundError(metadata.title, id);
         }
-        await checkAuthorization(enforcer, metadata, context, `delete`, existingItem);
+        await checkAuthorization(enforcer, metadata, executionContext, `delete`, existingItem);
         const result = await collection.findOneAndDelete(filter);
         if (!result.value) {
             throw new EntityNotFoundError(metadata.title, id);
         }
-        await auditors.writeDeletion(result.value, context);
+        await auditors.writeDeletion(result.value, executionContext);
         return;
     };
 }
@@ -247,7 +291,7 @@ function getReplaceById(utilities) {
         setStringIdentifier,
         enforcer,
     } = utilities;
-    return async function replaceById(id, _entity, context) {
+    return async function replaceById(id, _entity, executionContext) {
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
         // comes from outside, can't be trusted
@@ -256,13 +300,13 @@ function getReplaceById(utilities) {
         delete entity.owner;
         const filter = getIdentifierQuery(id);
         if (metadata.tenantInfo) {
-            addTenantToFilter(filter, context);
+            addTenantToFilter(filter, executionContext);
         }
         const existing = await collection.findOne(filter);
         if (!existing) {
             throw new EntityNotFoundError(metadata.title, JSON.stringify(filter));
         }
-        await checkAuthorization(enforcer, metadata, context, `update`, existing);
+        await checkAuthorization(enforcer, metadata, executionContext, `update`, existing);
         if (metadata.tenantInfo) {
             const existingTenantId = get(existing, metadata.tenantInfo.entityPathToId);
             if (!existingTenantId) {
@@ -279,12 +323,12 @@ function getReplaceById(utilities) {
         if (existing.owner) {
             entity.owner = existing.owner;
         }
-        setVersionInfo(entity, context);
+        setVersionInfo(entity, executionContext);
         setStringIdentifier(entity);
         inputValidator.ensureValid(metadata.schemas.core.$id, entity);
         const replaceResult = await collection.findOneAndReplace(filter, entity);
         entity._id = replaceResult.value._id;
-        await auditors.writeReplacement(replaceResult.value, entity, context);
+        await auditors.writeReplacement(replaceResult.value, entity, executionContext);
         mapOutput(entity);
         return entity;
     };
@@ -303,7 +347,7 @@ function getSearch(utilities) {
         metadata,
         enforcer,
     } = utilities;
-    return async function search(query, context) {
+    return async function search(query, executionContext) {
         // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
         // @ts-ignore
@@ -314,8 +358,14 @@ function getSearch(utilities) {
             sort = undefined;
             projection = undefined;
         }
-        addTenantToFilter(filter, context);
-        await checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, context, `retrieve`);
+        addTenantToFilter(filter, executionContext);
+        await checkAuthorizationOrAddOwnerToFilter(
+            filter,
+            enforcer,
+            metadata,
+            executionContext,
+            `retrieve`
+        );
         const items = await collection
             .find(filter)
             .skip(skip || 0)
@@ -335,16 +385,16 @@ module.exports = { getUtils, getCrud };
 /**
  * @param {import('casbin').Enforcer} [enforcer] The Casbin enforcer to use with the policies if provided
  * @param {EntityMetadata} metadata The entities metadata object
- * @param {import('../../version-info/types').ExecutionContext} context The execution context for this action
+ * @param {import('../../version-info/types').ExecutionContext} executionContext The execution context for this action
  * @param {string} action the name of the action
  * @param {any} currentEntity The current entity to check ownership against
  * @returns {Promise<void>}
  */
-async function checkAuthorization(enforcer, metadata, context, action, currentEntity) {
+async function checkAuthorization(enforcer, metadata, executionContext, action, currentEntity) {
     if (!metadata.authorization) {
         return;
     }
-    const currentUserId = context.identity.id;
+    const currentUserId = executionContext.identity.id;
     let aclAllowed = false;
     let ownershipAllowed = false;
     let allowed = false;
@@ -364,15 +414,21 @@ async function checkAuthorization(enforcer, metadata, context, action, currentEn
         allowed = aclAllowed && ownershipAllowed;
     }
     if (!allowed) {
-        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+        throw new NotAuthorizedError(executionContext.identity.id, metadata.namePlural, action);
     }
 }
 
-async function checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, context, action) {
+async function checkAuthorizationOrAddOwnerToFilter(
+    filter,
+    enforcer,
+    metadata,
+    executionContext,
+    action
+) {
     if (!metadata.authorization) {
         return;
     }
-    const currentUserId = context.identity.id;
+    const currentUserId = executionContext.identity.id;
     if (enforcer) {
         let aclAllowed = await enforcer.enforce(currentUserId, metadata.namePlural, action);
         if (aclAllowed) {
@@ -380,13 +436,13 @@ async function checkAuthorizationOrAddOwnerToFilter(filter, enforcer, metadata, 
         }
     }
     if (!metadata.authorization.ownership) {
-        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+        throw new NotAuthorizedError(executionContext.identity.id, metadata.namePlural, action);
     }
     let actionAllowed =
         metadata.authorization.ownership.allowedActions.indexOf(action) >= 0 ||
         metadata.authorization.ownership.allowedActions.indexOf(`*`) >= 0;
     if (!actionAllowed) {
-        throw new NotAuthorizedError(context.identity.id, metadata.namePlural, action);
+        throw new NotAuthorizedError(executionContext.identity.id, metadata.namePlural, action);
     }
     filter[`owner.id`] = currentUserId;
 }
@@ -465,7 +521,7 @@ async function runStepWithHooks(stepName, stepFn, hooks = {}, hookContext) {
     if (replaceFn) {
         await runHook(replaceFn, hookContext);
     } else {
-        await stepFn();
+        await stepFn(hookContext);
     }
     const afterFn = hooks[`after${upperStepName}`];
     if (afterFn) {

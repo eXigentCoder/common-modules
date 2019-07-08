@@ -143,7 +143,9 @@ export interface AgpOptions {
 }
 
 export interface HookContext {
-    context: ExecutionContext;
-    input: any;
+    executionContext: ExecutionContext;
+    input?: any;
+    id?: string;
     utilities: Utilities;
+    [key: string]: any;
 }
