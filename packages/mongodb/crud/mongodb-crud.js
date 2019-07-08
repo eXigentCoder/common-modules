@@ -258,7 +258,6 @@ function getReplaceById(utilities) {
     const {
         setVersionInfo,
         collection,
-        mapOutput: _mapOutput,
         metadata,
         inputValidator,
         auditors,
@@ -379,6 +378,7 @@ function getReplaceById(utilities) {
         await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
         return hookContext.entity;
     };
+
     /** @param {import('../types').HookContext} hookContext */
     function sanitize(hookContext) {
         const { input } = hookContext;
@@ -404,34 +404,60 @@ function getSearch(utilities) {
         metadata,
         enforcer,
     } = utilities;
-    return async function search(query, executionContext) {
-        // @ts-ignore
-        let { filter, skip, limit, sort, projection } = query;
+    return async function search(query, executionContext, hooks) {
+        /** @type {import('../types').Query} */
+        let queryObj = {};
         // @ts-ignore
         if (query.filter === null || query.filter === undefined) {
-            filter = query;
-            skip = undefined;
-            limit = undefined;
-            sort = undefined;
-            projection = undefined;
+            queryObj.filter = query;
+        } else {
+            // @ts-ignore
+            queryObj = query;
         }
-        addTenantToFilter(filter, executionContext);
-        await checkAuthorizationOrAddOwnerToFilter(
-            filter,
-            enforcer,
-            metadata,
+        /**@type {import('../types').HookContext} */
+        const hookContext = {
             executionContext,
-            `retrieve`
+            utilities,
+            queryObj,
+        };
+        await runStepWithHooks(
+            `getFilter`,
+            async ctx => {
+                addTenantToFilter(ctx.query.filter, executionContext);
+            },
+            hooks,
+            hookContext
         );
-        const items = await collection
-            .find(filter)
-            .skip(skip || 0)
-            .limit(limit || paginationDefaults.itemsPerPage)
-            .sort(sort || paginationDefaults.sort)
-            .project(projection || paginationDefaults.projection)
-            .toArray();
-        _mapOutput(items);
-        return items;
+        await runStepWithHooks(
+            `authorize`,
+            async ctx => {
+                await checkAuthorizationOrAddOwnerToFilter(
+                    ctx.query.filter,
+                    enforcer,
+                    metadata,
+                    executionContext,
+                    `retrieve`
+                );
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(
+            `search`,
+            async ctx => {
+                ctx.entity = await collection
+                    .find(queryObj.filter)
+                    .skip(queryObj.skip || 0)
+                    .limit(queryObj.limit || paginationDefaults.itemsPerPage)
+                    .sort(queryObj.sort || paginationDefaults.sort)
+                    .project(queryObj.projection || paginationDefaults.projection)
+                    .toArray();
+            },
+            hooks,
+            hookContext
+        );
+        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
+        return hookContext.entity;
     };
 }
 

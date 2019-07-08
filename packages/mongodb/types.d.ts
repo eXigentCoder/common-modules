@@ -164,6 +164,7 @@ export interface HookContext {
     utilities: Utilities;
     /** The entity currently being worked with*/
     entity?: any;
+    query?: Query;
     /** Any additional properties */
     [key: string]: any;
 }
