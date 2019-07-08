@@ -161,7 +161,7 @@ function getCreate(utilities) {
  * @returns {import("../types").GetById<object>} A function to get entities by their identifiers
  */
 function getGetById(utilities) {
-    const { collection, getIdentifierQuery, metadata, addTenantToFilter } = utilities;
+    const { collection, metadata } = utilities;
     return async function getById(id, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -169,15 +169,7 @@ function getGetById(utilities) {
             id,
             utilities,
         };
-        await runStepWithHooks(
-            `getFilter`,
-            async ctx => {
-                ctx.filter = getIdentifierQuery(id);
-                addTenantToFilter(ctx.filter, executionContext);
-            },
-            hooks,
-            hookContext
-        );
+        await runStepWithHooks(`getFilter`, getFilter, hooks, hookContext);
         await runStepWithHooks(
             `getItem`,
             async ctx => {
@@ -200,7 +192,7 @@ function getGetById(utilities) {
  * @returns {import("../types").DeleteById<object>} A function to delete entities by their identifier
  */
 function getDeleteById(utilities) {
-    const { collection, getIdentifierQuery, metadata, auditors, addTenantToFilter } = utilities;
+    const { collection, metadata, auditors } = utilities;
     return async function deleteById(id, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -208,15 +200,7 @@ function getDeleteById(utilities) {
             id,
             utilities,
         };
-        await runStepWithHooks(
-            `getFilter`,
-            async ctx => {
-                ctx.filter = getIdentifierQuery(id);
-                addTenantToFilter(ctx.filter, executionContext);
-            },
-            hooks,
-            hookContext
-        );
+        await runStepWithHooks(`getFilter`, getFilter, hooks, hookContext);
         await runStepWithHooks(
             `getItem`,
             async ctx => {
@@ -396,14 +380,7 @@ function getReplaceById(utilities) {
  * @returns {import("../types").Search<object>} A function to search for entities
  */
 function getSearch(utilities) {
-    const {
-        collection,
-        mapOutput: _mapOutput,
-        paginationDefaults,
-        addTenantToFilter,
-        metadata,
-        enforcer,
-    } = utilities;
+    const { collection, paginationDefaults, addTenantToFilter, metadata, enforcer } = utilities;
     return async function search(query, executionContext, hooks) {
         /** @type {import('../types').Query} */
         let queryObj = {};
@@ -418,7 +395,7 @@ function getSearch(utilities) {
         const hookContext = {
             executionContext,
             utilities,
-            queryObj,
+            query: queryObj,
         };
         await runStepWithHooks(
             `getFilter`,
@@ -464,6 +441,7 @@ function getSearch(utilities) {
 module.exports = { getUtils, getCrud };
 
 // --------------============== [ Todo shared steps]
+
 /**
  * @param {string} action
  * @returns {Function}
@@ -484,6 +462,12 @@ function auth(action) {
 /** @param {import('../types').HookContext} hookContext */
 async function mapOutput(hookContext) {
     hookContext.utilities.mapOutput(hookContext.entity);
+}
+
+/** @param {import('../types').HookContext} hookContext */
+function getFilter(hookContext) {
+    hookContext.filter = hookContext.utilities.getIdentifierQuery(hookContext.id);
+    hookContext.utilities.addTenantToFilter(hookContext.filter, hookContext.executionContext);
 }
 
 // --------------============== [ Todo these utilities should probably all be their own files]
