@@ -115,16 +115,17 @@ function getCreate(utilities) {
             utilities,
         };
         await runStepWithHooks(
+            `validate`,
             () => {
                 ensureEntityIsObject(_entity, metadata);
                 entity = JSON.parse(JSON.stringify(_entity));
                 inputValidator.ensureValid(metadata.schemas.create.$id, entity);
             },
             hooks,
-            `validate`,
             hookContext
         );
         await runStepWithHooks(
+            `setMetadata`,
             () => {
                 setStringIdentifier(entity);
                 setTenant(entity, context);
@@ -135,39 +136,38 @@ function getCreate(utilities) {
                 entity._id = new ObjectId(entity._id);
             },
             hooks,
-            `setMetadata`,
             hookContext
         );
         await runStepWithHooks(
+            `authorize`,
             async () => {
                 await checkAuthorization(enforcer, metadata, context, `create`, entity);
             },
             hooks,
-            `authorize`,
             hookContext
         );
         await runStepWithHooks(
+            `insert`,
             async () => {
                 await collection.insertOne(entity);
             },
             hooks,
-            `insert`,
             hookContext
         );
         await runStepWithHooks(
+            `writeAudit`,
             async () => {
                 await auditors.writeCreation(entity, context);
             },
             hooks,
-            `writeAudit`,
             hookContext
         );
         await runStepWithHooks(
+            `mapOutput`,
             async () => {
                 mapOutput(entity);
             },
             hooks,
-            `mapOutput`,
             hookContext
         );
 
@@ -455,7 +455,7 @@ function createAddTenantToFilter(metadata) {
  * @param {string} stepName
  * @param {import('../types').HookContext} hookContext
  */
-async function runStepWithHooks(stepFn, hooks = {}, stepName, hookContext) {
+async function runStepWithHooks(stepName, stepFn, hooks = {}, hookContext) {
     const upperStepName = upperFirst(stepName);
     const beforeFn = hooks[`before${upperStepName}`];
     if (beforeFn) {
