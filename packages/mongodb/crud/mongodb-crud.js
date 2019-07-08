@@ -93,49 +93,98 @@ async function getCrud({ metadata, inputValidator, outputValidator, db, enforcer
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("../types").Create<object>} A function to create entities
  */
-function getCreate({
-    setVersionInfo,
-    collection,
-    mapOutput,
-    metadata,
-    setStringIdentifier,
-    inputValidator,
-    auditors,
-    setTenant,
-    enforcer,
-    setOwnerIfApplicable,
-}) {
-    return async function create(_entity, context) {
-        ensureEntityIsObject(_entity, metadata);
-        const entity = JSON.parse(JSON.stringify(_entity));
-        inputValidator.ensureValid(metadata.schemas.create.$id, entity);
-        setStringIdentifier(entity);
-        setTenant(entity, context);
-        setVersionInfo(entity, context);
-        setOwnerIfApplicable(entity, context);
-        entity._id = new ObjectId();
-        inputValidator.ensureValid(metadata.schemas.core.$id, entity);
-        entity._id = new ObjectId(entity._id);
+function getCreate(utilities) {
+    const {
+        setVersionInfo,
+        collection,
+        mapOutput,
+        metadata,
+        setStringIdentifier,
+        inputValidator,
+        auditors,
+        setTenant,
+        enforcer,
+        setOwnerIfApplicable,
+    } = utilities;
+    return async function create(_entity, context, hooks = {}) {
+        let entity;
+        //runStepWithHooks();
+        validate();
+        await runHook({
+            fn: hooks[`afterValidation`],
+            context,
+            input: entity,
+            utilities,
+        });
+        setMetadata();
+        await runHook({
+            fn: hooks[`afterMetadataSet`],
+            context,
+            input: entity,
+            utilities,
+        });
         await checkAuthorization(enforcer, metadata, context, `create`, entity);
+        await runHook({
+            fn: hooks[`afterAuthorization`],
+            context,
+            input: entity,
+            utilities,
+        });
         await collection.insertOne(entity);
+        await runHook({
+            fn: hooks[`afterCreate`],
+            context,
+            input: entity,
+            utilities,
+        });
         await auditors.writeCreation(entity, context);
+        await runHook({
+            fn: hooks[`afterAudit`],
+            context,
+            input: entity,
+            utilities,
+        });
         mapOutput(entity);
+        await runHook({
+            fn: hooks[`afterMap`],
+            context,
+            input: entity,
+            utilities,
+        });
         return entity;
+
+        function validate() {
+            ensureEntityIsObject(_entity, metadata);
+            entity = JSON.parse(JSON.stringify(_entity));
+            inputValidator.ensureValid(metadata.schemas.create.$id, entity);
+        }
+
+        function setMetadata() {
+            setStringIdentifier(entity);
+            setTenant(entity, context);
+            setVersionInfo(entity, context);
+            setOwnerIfApplicable(entity, context);
+            entity._id = new ObjectId();
+            inputValidator.ensureValid(metadata.schemas.core.$id, entity);
+            entity._id = new ObjectId(entity._id);
+        }
     };
 }
+async function runStepWithHooks() {}
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("../types").GetById<object>} A function to get entities by their identifiers
  */
-function getGetById({
-    collection,
-    mapOutput,
-    getIdentifierQuery,
-    metadata,
-    addTenantToFilter,
-    enforcer,
-}) {
+function getGetById(utilities) {
+    const {
+        collection,
+        mapOutput,
+        getIdentifierQuery,
+        metadata,
+        addTenantToFilter,
+        enforcer,
+    } = utilities;
     return async function getById(id, context) {
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
@@ -153,14 +202,15 @@ function getGetById({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("../types").DeleteById<object>} A function to delete entities by their identifier
  */
-function getDeleteById({
-    collection,
-    getIdentifierQuery,
-    metadata,
-    auditors,
-    addTenantToFilter,
-    enforcer,
-}) {
+function getDeleteById(utilities) {
+    const {
+        collection,
+        getIdentifierQuery,
+        metadata,
+        auditors,
+        addTenantToFilter,
+        enforcer,
+    } = utilities;
     return async function deleteById(id, context) {
         const filter = getIdentifierQuery(id);
         addTenantToFilter(filter, context);
@@ -181,18 +231,19 @@ function getDeleteById({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("../types").ReplaceById<object>} A function to replace documents based off of their _id
  */
-function getReplaceById({
-    setVersionInfo,
-    collection,
-    mapOutput,
-    metadata,
-    inputValidator,
-    auditors,
-    getIdentifierQuery,
-    addTenantToFilter,
-    setStringIdentifier,
-    enforcer,
-}) {
+function getReplaceById(utilities) {
+    const {
+        setVersionInfo,
+        collection,
+        mapOutput,
+        metadata,
+        inputValidator,
+        auditors,
+        getIdentifierQuery,
+        addTenantToFilter,
+        setStringIdentifier,
+        enforcer,
+    } = utilities;
     return async function replaceById(id, _entity, context) {
         ensureEntityIsObject(_entity, metadata);
         const entity = JSON.parse(JSON.stringify(_entity));
@@ -240,14 +291,15 @@ function getReplaceById({
  * @param {Utilities} utilities The input utilities to create the function
  * @returns {import("../types").Search<object>} A function to search for entities
  */
-function getSearch({
-    collection,
-    mapOutput,
-    paginationDefaults,
-    addTenantToFilter,
-    metadata,
-    enforcer,
-}) {
+function getSearch(utilities) {
+    const {
+        collection,
+        mapOutput,
+        paginationDefaults,
+        addTenantToFilter,
+        metadata,
+        enforcer,
+    } = utilities;
     return async function search(query, context) {
         // @ts-ignore
         let { filter, skip, limit, sort, projection } = query;
@@ -392,4 +444,11 @@ function createAddTenantToFilter(metadata) {
         }
         set(query, metadata.tenantInfo.entityPathToId, value);
     };
+}
+
+async function runHook({ fn, context, input, utilities }) {
+    if (!fn) {
+        return;
+    }
+    await fn({ fn, context, input, utilities });
 }
