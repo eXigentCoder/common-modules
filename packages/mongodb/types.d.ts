@@ -141,3 +141,9 @@ export interface AgpOptions {
     /** object which map keys to casters (built-in or custom ones using the casters option). */
     castParams: { [key: string]: string };
 }
+
+export interface HookContext {
+    context: ExecutionContext;
+    input: any;
+    utilities: Utilities;
+}

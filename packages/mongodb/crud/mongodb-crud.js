@@ -5,6 +5,7 @@ const { createOutputMapper } = require(`../../validation`);
 const { createVersionInfoSetter } = require(`../../version-info`);
 const get = require(`lodash/get`);
 const set = require(`lodash/set`);
+const upperFirst = require(`lodash/upperFirst`);
 const { EntityNotFoundError } = require(`../../common-errors`);
 const createGetIdentifierQuery = require(`./utilities/create-identifier-query`);
 const createMongoDbAuditors = require(`../auditors/create-mongodb-auditors`);
@@ -106,71 +107,73 @@ function getCreate(utilities) {
         enforcer,
         setOwnerIfApplicable,
     } = utilities;
-    return async function create(_entity, context, hooks = {}) {
+    return async function create(_entity, context, hooks) {
         let entity;
-        //runStepWithHooks();
-        validate();
-        await runHook({
-            fn: hooks[`afterValidation`],
+        const hookContext = {
             context,
             input: entity,
             utilities,
-        });
-        setMetadata();
-        await runHook({
-            fn: hooks[`afterMetadataSet`],
-            context,
-            input: entity,
-            utilities,
-        });
-        await checkAuthorization(enforcer, metadata, context, `create`, entity);
-        await runHook({
-            fn: hooks[`afterAuthorization`],
-            context,
-            input: entity,
-            utilities,
-        });
-        await collection.insertOne(entity);
-        await runHook({
-            fn: hooks[`afterCreate`],
-            context,
-            input: entity,
-            utilities,
-        });
-        await auditors.writeCreation(entity, context);
-        await runHook({
-            fn: hooks[`afterAudit`],
-            context,
-            input: entity,
-            utilities,
-        });
-        mapOutput(entity);
-        await runHook({
-            fn: hooks[`afterMap`],
-            context,
-            input: entity,
-            utilities,
-        });
+        };
+        await runStepWithHooks(
+            () => {
+                ensureEntityIsObject(_entity, metadata);
+                entity = JSON.parse(JSON.stringify(_entity));
+                inputValidator.ensureValid(metadata.schemas.create.$id, entity);
+            },
+            hooks,
+            `validate`,
+            hookContext
+        );
+        await runStepWithHooks(
+            () => {
+                setStringIdentifier(entity);
+                setTenant(entity, context);
+                setVersionInfo(entity, context);
+                setOwnerIfApplicable(entity, context);
+                entity._id = new ObjectId();
+                inputValidator.ensureValid(metadata.schemas.core.$id, entity);
+                entity._id = new ObjectId(entity._id);
+            },
+            hooks,
+            `setMetadata`,
+            hookContext
+        );
+        await runStepWithHooks(
+            async () => {
+                await checkAuthorization(enforcer, metadata, context, `create`, entity);
+            },
+            hooks,
+            `authorize`,
+            hookContext
+        );
+        await runStepWithHooks(
+            async () => {
+                await collection.insertOne(entity);
+            },
+            hooks,
+            `insert`,
+            hookContext
+        );
+        await runStepWithHooks(
+            async () => {
+                await auditors.writeCreation(entity, context);
+            },
+            hooks,
+            `writeAudit`,
+            hookContext
+        );
+        await runStepWithHooks(
+            async () => {
+                mapOutput(entity);
+            },
+            hooks,
+            `mapOutput`,
+            hookContext
+        );
+
         return entity;
-
-        function validate() {
-            ensureEntityIsObject(_entity, metadata);
-            entity = JSON.parse(JSON.stringify(_entity));
-            inputValidator.ensureValid(metadata.schemas.create.$id, entity);
-        }
-
-        function setMetadata() {
-            setStringIdentifier(entity);
-            setTenant(entity, context);
-            setVersionInfo(entity, context);
-            setOwnerIfApplicable(entity, context);
-            entity._id = new ObjectId();
-            inputValidator.ensureValid(metadata.schemas.core.$id, entity);
-            entity._id = new ObjectId(entity._id);
-        }
     };
 }
-async function runStepWithHooks() {}
 
 /**
  * @param {Utilities} utilities The input utilities to create the function
@@ -446,9 +449,38 @@ function createAddTenantToFilter(metadata) {
     };
 }
 
-async function runHook({ fn, context, input, utilities }) {
+/**
+ * @param {Function} stepFn
+ * @param {{[key: string]: Function }} hooks
+ * @param {string} stepName
+ * @param {import('../types').HookContext} hookContext
+ */
+async function runStepWithHooks(stepFn, hooks = {}, stepName, hookContext) {
+    const upperStepName = upperFirst(stepName);
+    const beforeFn = hooks[`before${upperStepName}`];
+    if (beforeFn) {
+        await runHook(beforeFn, hookContext);
+    }
+    const replaceFn = hooks[stepName];
+    if (replaceFn) {
+        await runHook(replaceFn, hookContext);
+    } else {
+        await stepFn();
+    }
+    const afterFn = hooks[`after${upperStepName}`];
+    if (afterFn) {
+        await runHook(afterFn, hookContext);
+    }
+}
+
+/**
+ * @param {Function} fn
+ * @param {import('../types').HookContext} hookContext
+ * @returns {Promise<void>}
+ */
+async function runHook(fn, hookContext) {
     if (!fn) {
         return;
     }
-    await fn({ fn, context, input, utilities });
+    await fn(hookContext);
 }
