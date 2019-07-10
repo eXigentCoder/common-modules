@@ -20,7 +20,7 @@ function run(specFile) {
         const mocha = new Mocha({
             reporter: JSONReporter,
             retries: 0,
-            timeout: 5000,
+            timeout: 30000,
             bail: true,
             inlineDiffs: false,
             enableTimeouts: true,

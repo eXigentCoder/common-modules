@@ -3,6 +3,6 @@
 module.exports = {
     file: './test-init.js',
     spec: ['./packages/**/*.test.js'],
-    timeout: 5000,
+    timeout: 30000,
     exit: true,
 };

@@ -21,7 +21,7 @@ describe(`MongoDB`, () => {
         describe(`Auhtorization`, () => {
             describe(`enforcer`, () => {
                 it(`Should use the enforcer for authorization if one is provided`, async function() {
-                    this.timeout(5000);
+                    this.timeout(30000);
                     const connectionString = buildMongoUrl(urlConfig);
                     const role = `user-admin`;
                     const userId = `alice`;
@@ -46,7 +46,7 @@ describe(`MongoDB`, () => {
                     await adapter.close();
                 });
                 it(`Should use the policies on the metadata if provided`, async function() {
-                    this.timeout(5000);
+                    this.timeout(30000);
                     const connectionString = buildMongoUrl(urlConfig);
                     const userId = `bobson`;
                     const adapter = await MongooseAdapter.newAdapter(connectionString, {
@@ -76,7 +76,7 @@ describe(`MongoDB`, () => {
         });
         describe(`ownership`, () => {
             it(`Should not allow someone who isn't the owner to perform the action`, async function() {
-                this.timeout(5000);
+                this.timeout(30000);
                 const userId = `alice`;
                 const inputMetadata = stringIdNoTenantOwnership({ idSchema: { type: `string` } });
                 const { create, deleteById } = await getPopulatedCrud(inputMetadata);
@@ -91,7 +91,7 @@ describe(`MongoDB`, () => {
                 await deleteById(result._id, context);
             });
             it(`Should allow you to specify a * for actions`, async function() {
-                this.timeout(5000);
+                this.timeout(30000);
                 const userId = `alice`;
                 const inputMetadata = stringIdNoTenantOwnership({
                     idSchema: { type: `string` },

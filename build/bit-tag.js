@@ -1,17 +1,17 @@
 'use strict';
-const util = require('util');
-const { exec } = require('child_process');
-const version = require('../package.json').version;
+const util = require(`util`);
+const { exec } = require(`child_process`);
+const version = require(`../package.json`).version;
 const execute = util.promisify(exec);
 (async function run() {
     console.log(`Setting version number to ${version}`);
     try {
         const { stdout: bitTagOutput } = await execute(
-            `bit tag --all ${version} --force` //--skip-tests
+            `bit tag --all ${version} --force --skip-tests`
         );
         if (bitTagOutput) {
             console.log(bitTagOutput);
-            if (bitTagOutput.toLowerCase().indexOf('nothing to tag') >= 0) {
+            if (bitTagOutput.toLowerCase().indexOf(`nothing to tag`) >= 0) {
                 return;
             }
         }
