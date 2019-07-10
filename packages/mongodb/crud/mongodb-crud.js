@@ -133,12 +133,10 @@ function getReplaceById(utilities) {
         await runStepWithHooks(setFilterFromId, hookContext);
         await runStepWithHooks(setEntityFromDbUsingFilter, hookContext);
         await runStepWithHooks(getAuthorizeFn(`update`), hookContext);
-
         await runStepWithHooks(moveCurrentEntityToExisting, hookContext);
         await runStepWithHooks(setEntityFromInput, hookContext);
         await runStepWithHooks(getValidateEntityFn(`replace`), hookContext);
         await runStepWithHooks(setMetadataFields, hookContext);
-
         await runStepWithHooks(getValidateEntityFn(`core`), hookContext);
         await runStepWithHooks(replace, hookContext);
         await runStepWithHooks(getWriteAuditEntryFn(`replace`), hookContext);
