@@ -3,7 +3,7 @@ import { Validator } from '../validation/ajv';
 import { ExecutionContext } from '../version-info/types';
 import { EntityMetadata } from '../entity-metadata/types';
 import { Enforcer } from 'casbin';
-import { Hook } from 'mocha';
+
 /** Default options used to paginate search queries */
 export interface PaginationDefaults {
     /** The number of items to include in a page when no overriding value is provided */
@@ -154,8 +154,10 @@ export interface AgpOptions {
     castParams: { [key: string]: string };
 }
 
+export type Hook = (hookContext: HookContext) => Promise<void>;
+
 export interface Hooks {
-    [key: string]: Function;
+    [key: string]: Hook;
 }
 
 export interface HookContext {

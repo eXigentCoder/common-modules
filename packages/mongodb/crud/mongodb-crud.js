@@ -1,30 +1,25 @@
 'use strict';
 
-const { createOutputMapper } = require(`../../validation`);
-const { createVersionInfoSetter } = require(`../../version-info`);
 const get = require(`lodash/get`);
 const set = require(`lodash/set`);
-const { EntityNotFoundError } = require(`../../common-errors`);
-const createMongoDbAuditors = require(`../auditors/create-mongodb-auditors`);
 const ObjectId = require(`mongodb`).ObjectId;
-const { runStepWithHooks } = require(`./steps`);
+const getUtils = require(`./utilities/get-utilities`);
+
 const {
-    titleToStringIdentifier: defaultTitleToStringIdentifier,
-    createAddTenantToFilter,
-    createGetIdentifierQuery,
-    createSetOwnerIfApplicable,
-    createSetTenant,
-    createStringIdentifierSetter,
-    checkAuthorizationOrAddOwnerToFilter,
-} = require(`./utilities`);
-const {
-    auth,
-    mapOutput,
+    runStepWithHooks,
+    getAuthorizeFn,
+    mapEntityForOutput,
     getFilterFromId,
     setEntityFromInput,
     validate,
-    writeAudit,
+    getWriteAuditEntryFn,
     setEntityFromFilter,
+    authorizeQuery,
+    moveCurrentEntityToExisting,
+    insert,
+    deleteFromDbUsingQuery,
+    replace,
+    setEntityFromDBUsingQuery,
 } = require(`./steps`);
 /**
  * @typedef {import('../../entity-metadata').EntityMetadata} EntityMetadata
@@ -33,54 +28,6 @@ const {
  * @typedef {import('../types').Crud<Object>} Crud
  * @typedef {Crud & {utilities:Utilities}} GetCrud
  */
-
-/** @type {import('../types').GetUtils} */
-async function getUtils({
-    metadata,
-    inputValidator,
-    outputValidator,
-    db,
-    auditors,
-    enforcer,
-    titleToStringIdentifier,
-    paginationDefaults = {
-        itemsPerPage: 20,
-        sort: {},
-        projection: {},
-    },
-}) {
-    if (enforcer) {
-        if (metadata.authorization.groups) {
-            for (const group of metadata.authorization.groups) {
-                await enforcer.addGroupingPolicy(...group);
-            }
-        }
-        if (metadata.authorization.policies) {
-            for (const policy of metadata.authorization.policies) {
-                await enforcer.addPolicy(...policy);
-            }
-        }
-    }
-    titleToStringIdentifier = titleToStringIdentifier || defaultTitleToStringIdentifier;
-    return {
-        db,
-        metadata,
-        inputValidator,
-        outputValidator,
-        paginationDefaults,
-        setVersionInfo: createVersionInfoSetter({ metadata, validator: inputValidator }),
-        collection: db.collection(metadata.collectionName),
-        mapOutput: createOutputMapper(metadata.schemas.output.$id, outputValidator),
-        setStringIdentifier: createStringIdentifierSetter(metadata, titleToStringIdentifier),
-        getIdentifierQuery: createGetIdentifierQuery(metadata),
-        auditors: auditors || (await createMongoDbAuditors(metadata, db)),
-        setTenant: createSetTenant(metadata),
-        addTenantToFilter: createAddTenantToFilter(metadata),
-        setOwnerIfApplicable: createSetOwnerIfApplicable(metadata),
-        enforcer,
-        titleToStringIdentifier,
-    };
-}
 
 /**
  * @param {CreateUtilityParams} createUtilityParams The input utilities to create the function
@@ -111,7 +58,6 @@ async function getCrud({ metadata, inputValidator, outputValidator, db, enforcer
 function getCreate(utilities) {
     const {
         setVersionInfo,
-        collection,
         metadata,
         setStringIdentifier,
         inputValidator,
@@ -129,16 +75,14 @@ function getCreate(utilities) {
         await runStepWithHooks(setEntityFromInput, hookContext);
         await runStepWithHooks(validate(`create`), hookContext);
         await runStepWithHooks(setMetadata, hookContext);
-        await runStepWithHooks(auth(`create`), hookContext);
-        await runStepWithHooks(async function insert(ctx) {
-            await collection.insertOne(ctx.entity);
-        }, hookContext);
-        await runStepWithHooks(writeAudit(`create`), hookContext);
-        await runStepWithHooks(mapOutput, hookContext);
+        await runStepWithHooks(getAuthorizeFn(`create`), hookContext);
+        await runStepWithHooks(insert, hookContext);
+        await runStepWithHooks(getWriteAuditEntryFn(`create`), hookContext);
+        await runStepWithHooks(mapEntityForOutput, hookContext);
         return hookContext.entity;
     };
 
-    /** @param {import('../types').HookContext} hookContext */
+    /** @type {import('../types').Hook} */
     function setMetadata({ entity, executionContext }) {
         setStringIdentifier(entity);
         setTenant(entity, executionContext);
@@ -165,8 +109,8 @@ function getGetById(utilities) {
         };
         await runStepWithHooks(getFilterFromId, hookContext);
         await runStepWithHooks(setEntityFromFilter, hookContext);
-        await runStepWithHooks(auth(`retrieve`), hookContext);
-        await runStepWithHooks(mapOutput, hookContext);
+        await runStepWithHooks(getAuthorizeFn(`retrieve`), hookContext);
+        await runStepWithHooks(mapEntityForOutput, hookContext);
         return hookContext.entity;
     };
 }
@@ -176,7 +120,6 @@ function getGetById(utilities) {
  * @returns {import("../types").DeleteById<object>} A function to delete entities by their identifier
  */
 function getDeleteById(utilities) {
-    const { collection, metadata } = utilities;
     return async function deleteById(id, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -187,14 +130,9 @@ function getDeleteById(utilities) {
         };
         await runStepWithHooks(getFilterFromId, hookContext);
         await runStepWithHooks(setEntityFromFilter, hookContext);
-        await runStepWithHooks(auth(`delete`), hookContext);
-        await runStepWithHooks(async function _delete(ctx) {
-            ctx.result = await collection.findOneAndDelete(ctx.filter);
-            if (!ctx.result.value) {
-                throw new EntityNotFoundError(metadata.title, id);
-            }
-        }, hookContext);
-        await runStepWithHooks(writeAudit(`delete`), hookContext);
+        await runStepWithHooks(getAuthorizeFn(`delete`), hookContext);
+        await runStepWithHooks(deleteFromDbUsingQuery, hookContext);
+        await runStepWithHooks(getWriteAuditEntryFn(`delete`), hookContext);
     };
 }
 /**
@@ -202,7 +140,7 @@ function getDeleteById(utilities) {
  * @returns {import("../types").ReplaceById<object>} A function to replace documents based off of their _id
  */
 function getReplaceById(utilities) {
-    const { setVersionInfo, collection, metadata, setStringIdentifier } = utilities;
+    const { setVersionInfo, metadata, setStringIdentifier } = utilities;
     return async function replaceById(id, _entity, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -215,7 +153,7 @@ function getReplaceById(utilities) {
 
         await runStepWithHooks(getFilterFromId, hookContext);
         await runStepWithHooks(setEntityFromFilter, hookContext);
-        await runStepWithHooks(auth(`update`), hookContext);
+        await runStepWithHooks(getAuthorizeFn(`update`), hookContext);
 
         await runStepWithHooks(moveCurrentEntityToExisting, hookContext);
         await runStepWithHooks(setEntityFromInput, hookContext);
@@ -243,25 +181,18 @@ function getReplaceById(utilities) {
         }, hookContext);
 
         await runStepWithHooks(validate(`core`), hookContext);
-        await runStepWithHooks(async function replace(ctx) {
-            ctx.result = await collection.findOneAndReplace(ctx.filter, ctx.entity);
-            ctx.entity._id = ctx.result.value._id;
-        }, hookContext);
-        await runStepWithHooks(writeAudit(`replace`), hookContext);
-        await runStepWithHooks(mapOutput, hookContext);
+        await runStepWithHooks(replace, hookContext);
+        await runStepWithHooks(getWriteAuditEntryFn(`replace`), hookContext);
+        await runStepWithHooks(mapEntityForOutput, hookContext);
         return hookContext.entity;
     };
 
-    /** @param {import('../types').HookContext} hookContext */
+    /** @type {import('../types').Hook} */
     function sanitize(hookContext) {
         // comes from outside, can't be trusted
         delete hookContext.entity.versionInfo;
         delete hookContext.entity._id;
         delete hookContext.entity.owner;
-    }
-    function moveCurrentEntityToExisting(hookContext) {
-        hookContext.existing = hookContext.entity;
-        delete hookContext.entity;
     }
 }
 
@@ -270,17 +201,11 @@ function getReplaceById(utilities) {
  * @returns {import("../types").Search<object>} A function to search for entities
  */
 function getSearch(utilities) {
-    const { collection, paginationDefaults, addTenantToFilter, metadata, enforcer } = utilities;
     return async function search(query, executionContext, hooks) {
         /** @type {import('../types').Query} */
-        let queryObj = {};
         // @ts-ignore
-        if (query.filter === null || query.filter === undefined) {
-            queryObj.filter = query;
-        } else {
-            // @ts-ignore
-            queryObj = query;
-        }
+        let queryObj = query.filter ? query : { filter: query };
+
         /**@type {import('../types').HookContext} */
         const hookContext = {
             executionContext,
@@ -288,28 +213,9 @@ function getSearch(utilities) {
             query: queryObj,
             hooks,
         };
-        await runStepWithHooks(async function _addTenant(ctx) {
-            addTenantToFilter(ctx.query.filter, executionContext);
-        }, hookContext);
-        await runStepWithHooks(async function _auth(ctx) {
-            await checkAuthorizationOrAddOwnerToFilter(
-                ctx.query.filter,
-                enforcer,
-                metadata,
-                executionContext,
-                `retrieve`
-            );
-        }, hookContext);
-        await runStepWithHooks(async function _search(ctx) {
-            ctx.entity = await collection
-                .find(queryObj.filter)
-                .skip(queryObj.skip || 0)
-                .limit(queryObj.limit || paginationDefaults.itemsPerPage)
-                .sort(queryObj.sort || paginationDefaults.sort)
-                .project(queryObj.projection || paginationDefaults.projection)
-                .toArray();
-        }, hookContext);
-        await runStepWithHooks(mapOutput, hookContext);
+        await runStepWithHooks(authorizeQuery, hookContext);
+        await runStepWithHooks(setEntityFromDBUsingQuery, hookContext);
+        await runStepWithHooks(mapEntityForOutput, hookContext);
         return hookContext.entity;
     };
 }
