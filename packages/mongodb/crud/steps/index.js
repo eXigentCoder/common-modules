@@ -4,10 +4,13 @@ const upperFirst = require(`lodash/upperFirst`);
 const { checkAuthorization, ensureEntityIsObject } = require(`../utilities`);
 /**
  * @param {Function} stepFn
- * @param {string} stepName
  * @param {import('../../types').HookContext} hookContext
  */
-async function runStepWithHooks(stepName, stepFn, hookContext) {
+async function runStepWithHooks(stepFn, hookContext) {
+    const stepName = stepFn.name;
+    if (!stepName || stepName === `anonomous`) {
+        throw new Error(`Steps must have names, use a named function`);
+    }
     const upperStepName = upperFirst(stepName);
     const hooks = hookContext.hooks || {};
     const beforeFn = hooks[`before${upperStepName}`];
@@ -51,7 +54,7 @@ function setEntityFromInput(hookContext) {
  */
 function auth(action) {
     /** @param {import('../../types').HookContext} hookContext */
-    return async hookContext => {
+    return async function _auth(hookContext) {
         await checkAuthorization(
             hookContext.utilities.enforcer,
             hookContext.utilities.metadata,

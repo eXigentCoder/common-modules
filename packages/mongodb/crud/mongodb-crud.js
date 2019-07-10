@@ -121,26 +121,17 @@ function getCreate(utilities) {
             utilities,
             hooks,
         };
-        //
-        await runStepWithHooks(`setEntityFromInput`, setEntityFromInput, hookContext);
-        await runStepWithHooks(`validate`, validate, hookContext);
-        await runStepWithHooks(`setMetadata`, setMetadata, hookContext);
-        await runStepWithHooks(`authorize`, auth(`create`), hookContext);
-        await runStepWithHooks(
-            `insert`,
-            async ctx => {
-                await collection.insertOne(ctx.entity);
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `writeAudit`,
-            async ctx => {
-                await auditors.writeCreation(ctx.entity, executionContext);
-            },
-            hookContext
-        );
-        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
+        await runStepWithHooks(setEntityFromInput, hookContext);
+        await runStepWithHooks(validate, hookContext);
+        await runStepWithHooks(setMetadata, hookContext);
+        await runStepWithHooks(auth(`create`), hookContext);
+        await runStepWithHooks(async function insert(ctx) {
+            await collection.insertOne(ctx.entity);
+        }, hookContext);
+        await runStepWithHooks(async function _audit(ctx) {
+            await auditors.writeCreation(ctx.entity, executionContext);
+        }, hookContext);
+        await runStepWithHooks(mapOutput, hookContext);
         return hookContext.entity;
     };
 
@@ -178,19 +169,15 @@ function getGetById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(`getFilter`, getFilter, hookContext);
-        await runStepWithHooks(
-            `getItem`,
-            async ctx => {
-                ctx.entity = await collection.findOne(ctx.filter);
-                if (!ctx.entity) {
-                    throw new EntityNotFoundError(metadata.title, id);
-                }
-            },
-            hookContext
-        );
-        await runStepWithHooks(`authorize`, auth(`retrieve`), hookContext);
-        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
+        await runStepWithHooks(getFilter, hookContext);
+        await runStepWithHooks(async function _findOne(ctx) {
+            ctx.entity = await collection.findOne(ctx.filter);
+            if (!ctx.entity) {
+                throw new EntityNotFoundError(metadata.title, id);
+            }
+        }, hookContext);
+        await runStepWithHooks(auth(`retrieve`), hookContext);
+        await runStepWithHooks(mapOutput, hookContext);
         return hookContext.entity;
     };
 }
@@ -209,35 +196,23 @@ function getDeleteById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(`getFilter`, getFilter, hookContext);
-        await runStepWithHooks(
-            `getItem`,
-            async ctx => {
-                ctx.entity = await collection.findOne(ctx.filter);
-                if (!ctx.entity) {
-                    throw new EntityNotFoundError(metadata.title, id);
-                }
-            },
-            hookContext
-        );
-        await runStepWithHooks(`authorize`, auth(`delete`), hookContext);
-        await runStepWithHooks(
-            `delete`,
-            async ctx => {
-                ctx.result = await collection.findOneAndDelete(ctx.filter);
-                if (!ctx.result.value) {
-                    throw new EntityNotFoundError(metadata.title, id);
-                }
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `writeAudit`,
-            async ctx => {
-                await auditors.writeDeletion(ctx.result.value, executionContext);
-            },
-            hookContext
-        );
+        await runStepWithHooks(getFilter, hookContext);
+        await runStepWithHooks(async function _find(ctx) {
+            ctx.entity = await collection.findOne(ctx.filter);
+            if (!ctx.entity) {
+                throw new EntityNotFoundError(metadata.title, id);
+            }
+        }, hookContext);
+        await runStepWithHooks(auth(`delete`), hookContext);
+        await runStepWithHooks(async function _delete(ctx) {
+            ctx.result = await collection.findOneAndDelete(ctx.filter);
+            if (!ctx.result.value) {
+                throw new EntityNotFoundError(metadata.title, id);
+            }
+        }, hookContext);
+        await runStepWithHooks(async function _audit(ctx) {
+            await auditors.writeDeletion(ctx.result.value, executionContext);
+        }, hookContext);
     };
 }
 /**
@@ -265,99 +240,57 @@ function getReplaceById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(`sanitize`, sanitize, hookContext);
-        await runStepWithHooks(
-            `getFilter`,
-            async ctx => {
-                ctx.filter = getIdentifierQuery(id);
-                addTenantToFilter(ctx.filter, executionContext);
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `getExistingItem`,
-            async ctx => {
-                ctx.existing = await collection.findOne(ctx.filter);
-                if (!ctx.existing) {
-                    throw new EntityNotFoundError(metadata.title, JSON.stringify(ctx.filter));
-                }
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `authorize`,
-            async ctx => {
-                await checkAuthorization(
-                    enforcer,
-                    metadata,
-                    executionContext,
-                    `update`,
-                    ctx.existing
-                );
-            },
-            hookContext
-        );
+        await runStepWithHooks(sanitize, hookContext);
+        await runStepWithHooks(async function _filter(ctx) {
+            ctx.filter = getIdentifierQuery(id);
+            addTenantToFilter(ctx.filter, executionContext);
+        }, hookContext);
+        await runStepWithHooks(async function _findExisting(ctx) {
+            ctx.existing = await collection.findOne(ctx.filter);
+            if (!ctx.existing) {
+                throw new EntityNotFoundError(metadata.title, JSON.stringify(ctx.filter));
+            }
+        }, hookContext);
+        await runStepWithHooks(async function _auth(ctx) {
+            await checkAuthorization(enforcer, metadata, executionContext, `update`, ctx.existing);
+        }, hookContext);
 
-        await runStepWithHooks(
-            `checkAndSetTenantInfo`,
-            async ctx => {
-                if (metadata.tenantInfo) {
-                    const existingTenantId = get(ctx.existing, metadata.tenantInfo.entityPathToId);
-                    if (!existingTenantId) {
-                        throw new Error(
-                            `existingTenantId was null at path "${
-                                metadata.tenantInfo.entityPathToId
-                            }" for ${metadata.title} with id ${ctx.id}`
-                        );
-                    }
-                    set(ctx.entity, metadata.tenantInfo.entityPathToId, existingTenantId);
+        await runStepWithHooks(async function _checkSetTenant(ctx) {
+            if (metadata.tenantInfo) {
+                const existingTenantId = get(ctx.existing, metadata.tenantInfo.entityPathToId);
+                if (!existingTenantId) {
+                    throw new Error(
+                        `existingTenantId was null at path "${
+                            metadata.tenantInfo.entityPathToId
+                        }" for ${metadata.title} with id ${ctx.id}`
+                    );
                 }
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `validate`,
-            async ctx => {
-                inputValidator.ensureValid(metadata.schemas.replace.$id, ctx.entity);
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `copySystemProps`,
-            async ctx => {
-                ctx.entity.versionInfo = ctx.existing.versionInfo;
-                if (ctx.existing.owner) {
-                    ctx.entity.owner = ctx.existing.owner;
-                }
-                setVersionInfo(ctx.entity, executionContext);
-                setStringIdentifier(ctx.entity);
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `validateCore`,
-            async ctx => {
-                inputValidator.ensureValid(metadata.schemas.core.$id, ctx.entity);
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `replace`,
-            async ctx => {
-                ctx.result = await collection.findOneAndReplace(ctx.filter, ctx.entity);
-                ctx.entity._id = ctx.result.value._id;
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `writeAudit`,
-            async ctx => {
-                await auditors.writeReplacement(ctx.entity, executionContext);
-            },
-            hookContext
-        );
+                set(ctx.entity, metadata.tenantInfo.entityPathToId, existingTenantId);
+            }
+        }, hookContext);
+        await runStepWithHooks(async function _validate(ctx) {
+            inputValidator.ensureValid(metadata.schemas.replace.$id, ctx.entity);
+        }, hookContext);
+        await runStepWithHooks(async function _setData(ctx) {
+            ctx.entity.versionInfo = ctx.existing.versionInfo;
+            if (ctx.existing.owner) {
+                ctx.entity.owner = ctx.existing.owner;
+            }
+            setVersionInfo(ctx.entity, executionContext);
+            setStringIdentifier(ctx.entity);
+        }, hookContext);
+        await runStepWithHooks(async function _validateCore(ctx) {
+            inputValidator.ensureValid(metadata.schemas.core.$id, ctx.entity);
+        }, hookContext);
+        await runStepWithHooks(async function _replace(ctx) {
+            ctx.result = await collection.findOneAndReplace(ctx.filter, ctx.entity);
+            ctx.entity._id = ctx.result.value._id;
+        }, hookContext);
+        await runStepWithHooks(async function _audit(ctx) {
+            await auditors.writeReplacement(ctx.entity, executionContext);
+        }, hookContext);
 
-        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
+        await runStepWithHooks(mapOutput, hookContext);
         return hookContext.entity;
     };
 
@@ -396,40 +329,28 @@ function getSearch(utilities) {
             query: queryObj,
             hooks,
         };
-        await runStepWithHooks(
-            `getFilter`,
-            async ctx => {
-                addTenantToFilter(ctx.query.filter, executionContext);
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `authorize`,
-            async ctx => {
-                await checkAuthorizationOrAddOwnerToFilter(
-                    ctx.query.filter,
-                    enforcer,
-                    metadata,
-                    executionContext,
-                    `retrieve`
-                );
-            },
-            hookContext
-        );
-        await runStepWithHooks(
-            `search`,
-            async ctx => {
-                ctx.entity = await collection
-                    .find(queryObj.filter)
-                    .skip(queryObj.skip || 0)
-                    .limit(queryObj.limit || paginationDefaults.itemsPerPage)
-                    .sort(queryObj.sort || paginationDefaults.sort)
-                    .project(queryObj.projection || paginationDefaults.projection)
-                    .toArray();
-            },
-            hookContext
-        );
-        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
+        await runStepWithHooks(async function _addTenant(ctx) {
+            addTenantToFilter(ctx.query.filter, executionContext);
+        }, hookContext);
+        await runStepWithHooks(async function _auth(ctx) {
+            await checkAuthorizationOrAddOwnerToFilter(
+                ctx.query.filter,
+                enforcer,
+                metadata,
+                executionContext,
+                `retrieve`
+            );
+        }, hookContext);
+        await runStepWithHooks(async function _search(ctx) {
+            ctx.entity = await collection
+                .find(queryObj.filter)
+                .skip(queryObj.skip || 0)
+                .limit(queryObj.limit || paginationDefaults.itemsPerPage)
+                .sort(queryObj.sort || paginationDefaults.sort)
+                .project(queryObj.projection || paginationDefaults.projection)
+                .toArray();
+        }, hookContext);
+        await runStepWithHooks(mapOutput, hookContext);
         return hookContext.entity;
     };
 }
