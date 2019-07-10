@@ -16,12 +16,12 @@ module.exports = async function createMongoDbAuditors(metadata, db) {
 
     /** @type {import("../types").WriteCreation<object>} */
     async function writeCreation(entityAfterCreation, context) {
-        await writeAuditEntry(entityAfterCreation, context, `replace`);
+        await writeAuditEntry(entityAfterCreation, context, `create`);
     }
 
     /** @type {import("../types").WriteDeletion<object>} */
     async function writeDeletion(deletedObject, context) {
-        await writeAuditEntry(deletedObject, context, `replace`);
+        await writeAuditEntry(deletedObject, context, `delete`);
     }
 
     /** @type {import("../types").WriteReplacement<object>} */
