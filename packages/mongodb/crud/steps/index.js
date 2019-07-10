@@ -2,6 +2,8 @@
 
 const upperFirst = require(`lodash/upperFirst`);
 const { checkAuthorization, ensureEntityIsObject } = require(`../utilities`);
+const { EntityNotFoundError } = require(`../../../common-errors`);
+
 /**
  * @param {Function} stepFn
  * @param {import('../../types').HookContext} hookContext
@@ -71,9 +73,52 @@ async function mapOutput(hookContext) {
 }
 
 /** @param {import('../../types').HookContext} hookContext */
-function getFilter(hookContext) {
+function getFilterFromId(hookContext) {
     hookContext.filter = hookContext.utilities.getIdentifierQuery(hookContext.id);
     hookContext.utilities.addTenantToFilter(hookContext.filter, hookContext.executionContext);
 }
 
-module.exports = { runStepWithHooks, auth, mapOutput, getFilter, setEntityFromInput };
+/**
+ * @param {string} schemaName
+ * @returns {Function}
+ */
+function validate(schemaName) {
+    /** @param {import('../../types').HookContext} hookContext */
+    function _validate(hookContext) {
+        const schemaId = hookContext.utilities.metadata.schemas[schemaName].$id;
+        hookContext.utilities.inputValidator.ensureValid(schemaId, hookContext.entity);
+    }
+    return _validate;
+}
+
+/**
+ * @param {string} action
+ * @returns {Function}
+ */
+function writeAudit(action) {
+    /** @param {import('../../types').HookContext} hookContext */
+    async function _writeAudit(hookContext) {
+        const { entity, utilities, executionContext } = hookContext;
+        await utilities.auditors.writeAuditEntry(entity, executionContext, action);
+    }
+    return _writeAudit;
+}
+
+/** @param {import('../../types').HookContext} hookContext */
+async function setEntityFromFilter(hookContext) {
+    hookContext.entity = await hookContext.utilities.collection.findOne(hookContext.filter);
+    if (!hookContext.entity) {
+        throw new EntityNotFoundError(hookContext.utilities.metadata.title, hookContext.id);
+    }
+}
+
+module.exports = {
+    runStepWithHooks,
+    auth,
+    mapOutput,
+    getFilterFromId,
+    setEntityFromInput,
+    validate,
+    writeAudit,
+    setEntityFromFilter,
+};

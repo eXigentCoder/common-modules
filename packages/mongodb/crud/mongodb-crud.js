@@ -15,11 +15,17 @@ const {
     createSetOwnerIfApplicable,
     createSetTenant,
     createStringIdentifierSetter,
-    ensureEntityIsObject,
-    checkAuthorization,
     checkAuthorizationOrAddOwnerToFilter,
 } = require(`./utilities`);
-const { auth, mapOutput, getFilter, setEntityFromInput } = require(`./steps`);
+const {
+    auth,
+    mapOutput,
+    getFilterFromId,
+    setEntityFromInput,
+    validate,
+    writeAudit,
+    setEntityFromFilter,
+} = require(`./steps`);
 /**
  * @typedef {import('../../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('../types').CreateUtilityParams} CreateUtilityParams
@@ -109,7 +115,6 @@ function getCreate(utilities) {
         metadata,
         setStringIdentifier,
         inputValidator,
-        auditors,
         setTenant,
         setOwnerIfApplicable,
     } = utilities;
@@ -122,26 +127,16 @@ function getCreate(utilities) {
             hooks,
         };
         await runStepWithHooks(setEntityFromInput, hookContext);
-        await runStepWithHooks(validate, hookContext);
+        await runStepWithHooks(validate(`create`), hookContext);
         await runStepWithHooks(setMetadata, hookContext);
         await runStepWithHooks(auth(`create`), hookContext);
         await runStepWithHooks(async function insert(ctx) {
             await collection.insertOne(ctx.entity);
         }, hookContext);
-        await runStepWithHooks(async function _audit(ctx) {
-            await auditors.writeCreation(ctx.entity, executionContext);
-        }, hookContext);
+        await runStepWithHooks(writeAudit(`create`), hookContext);
         await runStepWithHooks(mapOutput, hookContext);
         return hookContext.entity;
     };
-
-    /** @param {import('../types').HookContext} hookContext */
-    function validate(hookContext) {
-        const { input } = hookContext;
-        ensureEntityIsObject(input, metadata);
-        hookContext.entity = JSON.parse(JSON.stringify(input));
-        inputValidator.ensureValid(metadata.schemas.create.$id, hookContext.entity);
-    }
 
     /** @param {import('../types').HookContext} hookContext */
     function setMetadata({ entity, executionContext }) {
@@ -160,7 +155,6 @@ function getCreate(utilities) {
  * @returns {import("../types").GetById<object>} A function to get entities by their identifiers
  */
 function getGetById(utilities) {
-    const { collection, metadata } = utilities;
     return async function getById(id, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -169,13 +163,8 @@ function getGetById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(getFilter, hookContext);
-        await runStepWithHooks(async function _findOne(ctx) {
-            ctx.entity = await collection.findOne(ctx.filter);
-            if (!ctx.entity) {
-                throw new EntityNotFoundError(metadata.title, id);
-            }
-        }, hookContext);
+        await runStepWithHooks(getFilterFromId, hookContext);
+        await runStepWithHooks(setEntityFromFilter, hookContext);
         await runStepWithHooks(auth(`retrieve`), hookContext);
         await runStepWithHooks(mapOutput, hookContext);
         return hookContext.entity;
@@ -187,7 +176,7 @@ function getGetById(utilities) {
  * @returns {import("../types").DeleteById<object>} A function to delete entities by their identifier
  */
 function getDeleteById(utilities) {
-    const { collection, metadata, auditors } = utilities;
+    const { collection, metadata } = utilities;
     return async function deleteById(id, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -196,13 +185,8 @@ function getDeleteById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(getFilter, hookContext);
-        await runStepWithHooks(async function _find(ctx) {
-            ctx.entity = await collection.findOne(ctx.filter);
-            if (!ctx.entity) {
-                throw new EntityNotFoundError(metadata.title, id);
-            }
-        }, hookContext);
+        await runStepWithHooks(getFilterFromId, hookContext);
+        await runStepWithHooks(setEntityFromFilter, hookContext);
         await runStepWithHooks(auth(`delete`), hookContext);
         await runStepWithHooks(async function _delete(ctx) {
             ctx.result = await collection.findOneAndDelete(ctx.filter);
@@ -210,9 +194,7 @@ function getDeleteById(utilities) {
                 throw new EntityNotFoundError(metadata.title, id);
             }
         }, hookContext);
-        await runStepWithHooks(async function _audit(ctx) {
-            await auditors.writeDeletion(ctx.result.value, executionContext);
-        }, hookContext);
+        await runStepWithHooks(writeAudit(`delete`), hookContext);
     };
 }
 /**
@@ -220,17 +202,7 @@ function getDeleteById(utilities) {
  * @returns {import("../types").ReplaceById<object>} A function to replace documents based off of their _id
  */
 function getReplaceById(utilities) {
-    const {
-        setVersionInfo,
-        collection,
-        metadata,
-        inputValidator,
-        auditors,
-        getIdentifierQuery,
-        addTenantToFilter,
-        setStringIdentifier,
-        enforcer,
-    } = utilities;
+    const { setVersionInfo, collection, metadata, setStringIdentifier } = utilities;
     return async function replaceById(id, _entity, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -240,22 +212,17 @@ function getReplaceById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(sanitize, hookContext);
-        await runStepWithHooks(async function _filter(ctx) {
-            ctx.filter = getIdentifierQuery(id);
-            addTenantToFilter(ctx.filter, executionContext);
-        }, hookContext);
-        await runStepWithHooks(async function _findExisting(ctx) {
-            ctx.existing = await collection.findOne(ctx.filter);
-            if (!ctx.existing) {
-                throw new EntityNotFoundError(metadata.title, JSON.stringify(ctx.filter));
-            }
-        }, hookContext);
-        await runStepWithHooks(async function _auth(ctx) {
-            await checkAuthorization(enforcer, metadata, executionContext, `update`, ctx.existing);
-        }, hookContext);
 
-        await runStepWithHooks(async function _checkSetTenant(ctx) {
+        await runStepWithHooks(getFilterFromId, hookContext);
+        await runStepWithHooks(setEntityFromFilter, hookContext);
+        await runStepWithHooks(auth(`update`), hookContext);
+
+        await runStepWithHooks(moveCurrentEntityToExisting, hookContext);
+        await runStepWithHooks(setEntityFromInput, hookContext);
+        await runStepWithHooks(sanitize, hookContext);
+        await runStepWithHooks(validate(`replace`), hookContext);
+        await runStepWithHooks(async function _setDataFromExisting(ctx) {
+            //maybe instead of copying known fields in, better to copy provided fields to existing? that way if server sets new prop, won't be overwritten...
             if (metadata.tenantInfo) {
                 const existingTenantId = get(ctx.existing, metadata.tenantInfo.entityPathToId);
                 if (!existingTenantId) {
@@ -267,11 +234,6 @@ function getReplaceById(utilities) {
                 }
                 set(ctx.entity, metadata.tenantInfo.entityPathToId, existingTenantId);
             }
-        }, hookContext);
-        await runStepWithHooks(async function _validate(ctx) {
-            inputValidator.ensureValid(metadata.schemas.replace.$id, ctx.entity);
-        }, hookContext);
-        await runStepWithHooks(async function _setData(ctx) {
             ctx.entity.versionInfo = ctx.existing.versionInfo;
             if (ctx.existing.owner) {
                 ctx.entity.owner = ctx.existing.owner;
@@ -279,30 +241,27 @@ function getReplaceById(utilities) {
             setVersionInfo(ctx.entity, executionContext);
             setStringIdentifier(ctx.entity);
         }, hookContext);
-        await runStepWithHooks(async function _validateCore(ctx) {
-            inputValidator.ensureValid(metadata.schemas.core.$id, ctx.entity);
-        }, hookContext);
-        await runStepWithHooks(async function _replace(ctx) {
+
+        await runStepWithHooks(validate(`core`), hookContext);
+        await runStepWithHooks(async function replace(ctx) {
             ctx.result = await collection.findOneAndReplace(ctx.filter, ctx.entity);
             ctx.entity._id = ctx.result.value._id;
         }, hookContext);
-        await runStepWithHooks(async function _audit(ctx) {
-            await auditors.writeReplacement(ctx.entity, executionContext);
-        }, hookContext);
-
+        await runStepWithHooks(writeAudit(`replace`), hookContext);
         await runStepWithHooks(mapOutput, hookContext);
         return hookContext.entity;
     };
 
     /** @param {import('../types').HookContext} hookContext */
     function sanitize(hookContext) {
-        const { input } = hookContext;
-        ensureEntityIsObject(input, metadata);
-        hookContext.entity = JSON.parse(JSON.stringify(input));
         // comes from outside, can't be trusted
         delete hookContext.entity.versionInfo;
         delete hookContext.entity._id;
         delete hookContext.entity.owner;
+    }
+    function moveCurrentEntityToExisting(hookContext) {
+        hookContext.existing = hookContext.entity;
+        delete hookContext.entity;
     }
 }
 
