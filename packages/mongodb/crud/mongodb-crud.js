@@ -19,7 +19,7 @@ const {
     checkAuthorization,
     checkAuthorizationOrAddOwnerToFilter,
 } = require(`./utilities`);
-const { auth, mapOutput, getFilter } = require(`./steps`);
+const { auth, mapOutput, getFilter, setEntityFromInput } = require(`./steps`);
 /**
  * @typedef {import('../../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('../types').CreateUtilityParams} CreateUtilityParams
@@ -119,17 +119,18 @@ function getCreate(utilities) {
             executionContext,
             input: _entity,
             utilities,
-            entity: null,
+            hooks,
         };
-        await runStepWithHooks(`validate`, validate, hooks, hookContext);
-        await runStepWithHooks(`setMetadata`, setMetadata, hooks, hookContext);
-        await runStepWithHooks(`authorize`, auth(`create`), hooks, hookContext);
+        //
+        await runStepWithHooks(`setEntityFromInput`, setEntityFromInput, hookContext);
+        await runStepWithHooks(`validate`, validate, hookContext);
+        await runStepWithHooks(`setMetadata`, setMetadata, hookContext);
+        await runStepWithHooks(`authorize`, auth(`create`), hookContext);
         await runStepWithHooks(
             `insert`,
             async ctx => {
                 await collection.insertOne(ctx.entity);
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -137,10 +138,9 @@ function getCreate(utilities) {
             async ctx => {
                 await auditors.writeCreation(ctx.entity, executionContext);
             },
-            hooks,
             hookContext
         );
-        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
+        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
         return hookContext.entity;
     };
 
@@ -176,8 +176,9 @@ function getGetById(utilities) {
             executionContext,
             id,
             utilities,
+            hooks,
         };
-        await runStepWithHooks(`getFilter`, getFilter, hooks, hookContext);
+        await runStepWithHooks(`getFilter`, getFilter, hookContext);
         await runStepWithHooks(
             `getItem`,
             async ctx => {
@@ -186,11 +187,10 @@ function getGetById(utilities) {
                     throw new EntityNotFoundError(metadata.title, id);
                 }
             },
-            hooks,
             hookContext
         );
-        await runStepWithHooks(`authorize`, auth(`retrieve`), hooks, hookContext);
-        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
+        await runStepWithHooks(`authorize`, auth(`retrieve`), hookContext);
+        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
         return hookContext.entity;
     };
 }
@@ -207,8 +207,9 @@ function getDeleteById(utilities) {
             executionContext,
             id,
             utilities,
+            hooks,
         };
-        await runStepWithHooks(`getFilter`, getFilter, hooks, hookContext);
+        await runStepWithHooks(`getFilter`, getFilter, hookContext);
         await runStepWithHooks(
             `getItem`,
             async ctx => {
@@ -217,10 +218,9 @@ function getDeleteById(utilities) {
                     throw new EntityNotFoundError(metadata.title, id);
                 }
             },
-            hooks,
             hookContext
         );
-        await runStepWithHooks(`authorize`, auth(`delete`), hooks, hookContext);
+        await runStepWithHooks(`authorize`, auth(`delete`), hookContext);
         await runStepWithHooks(
             `delete`,
             async ctx => {
@@ -229,7 +229,6 @@ function getDeleteById(utilities) {
                     throw new EntityNotFoundError(metadata.title, id);
                 }
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -237,7 +236,6 @@ function getDeleteById(utilities) {
             async ctx => {
                 await auditors.writeDeletion(ctx.result.value, executionContext);
             },
-            hooks,
             hookContext
         );
     };
@@ -265,15 +263,15 @@ function getReplaceById(utilities) {
             input: _entity,
             id,
             utilities,
+            hooks,
         };
-        await runStepWithHooks(`sanitize`, sanitize, hooks, hookContext);
+        await runStepWithHooks(`sanitize`, sanitize, hookContext);
         await runStepWithHooks(
             `getFilter`,
             async ctx => {
                 ctx.filter = getIdentifierQuery(id);
                 addTenantToFilter(ctx.filter, executionContext);
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -284,7 +282,6 @@ function getReplaceById(utilities) {
                     throw new EntityNotFoundError(metadata.title, JSON.stringify(ctx.filter));
                 }
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -298,7 +295,6 @@ function getReplaceById(utilities) {
                     ctx.existing
                 );
             },
-            hooks,
             hookContext
         );
 
@@ -317,7 +313,6 @@ function getReplaceById(utilities) {
                     set(ctx.entity, metadata.tenantInfo.entityPathToId, existingTenantId);
                 }
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -325,7 +320,6 @@ function getReplaceById(utilities) {
             async ctx => {
                 inputValidator.ensureValid(metadata.schemas.replace.$id, ctx.entity);
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -338,7 +332,6 @@ function getReplaceById(utilities) {
                 setVersionInfo(ctx.entity, executionContext);
                 setStringIdentifier(ctx.entity);
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -346,7 +339,6 @@ function getReplaceById(utilities) {
             async ctx => {
                 inputValidator.ensureValid(metadata.schemas.core.$id, ctx.entity);
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -355,19 +347,17 @@ function getReplaceById(utilities) {
                 ctx.result = await collection.findOneAndReplace(ctx.filter, ctx.entity);
                 ctx.entity._id = ctx.result.value._id;
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
             `writeAudit`,
             async ctx => {
-                await auditors.writeReplacement(ctx.result.value, ctx.entity, executionContext);
+                await auditors.writeReplacement(ctx.entity, executionContext);
             },
-            hooks,
             hookContext
         );
 
-        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
+        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
         return hookContext.entity;
     };
 
@@ -404,13 +394,13 @@ function getSearch(utilities) {
             executionContext,
             utilities,
             query: queryObj,
+            hooks,
         };
         await runStepWithHooks(
             `getFilter`,
             async ctx => {
                 addTenantToFilter(ctx.query.filter, executionContext);
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -424,7 +414,6 @@ function getSearch(utilities) {
                     `retrieve`
                 );
             },
-            hooks,
             hookContext
         );
         await runStepWithHooks(
@@ -438,10 +427,9 @@ function getSearch(utilities) {
                     .project(queryObj.projection || paginationDefaults.projection)
                     .toArray();
             },
-            hooks,
             hookContext
         );
-        await runStepWithHooks(`mapOutput`, mapOutput, hooks, hookContext);
+        await runStepWithHooks(`mapOutput`, mapOutput, hookContext);
         return hookContext.entity;
     };
 }

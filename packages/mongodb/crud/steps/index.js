@@ -1,15 +1,15 @@
 'use strict';
 
 const upperFirst = require(`lodash/upperFirst`);
-const { checkAuthorization } = require(`../utilities`);
+const { checkAuthorization, ensureEntityIsObject } = require(`../utilities`);
 /**
  * @param {Function} stepFn
- * @param {{[key: string]: Function }} hooks
  * @param {string} stepName
  * @param {import('../../types').HookContext} hookContext
  */
-async function runStepWithHooks(stepName, stepFn, hooks = {}, hookContext) {
+async function runStepWithHooks(stepName, stepFn, hookContext) {
     const upperStepName = upperFirst(stepName);
+    const hooks = hookContext.hooks || {};
     const beforeFn = hooks[`before${upperStepName}`];
     if (beforeFn) {
         await runHook(beforeFn, hookContext);
@@ -36,6 +36,13 @@ async function runHook(fn, hookContext) {
         return;
     }
     await fn(hookContext);
+}
+
+/** @param {import('../../types').HookContext} hookContext */
+function setEntityFromInput(hookContext) {
+    const { input, utilities } = hookContext;
+    ensureEntityIsObject(input, utilities.metadata);
+    hookContext.entity = JSON.parse(JSON.stringify(input));
 }
 
 /**
@@ -66,4 +73,4 @@ function getFilter(hookContext) {
     hookContext.utilities.addTenantToFilter(hookContext.filter, hookContext.executionContext);
 }
 
-module.exports = { runStepWithHooks, auth, mapOutput, getFilter };
+module.exports = { runStepWithHooks, auth, mapOutput, getFilter, setEntityFromInput };

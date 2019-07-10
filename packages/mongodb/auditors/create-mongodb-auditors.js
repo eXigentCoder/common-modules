@@ -25,10 +25,11 @@ module.exports = async function createMongoDbAuditors(metadata, db) {
     }
 
     /** @type {import("../types").WriteReplacement<object>} */
-    async function writeReplacement(oldEntity, newEntity, context) {
-        await writeAuditEntry(newEntity, context, `replace`);
+    async function writeReplacement(newEntityState, context) {
+        await writeAuditEntry(newEntityState, context, `replace`);
     }
 
+    /** @type {import("../types").WriteAuditEntry<object>} */
     async function writeAuditEntry(currentEntitState, context, action) {
         if (metadata.auditChanges !== true) {
             return;
@@ -58,5 +59,6 @@ module.exports = async function createMongoDbAuditors(metadata, db) {
         writeCreation,
         writeDeletion,
         writeReplacement,
+        writeAuditEntry,
     };
 };
