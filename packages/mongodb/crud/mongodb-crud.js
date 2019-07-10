@@ -12,7 +12,7 @@ const {
     setEntityFromInput,
     getValidateEntityFn,
     getWriteAuditEntryFn,
-    setEntityFromFilter,
+    setEntityFromDbUsingFilter,
     authorizeQuery,
     moveCurrentEntityToExisting,
     insertEntityIntoDb,
@@ -66,7 +66,7 @@ function getCreate(utilities) {
         };
         await runStepWithHooks(setEntityFromInput, hookContext);
         await runStepWithHooks(getValidateEntityFn(`create`), hookContext);
-        await runStepWithHooks(setMetadata, hookContext);
+        await runStepWithHooks(setCreationMetadata, hookContext);
         await runStepWithHooks(getAuthorizeFn(`create`), hookContext);
         await runStepWithHooks(getValidateEntityFn(`core`), hookContext);
         await runStepWithHooks(insertEntityIntoDb, hookContext);
@@ -76,7 +76,7 @@ function getCreate(utilities) {
     };
 
     /** @type {import('../types').Hook} */
-    function setMetadata({ entity, executionContext }) {
+    function setCreationMetadata({ entity, executionContext }) {
         setStringIdentifier(entity);
         setTenant(entity, executionContext);
         setVersionInfo(entity, executionContext);
@@ -98,7 +98,7 @@ function getGetById(utilities) {
             hooks,
         };
         await runStepWithHooks(setFilterFromId, hookContext);
-        await runStepWithHooks(setEntityFromFilter, hookContext);
+        await runStepWithHooks(setEntityFromDbUsingFilter, hookContext);
         await runStepWithHooks(getAuthorizeFn(`retrieve`), hookContext);
         await runStepWithHooks(mapEntityForOutput, hookContext);
         return hookContext.entity;
@@ -119,7 +119,7 @@ function getDeleteById(utilities) {
             hooks,
         };
         await runStepWithHooks(setFilterFromId, hookContext);
-        await runStepWithHooks(setEntityFromFilter, hookContext);
+        await runStepWithHooks(setEntityFromDbUsingFilter, hookContext);
         await runStepWithHooks(getAuthorizeFn(`delete`), hookContext);
         await runStepWithHooks(deleteFromDbUsingFilter, hookContext);
         await runStepWithHooks(getWriteAuditEntryFn(`delete`), hookContext);
@@ -142,7 +142,7 @@ function getReplaceById(utilities) {
         };
 
         await runStepWithHooks(setFilterFromId, hookContext);
-        await runStepWithHooks(setEntityFromFilter, hookContext);
+        await runStepWithHooks(setEntityFromDbUsingFilter, hookContext);
         await runStepWithHooks(getAuthorizeFn(`update`), hookContext);
 
         await runStepWithHooks(moveCurrentEntityToExisting, hookContext);

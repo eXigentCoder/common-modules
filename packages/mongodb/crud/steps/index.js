@@ -104,7 +104,7 @@ function getWriteAuditEntryFn(action) {
 }
 
 /** @type {import('../../types').Hook} */
-async function setEntityFromFilter(hookContext) {
+async function setEntityFromDbUsingFilter(hookContext) {
     hookContext.entity = await hookContext.utilities.collection.findOne(hookContext.filter);
     if (!hookContext.entity) {
         throw new EntityNotFoundError(hookContext.utilities.metadata.title, hookContext.id);
@@ -141,10 +141,11 @@ async function insertEntityIntoDb(hookContext) {
 async function deleteFromDbUsingFilter(hookContext) {
     const { utilities, id, filter } = hookContext;
     const { collection } = utilities;
-    hookContext.result = await collection.findOneAndDelete(filter);
-    if (!hookContext.result.value) {
+    const result = await collection.findOneAndDelete(filter);
+    if (!result.value) {
         throw new EntityNotFoundError(utilities.metadata.title, id);
     }
+    hookContext.entity = result.value;
 }
 
 /** @type {import('../../types').Hook} */
@@ -176,7 +177,7 @@ module.exports = {
     setEntityFromInput,
     getValidateEntityFn,
     getWriteAuditEntryFn,
-    setEntityFromFilter,
+    setEntityFromDbUsingFilter,
     authorizeQuery,
     insertEntityIntoDb,
     deleteFromDbUsingFilter,
