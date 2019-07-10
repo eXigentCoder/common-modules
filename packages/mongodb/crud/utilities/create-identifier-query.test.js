@@ -2,7 +2,7 @@
 const generateEntityMetadata = require(`../../../entity-metadata`);
 const { createInputValidator, createOutputValidator } = require(`../../../validation`);
 const { jsonSchemas, addMongoId } = require(`../../../validation-mongodb`);
-const createGetIdentifierQuery = require(`./create-identifier-query`);
+const { createGetIdentifierQuery } = require(`./create-identifier-query`);
 const ObjectId = require(`mongodb`).ObjectId;
 const { ValidationError } = require(`../../../common-errors`);
 

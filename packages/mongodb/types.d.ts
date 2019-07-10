@@ -3,6 +3,7 @@ import { Validator } from '../validation/ajv';
 import { ExecutionContext } from '../version-info/types';
 import { EntityMetadata } from '../entity-metadata/types';
 import { Enforcer } from 'casbin';
+
 /** Default options used to paginate search queries */
 export interface PaginationDefaults {
     /** The number of items to include in a page when no overriding value is provided */
@@ -51,24 +52,35 @@ export interface Crud<T> {
     search: Search<T>;
 }
 
-export type Create<T> = (entity: T, context: ExecutionContext) => Promise<T>;
-export type GetById<T> = (id: string, context: ExecutionContext) => Promise<T>;
-export type DeleteById<T> = (id: string, context: ExecutionContext) => Promise<void>;
-export type ReplaceById<T> = (id: string, entity: T, context: ExecutionContext) => Promise<T>;
-export type Search<T> = (query: Query | Object, context: ExecutionContext) => Promise<T[]>;
+export type Create<T> = (entity: T, context: ExecutionContext, hooks: Hooks) => Promise<T>;
+export type GetById<T> = (id: string, context: ExecutionContext, hooks: Hooks) => Promise<T>;
+export type DeleteById<T> = (id: string, context: ExecutionContext, hooks: Hooks) => Promise<void>;
+export type ReplaceById<T> = (
+    id: string,
+    entity: T,
+    context: ExecutionContext,
+    hooks: Hooks
+) => Promise<T>;
+export type Search<T> = (
+    query: Query | Object,
+    context: ExecutionContext,
+    hooks: Hooks
+) => Promise<T[]>;
 
 export interface Auditors<T> {
     writeCreation: WriteCreation<T>;
     writeDeletion: WriteDeletion<T>;
     writeReplacement: WriteReplacement<T>;
+    writeAuditEntry: WriteAuditEntry<T>;
 }
 
 export type WriteCreation<T> = (entityAfterCreation: T, context: ExecutionContext) => Promise<void>;
 export type WriteDeletion<T> = (deletedObject: T, context: ExecutionContext) => Promise<void>;
-export type WriteReplacement<T> = (
-    oldEntity: T,
-    newEntity: T,
-    context: ExecutionContext
+export type WriteReplacement<T> = (newEntityState: T, context: ExecutionContext) => Promise<void>;
+export type WriteAuditEntry<T> = (
+    currentEntitState: T,
+    context: ExecutionContext,
+    action: String
 ) => Promise<void>;
 
 export type SetStringIdentifier = (item: Object) => void;
@@ -142,10 +154,23 @@ export interface AgpOptions {
     castParams: { [key: string]: string };
 }
 
+export type Hook = (hookContext: HookContext) => Promise<void>;
+
+export interface Hooks {
+    [key: string]: Hook;
+}
+
 export interface HookContext {
     executionContext: ExecutionContext;
+    /** The raw input that was passed in */
     input?: any;
+    /** The id of the entity as passed in */
     id?: string;
     utilities: Utilities;
+    /** The entity currently being worked with*/
+    entity?: any;
+    query?: Query;
+    hooks: Hooks;
+    /** Any additional properties */
     [key: string]: any;
 }

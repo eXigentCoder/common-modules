@@ -65,4 +65,4 @@ function createSetOwnerIfApplicable(metadata) {
     };
 }
 
-module.exports = createSetOwnerIfApplicable;
+module.exports = { createSetOwnerIfApplicable };

@@ -10,7 +10,7 @@ const { ValidationError } = require(`../../../common-errors`);
  * @param {EntityMetadata} metadata The entity metadata containing the rules for identifiers
  * @returns {GetIdentifierQuery} The function to set the get the right mongodb query based on the type of supplied identifier
  */
-module.exports = function createGetIdentifierQuery(metadata) {
+function createGetIdentifierQuery(metadata) {
     const { stringIdentifier, identifier } = metadata;
 
     return function getIdentifierQuery(identifierValue) {
@@ -53,4 +53,5 @@ module.exports = function createGetIdentifierQuery(metadata) {
             )}" when trying to refer to a ${metadata.title}, must be a string or ObjectId`
         );
     };
-};
+}
+module.exports = { createGetIdentifierQuery };
