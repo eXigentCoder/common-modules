@@ -1,6 +1,6 @@
 'use strict';
 
-const { removeSchemaAndRequired, removeFromRequired } = require(`./json-schema-utilities`);
+const { removeFromRequired, removeFromRequiredForEntityPath } = require(`./json-schema-utilities`);
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -11,7 +11,7 @@ module.exports = function filterPropertiesForReplace(schema, metadata) {
         throw new Error(`Schema is a required field`);
     }
     removeFromRequired(schema, ``, `versionInfo`);
-    removeSchemaAndRequired(schema, metadata.identifier.pathToId);
+    removeFromRequiredForEntityPath(schema, metadata.identifier.pathToId);
     if (metadata.authorization && metadata.authorization.ownership) {
         removeFromRequired(schema, ``, `owner`);
     }

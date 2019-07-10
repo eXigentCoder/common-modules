@@ -166,6 +166,18 @@ function removeFromRequired(schema, entityPath, value) {
 }
 
 /**
+ * Takes in an entity path and gets the required fields array for it.
+ * @param {JsonSchema} schema The schema to work with
+ * @param {string} entityPath The path to the required fields as it would appear on the entity
+ * @returns {void} The required fields array
+ */
+function removeFromRequiredForEntityPath(schema, entityPath) {
+    const tenantFieldName = getLastNodeOnPath(entityPath);
+    const pathExcludingId = removeLastNNodesOnPath(entityPath, 1);
+    removeFromRequired(schema, pathExcludingId, tenantFieldName);
+}
+
+/**
  * Walks along the schema path, making sure that all the nodes along the path are required
  * @param {JsonSchema} schema The schema to work with
  * @param {string} entityPath That path indicating all the nested nodes (separated by a `.`) that should be marked as required
@@ -275,6 +287,7 @@ module.exports = {
     setRequiredForEntityPath,
     addToRequiredForEntityPath,
     removeFromRequired,
+    removeFromRequiredForEntityPath,
     //entity related
     removePropertyFromEntity,
 

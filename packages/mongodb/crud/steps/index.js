@@ -169,6 +169,22 @@ async function setEntityFromDBUsingQuery(hookContext) {
         .toArray();
 }
 
+/** @type {import('../../types').Hook} */
+async function setMetadataFields({ existing, entity, executionContext, utilities }) {
+    utilities.setStringIdentifier(entity);
+    utilities.setTenant(entity, executionContext);
+    if (existing) {
+        entity.versionInfo = existing.versionInfo;
+        if (existing.owner) {
+            entity.owner = existing.owner;
+        }
+    } else {
+        utilities.setOwnerIfApplicable(entity, executionContext);
+    }
+    utilities.setVersionInfo(entity, executionContext);
+    delete entity._id;
+}
+
 module.exports = {
     runStepWithHooks,
     getAuthorizeFn,
@@ -184,4 +200,5 @@ module.exports = {
     replace,
     moveCurrentEntityToExisting,
     setEntityFromDBUsingQuery,
+    setMetadataFields,
 };
