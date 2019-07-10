@@ -76,7 +76,7 @@ async function mapEntityForOutput(hookContext) {
 }
 
 /** @type {import('../../types').Hook} */
-function getFilterFromId(hookContext) {
+function setFilterFromId(hookContext) {
     hookContext.filter = hookContext.utilities.getIdentifierQuery(hookContext.id);
     hookContext.utilities.addTenantToFilter(hookContext.filter, hookContext.executionContext);
 }
@@ -85,7 +85,7 @@ function getFilterFromId(hookContext) {
  * @param {string} schemaName
  * @returns {import('../../types').Hook}
  */
-function validate(schemaName) {
+function getValidateEntityFn(schemaName) {
     return async function _validate(hookContext) {
         const schemaId = hookContext.utilities.metadata.schemas[schemaName].$id;
         hookContext.utilities.inputValidator.ensureValid(schemaId, hookContext.entity);
@@ -131,14 +131,14 @@ function moveCurrentEntityToExisting(hookContext) {
 }
 
 /** @type {import('../../types').Hook} */
-async function insert(hookContext) {
+async function insertEntityIntoDb(hookContext) {
     const { utilities, entity } = hookContext;
     const { collection } = utilities;
     await collection.insertOne(entity);
 }
 
 /** @type {import('../../types').Hook} */
-async function deleteFromDbUsingQuery(hookContext) {
+async function deleteFromDbUsingFilter(hookContext) {
     const { utilities, id, filter } = hookContext;
     const { collection } = utilities;
     hookContext.result = await collection.findOneAndDelete(filter);
@@ -172,14 +172,14 @@ module.exports = {
     runStepWithHooks,
     getAuthorizeFn,
     mapEntityForOutput,
-    getFilterFromId,
+    setFilterFromId,
     setEntityFromInput,
-    validate,
+    getValidateEntityFn,
     getWriteAuditEntryFn,
     setEntityFromFilter,
     authorizeQuery,
-    insert,
-    deleteFromDbUsingQuery,
+    insertEntityIntoDb,
+    deleteFromDbUsingFilter,
     replace,
     moveCurrentEntityToExisting,
     setEntityFromDBUsingQuery,

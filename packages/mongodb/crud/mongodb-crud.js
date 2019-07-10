@@ -2,22 +2,21 @@
 
 const get = require(`lodash/get`);
 const set = require(`lodash/set`);
-const ObjectId = require(`mongodb`).ObjectId;
 const getUtils = require(`./utilities/get-utilities`);
 
 const {
     runStepWithHooks,
     getAuthorizeFn,
     mapEntityForOutput,
-    getFilterFromId,
+    setFilterFromId,
     setEntityFromInput,
-    validate,
+    getValidateEntityFn,
     getWriteAuditEntryFn,
     setEntityFromFilter,
     authorizeQuery,
     moveCurrentEntityToExisting,
-    insert,
-    deleteFromDbUsingQuery,
+    insertEntityIntoDb,
+    deleteFromDbUsingFilter,
     replace,
     setEntityFromDBUsingQuery,
 } = require(`./steps`);
@@ -56,14 +55,7 @@ async function getCrud({ metadata, inputValidator, outputValidator, db, enforcer
  * @returns {import("../types").Create<object>} A function to create entities
  */
 function getCreate(utilities) {
-    const {
-        setVersionInfo,
-        metadata,
-        setStringIdentifier,
-        inputValidator,
-        setTenant,
-        setOwnerIfApplicable,
-    } = utilities;
+    const { setVersionInfo, setStringIdentifier, setTenant, setOwnerIfApplicable } = utilities;
     return async function create(_entity, executionContext, hooks) {
         /**@type {import('../types').HookContext} */
         const hookContext = {
@@ -73,10 +65,11 @@ function getCreate(utilities) {
             hooks,
         };
         await runStepWithHooks(setEntityFromInput, hookContext);
-        await runStepWithHooks(validate(`create`), hookContext);
+        await runStepWithHooks(getValidateEntityFn(`create`), hookContext);
         await runStepWithHooks(setMetadata, hookContext);
         await runStepWithHooks(getAuthorizeFn(`create`), hookContext);
-        await runStepWithHooks(insert, hookContext);
+        await runStepWithHooks(getValidateEntityFn(`core`), hookContext);
+        await runStepWithHooks(insertEntityIntoDb, hookContext);
         await runStepWithHooks(getWriteAuditEntryFn(`create`), hookContext);
         await runStepWithHooks(mapEntityForOutput, hookContext);
         return hookContext.entity;
@@ -88,9 +81,6 @@ function getCreate(utilities) {
         setTenant(entity, executionContext);
         setVersionInfo(entity, executionContext);
         setOwnerIfApplicable(entity, executionContext);
-        entity._id = new ObjectId();
-        inputValidator.ensureValid(metadata.schemas.core.$id, entity);
-        entity._id = new ObjectId(entity._id);
     }
 }
 
@@ -107,7 +97,7 @@ function getGetById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(getFilterFromId, hookContext);
+        await runStepWithHooks(setFilterFromId, hookContext);
         await runStepWithHooks(setEntityFromFilter, hookContext);
         await runStepWithHooks(getAuthorizeFn(`retrieve`), hookContext);
         await runStepWithHooks(mapEntityForOutput, hookContext);
@@ -128,10 +118,10 @@ function getDeleteById(utilities) {
             utilities,
             hooks,
         };
-        await runStepWithHooks(getFilterFromId, hookContext);
+        await runStepWithHooks(setFilterFromId, hookContext);
         await runStepWithHooks(setEntityFromFilter, hookContext);
         await runStepWithHooks(getAuthorizeFn(`delete`), hookContext);
-        await runStepWithHooks(deleteFromDbUsingQuery, hookContext);
+        await runStepWithHooks(deleteFromDbUsingFilter, hookContext);
         await runStepWithHooks(getWriteAuditEntryFn(`delete`), hookContext);
     };
 }
@@ -151,14 +141,14 @@ function getReplaceById(utilities) {
             hooks,
         };
 
-        await runStepWithHooks(getFilterFromId, hookContext);
+        await runStepWithHooks(setFilterFromId, hookContext);
         await runStepWithHooks(setEntityFromFilter, hookContext);
         await runStepWithHooks(getAuthorizeFn(`update`), hookContext);
 
         await runStepWithHooks(moveCurrentEntityToExisting, hookContext);
         await runStepWithHooks(setEntityFromInput, hookContext);
         await runStepWithHooks(sanitize, hookContext);
-        await runStepWithHooks(validate(`replace`), hookContext);
+        await runStepWithHooks(getValidateEntityFn(`replace`), hookContext);
         await runStepWithHooks(async function _setDataFromExisting(ctx) {
             //maybe instead of copying known fields in, better to copy provided fields to existing? that way if server sets new prop, won't be overwritten...
             if (metadata.tenantInfo) {
@@ -180,7 +170,7 @@ function getReplaceById(utilities) {
             setStringIdentifier(ctx.entity);
         }, hookContext);
 
-        await runStepWithHooks(validate(`core`), hookContext);
+        await runStepWithHooks(getValidateEntityFn(`core`), hookContext);
         await runStepWithHooks(replace, hookContext);
         await runStepWithHooks(getWriteAuditEntryFn(`replace`), hookContext);
         await runStepWithHooks(mapEntityForOutput, hookContext);
