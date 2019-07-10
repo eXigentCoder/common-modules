@@ -1,23 +1,27 @@
 'use strict';
-const util = require(`util`);
-const { exec } = require(`child_process`);
+//const util = require(`util`);
+const { spawn } = require(`child_process`);
 const version = require(`../package.json`).version;
-const execute = util.promisify(exec);
-(async function run() {
-    console.log(`Setting version number to ${version}`);
-    try {
-        const { stdout: bitTagOutput } = await execute(
-            `bit tag --all ${version} --force --skip-tests`
-        );
-        if (bitTagOutput) {
-            console.log(bitTagOutput);
-            if (bitTagOutput.toLowerCase().indexOf(`nothing to tag`) >= 0) {
-                return;
-            }
-        }
-        //const { stdout: npmCommitOutput } = await execute('npm run bit-commit');
-        //console.log(npmCommitOutput);
-    } catch (err) {
-        console.error(err);
+
+const command = `bit tag --all ${version} --force --skip-tests`;
+console.log(`[Bit Tag]: ${command}`);
+
+const parts = command.split(` `);
+const first = parts.shift();
+const proc = spawn(first, parts, { shell: true });
+
+proc.stderr.on(`data`, function(data) {
+    console.error(`[Bit Tag]: ${data.toString()}`);
+});
+
+proc.stdout.on(`data`, (data) => {
+    console.log(`[Bit Tag]: ${data.toString()}`);
+});
+
+proc.on(`exit`, function(code) {
+    if(code === 0){
+        console.log(`Done`);
     }
-})();
+    // eslint-disable-next-line no-process-exit
+    process.exit(code);
+});
