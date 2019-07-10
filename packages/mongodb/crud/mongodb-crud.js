@@ -1,17 +1,25 @@
 'use strict';
 
-const { ValidationError, TenantError, NotAuthorizedError } = require(`../../common-errors`);
 const { createOutputMapper } = require(`../../validation`);
 const { createVersionInfoSetter } = require(`../../version-info`);
 const get = require(`lodash/get`);
 const set = require(`lodash/set`);
-const upperFirst = require(`lodash/upperFirst`);
 const { EntityNotFoundError } = require(`../../common-errors`);
-const createGetIdentifierQuery = require(`./utilities/create-identifier-query`);
 const createMongoDbAuditors = require(`../auditors/create-mongodb-auditors`);
 const ObjectId = require(`mongodb`).ObjectId;
-const createSetOwnerIfApplicable = require(`./utilities/set-owner-if-applicable`);
-const defaultTitleToStringIdentifier = require(`./utilities/title-to-string-identifier`);
+const { runStepWithHooks } = require(`./steps`);
+const {
+    titleToStringIdentifier: defaultTitleToStringIdentifier,
+    createAddTenantToFilter,
+    createGetIdentifierQuery,
+    createSetOwnerIfApplicable,
+    createSetTenant,
+    createStringIdentifierSetter,
+    ensureEntityIsObject,
+    checkAuthorization,
+    checkAuthorizationOrAddOwnerToFilter,
+} = require(`./utilities`);
+const { auth, mapOutput, getFilter } = require(`./steps`);
 /**
  * @typedef {import('../../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('../types').CreateUtilityParams} CreateUtilityParams
@@ -439,194 +447,3 @@ function getSearch(utilities) {
 }
 
 module.exports = { getUtils, getCrud };
-
-// --------------============== [ Todo shared steps]
-
-/**
- * @param {string} action
- * @returns {Function}
- */
-function auth(action) {
-    /** @param {import('../types').HookContext} hookContext */
-    return async hookContext => {
-        await checkAuthorization(
-            hookContext.utilities.enforcer,
-            hookContext.utilities.metadata,
-            hookContext.executionContext,
-            action,
-            hookContext.entity
-        );
-    };
-}
-
-/** @param {import('../types').HookContext} hookContext */
-async function mapOutput(hookContext) {
-    hookContext.utilities.mapOutput(hookContext.entity);
-}
-
-/** @param {import('../types').HookContext} hookContext */
-function getFilter(hookContext) {
-    hookContext.filter = hookContext.utilities.getIdentifierQuery(hookContext.id);
-    hookContext.utilities.addTenantToFilter(hookContext.filter, hookContext.executionContext);
-}
-
-// --------------============== [ Todo these utilities should probably all be their own files]
-
-/**
- * @param {import('casbin').Enforcer} [enforcer] The Casbin enforcer to use with the policies if provided
- * @param {EntityMetadata} metadata The entities metadata object
- * @param {import('../../version-info/types').ExecutionContext} executionContext The execution context for this action
- * @param {string} action the name of the action
- * @param {any} currentEntity The current entity to check ownership against
- * @returns {Promise<void>}
- */
-async function checkAuthorization(enforcer, metadata, executionContext, action, currentEntity) {
-    if (!metadata.authorization) {
-        return;
-    }
-    const currentUserId = executionContext.identity.id;
-    let aclAllowed = false;
-    let ownershipAllowed = false;
-    let allowed = false;
-    if (enforcer) {
-        aclAllowed = await enforcer.enforce(currentUserId, metadata.namePlural, action);
-    }
-    if (metadata.authorization.ownership) {
-        let actionAllowed =
-            metadata.authorization.ownership.allowedActions.indexOf(action) >= 0 ||
-            metadata.authorization.ownership.allowedActions.indexOf(`*`) >= 0;
-        let isOwner = get(currentEntity, `owner.id`, ``) === currentUserId;
-        ownershipAllowed = actionAllowed && isOwner;
-    }
-    if (metadata.authorization.interaction === `or`) {
-        allowed = aclAllowed || ownershipAllowed;
-    } else {
-        allowed = aclAllowed && ownershipAllowed;
-    }
-    if (!allowed) {
-        throw new NotAuthorizedError(executionContext.identity.id, metadata.namePlural, action);
-    }
-}
-
-async function checkAuthorizationOrAddOwnerToFilter(
-    filter,
-    enforcer,
-    metadata,
-    executionContext,
-    action
-) {
-    if (!metadata.authorization) {
-        return;
-    }
-    const currentUserId = executionContext.identity.id;
-    if (enforcer) {
-        let aclAllowed = await enforcer.enforce(currentUserId, metadata.namePlural, action);
-        if (aclAllowed) {
-            return;
-        }
-    }
-    if (!metadata.authorization.ownership) {
-        throw new NotAuthorizedError(executionContext.identity.id, metadata.namePlural, action);
-    }
-    let actionAllowed =
-        metadata.authorization.ownership.allowedActions.indexOf(action) >= 0 ||
-        metadata.authorization.ownership.allowedActions.indexOf(`*`) >= 0;
-    if (!actionAllowed) {
-        throw new NotAuthorizedError(executionContext.identity.id, metadata.namePlural, action);
-    }
-    filter[`owner.id`] = currentUserId;
-}
-
-/**
- * @param {EntityMetadata} metadata The entity metadata containing the rules for the string identifier
- * @returns {import('../types').SetStringIdentifier} The function to set the string identifier on an object
- */
-function createStringIdentifierSetter(metadata, titleToStringIdentifier) {
-    return function setStringIdentifier(item) {
-        if (!metadata.stringIdentifier) {
-            return;
-        }
-        if (metadata.stringIdentifier.entitySourcePath) {
-            const currentValue = get(item, metadata.stringIdentifier.pathToId);
-            if (currentValue) {
-                return;
-            }
-            const newValue = titleToStringIdentifier(
-                get(item, metadata.stringIdentifier.entitySourcePath)
-            );
-            set(item, metadata.stringIdentifier.pathToId, newValue);
-        }
-    };
-}
-
-function ensureEntityIsObject(entity, metadata) {
-    if (entity === null || typeof entity !== `object`) {
-        throw new ValidationError(
-            `The ${metadata.title} value provided was not an object, type was :${typeof entity}`
-        );
-    }
-}
-
-/** @type {import('../types').CreateSetTenant} */
-function createSetTenant(metadata) {
-    return function setTenant(entity, context) {
-        if (!metadata.tenantInfo) {
-            return;
-        }
-        const value = get(context, metadata.tenantInfo.executionContextSourcePath);
-        if (!value) {
-            throw new TenantError(metadata.tenantInfo.title);
-        }
-        set(entity, metadata.tenantInfo.entityPathToId, value);
-    };
-}
-
-/** @type {import('../types').CreateAddTenantToFilter} */
-function createAddTenantToFilter(metadata) {
-    return function addTenantToFilter(query, context) {
-        if (!metadata.tenantInfo) {
-            return;
-        }
-        const value = get(context, metadata.tenantInfo.executionContextSourcePath);
-        if (!value) {
-            throw new TenantError(metadata.tenantInfo.title);
-        }
-        set(query, metadata.tenantInfo.entityPathToId, value);
-    };
-}
-
-/**
- * @param {Function} stepFn
- * @param {{[key: string]: Function }} hooks
- * @param {string} stepName
- * @param {import('../types').HookContext} hookContext
- */
-async function runStepWithHooks(stepName, stepFn, hooks = {}, hookContext) {
-    const upperStepName = upperFirst(stepName);
-    const beforeFn = hooks[`before${upperStepName}`];
-    if (beforeFn) {
-        await runHook(beforeFn, hookContext);
-    }
-    const replaceFn = hooks[stepName];
-    if (replaceFn) {
-        await runHook(replaceFn, hookContext);
-    } else {
-        await stepFn(hookContext);
-    }
-    const afterFn = hooks[`after${upperStepName}`];
-    if (afterFn) {
-        await runHook(afterFn, hookContext);
-    }
-}
-
-/**
- * @param {Function} fn
- * @param {import('../types').HookContext} hookContext
- * @returns {Promise<void>}
- */
-async function runHook(fn, hookContext) {
-    if (!fn) {
-        return;
-    }
-    await fn(hookContext);
-}

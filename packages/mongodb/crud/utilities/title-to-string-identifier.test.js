@@ -1,6 +1,6 @@
 'use strict';
 
-const titleToStringIdentifier = require(`./title-to-string-identifier`);
+const { titleToStringIdentifier } = require(`./title-to-string-identifier`);
 
 describe(`MongoDB`, () => {
     describe(`title-to-string-identifier`, () => {
