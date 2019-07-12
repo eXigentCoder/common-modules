@@ -17,9 +17,8 @@ function createStringIdentifierSetter(metadata, titleToStringIdentifier) {
             if (currentValue) {
                 return;
             }
-            const newValue = titleToStringIdentifier(
-                get(item, metadata.stringIdentifier.entitySourcePath)
-            );
+            const title = get(item, metadata.stringIdentifier.entitySourcePath);
+            const newValue = titleToStringIdentifier(title);
             set(item, metadata.stringIdentifier.pathToId, newValue);
         }
     };

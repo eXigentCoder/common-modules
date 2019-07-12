@@ -1,17 +1,17 @@
 'use strict';
 const generateEntityMetadata = require(`../../../entity-metadata`);
 const { createInputValidator, createOutputValidator } = require(`../../../validation`);
-const { jsonSchemas, addMongoId } = require(`../../../validation-mongodb`);
+const { addMongoId } = require(`../../../validation-mongodb`);
 const { createGetIdentifierQuery } = require(`./create-identifier-query`);
 const ObjectId = require(`mongodb`).ObjectId;
 const { ValidationError } = require(`../../../common-errors`);
-
+const { noStringIdNoTenant,stringIdNoTenant } = require(`../../test-utilities`);
 describe(`MongoDB`, () => {
     describe(`createGetIdentifierQuery`, () => {
         describe(`no string identifer`, () => {
             const inputValidator = createInputValidator(addMongoId);
             const outputValidator = createOutputValidator(addMongoId);
-            const inputMetadata = validMetaDataNoStringIdentifer();
+            const inputMetadata = noStringIdNoTenant();
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             const getIdentifierQuery = createGetIdentifierQuery(metadata);
             it(`should throw an error if no id provided`, () => {
@@ -51,7 +51,7 @@ describe(`MongoDB`, () => {
         describe(`has a string identifer`, () => {
             const inputValidator = createInputValidator(addMongoId);
             const outputValidator = createOutputValidator(addMongoId);
-            const inputMetadata = validMetaDataWithStringIdentifer();
+            const inputMetadata = stringIdNoTenant();
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             const getIdentifierQuery = createGetIdentifierQuery(metadata);
             it(`should throw an error if no id provided`, () => {
@@ -86,51 +86,9 @@ describe(`MongoDB`, () => {
             });
             it(`should be able to handle a non ObjectId string`, () => {
                 const query = getIdentifierQuery(`bob`);
-                expect(query).to.eql({ username: `bob` });
+                expect(query).to.eql({ name: `bob` });
             });
         });
     });
 });
 
-/** @returns {import('../../../entity-metadata').EntityMetadata} */
-function validMetaDataNoStringIdentifer() {
-    return {
-        schemas: {
-            core: {
-                type: `object`,
-                properties: {
-                    username: {
-                        type: `string`,
-                    },
-                },
-            },
-        },
-        name: `user`,
-        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
-        collectionName: `crud-users`,
-        baseUrl: `https://ryankotzen.com`,
-    };
-}
-/** @returns {import('../../../entity-metadata').EntityMetadata} */
-function validMetaDataWithStringIdentifer() {
-    return {
-        schemas: {
-            core: {
-                type: `object`,
-                properties: {
-                    firstName: {
-                        type: `string`,
-                    },
-                    lastName: {
-                        type: `string`,
-                    },
-                },
-            },
-        },
-        name: `user`,
-        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
-        stringIdentifier: { pathToId: `username`, schema: { type: `string` } },
-        collectionName: `crud-users`,
-        baseUrl: `https://ryankotzen.com`,
-    };
-}

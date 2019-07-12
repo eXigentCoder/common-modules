@@ -52,19 +52,19 @@ export interface Crud<T> {
     search: Search<T>;
 }
 
-export type Create<T> = (entity: T, context: ExecutionContext, hooks: Hooks) => Promise<T>;
-export type GetById<T> = (id: string, context: ExecutionContext, hooks: Hooks) => Promise<T>;
-export type DeleteById<T> = (id: string, context: ExecutionContext, hooks: Hooks) => Promise<void>;
+export type Create<T> = (entity: T, context: ExecutionContext, hooks?: Hooks) => Promise<T>;
+export type GetById<T> = (id: string, context: ExecutionContext, hooks?: Hooks) => Promise<T>;
+export type DeleteById<T> = (id: string, context: ExecutionContext, hooks?: Hooks) => Promise<void>;
 export type ReplaceById<T> = (
     id: string,
     entity: T,
     context: ExecutionContext,
-    hooks: Hooks
+    hooks?: Hooks
 ) => Promise<T>;
 export type Search<T> = (
     query: Query | Object,
     context: ExecutionContext,
-    hooks: Hooks
+    hooks?: Hooks
 ) => Promise<T[]>;
 
 export interface Auditors<T> {
