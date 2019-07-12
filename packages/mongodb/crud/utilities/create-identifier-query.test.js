@@ -5,7 +5,7 @@ const { addMongoId } = require(`../../../validation-mongodb`);
 const { createGetIdentifierQuery } = require(`./create-identifier-query`);
 const ObjectId = require(`mongodb`).ObjectId;
 const { ValidationError } = require(`../../../common-errors`);
-const { noStringIdNoTenant,stringIdNoTenant } = require(`../../test-utilities`);
+const { noStringIdNoTenant, stringIdNoTenant } = require(`../../test-utilities`);
 describe(`MongoDB`, () => {
     describe(`createGetIdentifierQuery`, () => {
         describe(`no string identifer`, () => {
@@ -91,4 +91,3 @@ describe(`MongoDB`, () => {
         });
     });
 });
-

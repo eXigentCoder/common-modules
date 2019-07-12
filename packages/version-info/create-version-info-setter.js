@@ -85,9 +85,7 @@ function validateParams(object, context, options) {
     options.validator.ensureValid(options.executionContextSchema.$id, context);
     if (get(object, options.metadata.identifier.pathToId) && !object.versionInfo) {
         throw new Error(
-            `Object had a value for "${
-                options.metadata.identifier.pathToId
-            }", indicating that it already exists in the db but no "versionInfo" property was provided, this would cause the creation info to be incorrect and has been prevented.`
+            `Object had a value for "${options.metadata.identifier.pathToId}", indicating that it already exists in the db but no "versionInfo" property was provided, this would cause the creation info to be incorrect and has been prevented.`
         );
     }
 }

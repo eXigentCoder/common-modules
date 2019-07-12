@@ -24,9 +24,7 @@ module.exports = class IsRequiredError extends KrimZenNinjaBaseError {
         }
         let message;
         if (functionName) {
-            message = `You must provide "${requiredValue}" to the "${functionName}" ${
-                functionType
-            }.`;
+            message = `You must provide "${requiredValue}" to the "${functionName}" ${functionType}.`;
         } else {
             message = `The "${requiredValue}" value is required`;
         }

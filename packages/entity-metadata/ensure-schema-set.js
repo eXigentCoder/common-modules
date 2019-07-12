@@ -29,9 +29,7 @@ module.exports = function ensureSchemaSet(
     if (direction.toLowerCase() === `output`) {
         if (outputValidator.getSchema(schema.$id)) {
             console.warn(
-                `Output schema with $id ${schema.$id} for ${
-                    metadata.collectionName
-                } already existed, skipping`
+                `Output schema with $id ${schema.$id} for ${metadata.collectionName} already existed, skipping`
             );
         } else {
             outputValidator.addSchema(schema);
@@ -39,9 +37,7 @@ module.exports = function ensureSchemaSet(
     } else {
         if (inputValidator.getSchema(schema.$id)) {
             console.warn(
-                `Input schema with $id ${schema.$id} for ${
-                    metadata.collectionName
-                } already existed, skipping`
+                `Input schema with $id ${schema.$id} for ${metadata.collectionName} already existed, skipping`
             );
         } else {
             inputValidator.addSchema(schema);

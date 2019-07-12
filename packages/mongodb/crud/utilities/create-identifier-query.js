@@ -19,16 +19,12 @@ function createGetIdentifierQuery(metadata) {
             : `${identifier.pathToId}`;
         if (identifierValue === null || identifierValue === undefined) {
             throw new ValidationError(
-                `${identifierNameErrorMessage} is required as an identifier to refer to a ${
-                    metadata.title
-                }`
+                `${identifierNameErrorMessage} is required as an identifier to refer to a ${metadata.title}`
             );
         }
         if (typeof identifierValue === `number`) {
             throw new ValidationError(
-                `${identifierNameErrorMessage} cannot be a number when used to refer to a ${
-                    metadata.title
-                }`
+                `${identifierNameErrorMessage} cannot be a number when used to refer to a ${metadata.title}`
             );
         }
         if (ObjectId.isValid(identifierValue)) {
@@ -37,9 +33,7 @@ function createGetIdentifierQuery(metadata) {
 
         if (typeof identifierValue === `object`) {
             throw new ValidationError(
-                `${identifierNameErrorMessage} cannot be an object when used to refer to a ${
-                    metadata.title
-                }`
+                `${identifierNameErrorMessage} cannot be an object when used to refer to a ${metadata.title}`
             );
         }
         if (typeof identifierValue === `string` && stringIdentifier) {
