@@ -20,7 +20,7 @@ describe(`MongoDB`, () => {
                 toUpdate.username += `-updated`;
                 const replaced = await replaceById(toUpdate._id, toUpdate, createContext());
                 expect(replaced.username).to.eql(toUpdate.username);
-                expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced._id.toString()).to.eql(toUpdate._id.toString());
                 expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
             it(`Should allow you to replace an existing entity with a valid entity when using the main identifier - stringId no tenant`, async () => {
@@ -31,7 +31,7 @@ describe(`MongoDB`, () => {
                 toUpdate.username += `-updated`;
                 const replaced = await replaceById(toUpdate._id, toUpdate, createContext());
                 expect(replaced.username).to.eql(toUpdate.username);
-                expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced._id.toString()).to.eql(toUpdate._id.toString());
                 expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
             it(`Should allow you to replace an existing entity with a valid entity when using the main identifier - stringId and tenant`, async () => {
@@ -44,7 +44,7 @@ describe(`MongoDB`, () => {
                 toUpdate.username += `-updated`;
                 const replaced = await replaceById(toUpdate._id, toUpdate, context);
                 expect(replaced.username).to.eql(toUpdate.username);
-                expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced._id.toString()).to.eql(toUpdate._id.toString());
                 expect(replaced.tenantId).to.eql(created.tenantId);
                 expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
@@ -68,7 +68,7 @@ describe(`MongoDB`, () => {
                 toUpdate.tenantId += `-updated`;
                 const replaced = await replaceById(toUpdate._id, toUpdate, context);
                 expect(replaced.username).to.eql(toUpdate.username);
-                expect(replaced._id).to.eql(toUpdate._id);
+                expect(replaced._id.toString()).to.eql(toUpdate._id.toString());
                 expect(replaced.tenantId).to.eql(created.tenantId);
                 expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
             });
@@ -80,7 +80,7 @@ describe(`MongoDB`, () => {
                 expect(created.name).to.be.ok;
                 const toUpdate = JSON.parse(JSON.stringify(created));
                 delete toUpdate.name;
-                const replaced = await replaceById(toUpdate._id, toUpdate, context);
+                const replaced = await replaceById(toUpdate._id.toString(), toUpdate, context);
                 expect(replaced.name).to.eql(created.name);
             });
         });

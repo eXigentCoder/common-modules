@@ -25,7 +25,7 @@ function validateAndCoerceToMongoId(
     }
     const valid = isValidMongoId(input);
     if (valid) {
-        parentDataObject[propName] = new mongo.ObjectId(input).toString();
+        parentDataObject[propName] = new mongo.ObjectId(input);
     }
     return valid;
 }

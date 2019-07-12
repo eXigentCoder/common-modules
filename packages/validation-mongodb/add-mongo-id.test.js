@@ -18,7 +18,7 @@ describe(`Validation - MongoDB`, () => {
                 _id: new ObjectId().toString(),
             };
             expect(validate(obj)).to.be.ok;
-            expect(typeof obj._id).to.equal(`string`);
+            expect(typeof obj._id.toString()).to.equal(`string`);
             expect(ObjectId.isValid(obj._id)).to.be.ok;
         });
 
@@ -35,7 +35,7 @@ describe(`Validation - MongoDB`, () => {
                 _id: new ObjectId().toString(),
             };
             expect(validate(obj)).to.be.ok;
-            expect(typeof obj._id).to.equal(`string`);
+            expect(typeof obj._id.toString()).to.equal(`string`);
             expect(ObjectId.isValid(obj._id)).to.be.ok;
         });
     });

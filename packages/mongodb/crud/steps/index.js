@@ -7,6 +7,7 @@ const {
     checkAuthorizationOrAddOwnerToFilter,
 } = require(`../utilities`);
 const { EntityNotFoundError } = require(`../../../common-errors`);
+const ObjectId = require(`mongodb`).ObjectId;
 
 /**
  * @param {import('../../types').Hook} stepFn
@@ -178,11 +179,12 @@ async function setMetadataFields({ existing, entity, executionContext, utilities
         if (existing.owner) {
             entity.owner = existing.owner;
         }
+        utilities.setVersionInfo(entity, executionContext);
     } else {
         utilities.setOwnerIfApplicable(entity, executionContext);
+        utilities.setVersionInfo(entity, executionContext);
+        entity._id = new ObjectId();
     }
-    utilities.setVersionInfo(entity, executionContext);
-    delete entity._id;
 }
 
 module.exports = {
