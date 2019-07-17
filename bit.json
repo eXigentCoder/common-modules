@@ -3,5 +3,17 @@
         "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
     },
     "componentsDefaultDirectory": "packages/{name}",
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "overrides": {
+        "exigentcoder.common-modules/common-errors": {
+            "env": {
+                "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
+            }
+        },
+        "exigentcoder.common-modules/validation": {
+            "env": {
+                "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
+            }
+        }
+    }
 }
