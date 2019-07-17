@@ -3,7 +3,7 @@
 const { spawn } = require(`child_process`);
 const version = require(`../package.json`).version;
 
-const command = `bit tag --all -s ${version} --force --skip-tests`;
+const command = `bit tag --all ${version} --force --skip-tests`;
 console.log(`[Bit Tag]: ${command}`);
 
 const parts = command.split(` `);
