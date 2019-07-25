@@ -4,7 +4,7 @@ const dropExistingData = require(`./drop-existing-data`);
 const createTestData = require(`./create-test-data`);
 const v8n = require(`v8n`);
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {string} options.workingDirectory
  * @property {boolean} [options.dropExistingData=false]
  *
