@@ -17,40 +17,40 @@ describe(`MongoDB`, () => {
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = { filter: { username: entity.username } };
-                const results = await search(query, createContext());
-                expect(results).to.be.an(`array`);
-                expect(results).to.have.length(1);
-                expect(results[0]).to.eql(created);
+                const result = await search(query, createContext());
+                expect(result.items).to.be.an(`array`);
+                expect(result.items).to.have.length(1);
+                expect(result.items[0]).to.eql(created);
             });
             it(`Should allow you to search if filter is passed through without the filter keyword`, async () => {
                 const { search, create } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = { username: entity.username };
-                const results = await search(query, createContext());
-                expect(results).to.be.an(`array`);
-                expect(results).to.have.length(1);
-                expect(results[0]).to.eql(created);
+                const result = await search(query, createContext());
+                expect(result.items).to.be.an(`array`);
+                expect(result.items).to.have.length(1);
+                expect(result.items[0]).to.eql(created);
             });
             it(`Should allow you to search - no stringId or tenant`, async () => {
                 const { search, create, queryMapper } = await getPopulatedCrud(noStringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = queryMapper({ filter: { username: entity.username } });
-                const results = await search(query, createContext());
-                expect(results).to.be.an(`array`);
-                expect(results).to.have.length(1);
-                expect(results[0]).to.eql(created);
+                const result = await search(query, createContext());
+                expect(result.items).to.be.an(`array`);
+                expect(result.items).to.have.length(1);
+                expect(result.items[0]).to.eql(created);
             });
             it(`Should allow you to search - stringId no tenant`, async () => {
                 const { search, create, queryMapper } = await getPopulatedCrud(stringIdNoTenant);
                 const entity = validEntity();
                 const created = await create(entity, createContext());
                 const query = queryMapper({ filter: { username: entity.username } });
-                const results = await search(query, createContext());
-                expect(results).to.be.an(`array`);
-                expect(results).to.have.length(1);
-                expect(results[0]).to.eql(created);
+                const result = await search(query, createContext());
+                expect(result.items).to.be.an(`array`);
+                expect(result.items).to.have.length(1);
+                expect(result.items[0]).to.eql(created);
             });
             it(`Should allow you to search - stringId and tenant`, async () => {
                 const { search, create, queryMapper } = await getPopulatedCrud(stringIdTenant);
@@ -58,19 +58,19 @@ describe(`MongoDB`, () => {
                 const context = createContext();
                 const created = await create(entity, context);
                 const query = queryMapper({ filter: { username: entity.username } });
-                const results = await search(query, context);
-                expect(results).to.be.an(`array`);
-                expect(results).to.have.length(1);
-                expect(results[0]).to.eql(created);
+                const result = await search(query, context);
+                expect(result.items).to.be.an(`array`);
+                expect(result.items).to.have.length(1);
+                expect(result.items[0]).to.eql(created);
             });
             it(`Should not return results from other tenants`, async () => {
                 const { search, create, queryMapper } = await getPopulatedCrud(stringIdTenant);
                 const entity = validEntity();
                 await create(entity, createContext());
                 const query = queryMapper({ filter: { username: entity.username } });
-                const results = await search(query, createContext());
-                expect(results).to.be.an(`array`);
-                expect(results).to.have.length(0);
+                const result = await search(query, createContext());
+                expect(result.items).to.be.an(`array`);
+                expect(result.items).to.have.length(0);
             });
         });
 

@@ -23,7 +23,7 @@ const {
  * @typedef {import('../../entity-metadata').EntityMetadata} EntityMetadata
  * @typedef {import('../types').CreateUtilityParams} CreateUtilityParams
  * @typedef {import('../types').Utilities} Utilities
- * @typedef {import('../types').Crud<Object>} Crud
+ * @typedef {import('../types').Crud<object>} Crud
  * @typedef {Crud & {utilities:Utilities}} GetCrud
  */
 
@@ -165,7 +165,9 @@ function getSearch(utilities) {
         await runStepWithHooks(authorizeQuery, hookContext);
         await runStepWithHooks(setEntityFromDBUsingQuery, hookContext);
         await runStepWithHooks(mapEntityForOutput, hookContext);
-        return hookContext.entity;
+        return {
+            items:hookContext.entity
+        };
     };
 }
 

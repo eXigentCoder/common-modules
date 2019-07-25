@@ -111,7 +111,7 @@ describe(`MongoDB`, () => {
                     context
                 );
                 await expect(searchResults).to.be.ok;
-                await expect(searchResults[0]).to.eql(created);
+                await expect(searchResults.items[0]).to.eql(created);
                 const toUpdate = JSON.parse(JSON.stringify(created));
                 toUpdate.username += `updated`;
                 const replaced = await replaceById(created._id, toUpdate, context);

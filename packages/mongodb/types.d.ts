@@ -65,7 +65,7 @@ export type Search<T> = (
     query: Query | Object,
     context: ExecutionContext,
     hooks?: Hooks
-) => Promise<T[]>;
+) => Promise<{items:T[]}>;
 
 export interface Auditors<T> {
     writeCreation: WriteCreation<T>;
