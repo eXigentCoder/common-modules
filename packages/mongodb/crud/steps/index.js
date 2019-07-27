@@ -127,7 +127,7 @@ async function authorizeQuery(hookContext) {
 
 /** @type {import('../../types').Hook} */
 function moveCurrentEntityToExisting(hookContext) {
-    hookContext.existing = hookContext.entity;
+    hookContext.existingEntity = hookContext.entity;
     delete hookContext.entity;
 }
 
@@ -171,13 +171,13 @@ async function setEntityFromDBUsingQuery(hookContext) {
 }
 
 /** @type {import('../../types').Hook} */
-async function setMetadataFields({ existing, entity, executionContext, utilities }) {
+async function setMetadataFields({ existingEntity, entity, executionContext, utilities }) {
     utilities.setStringIdentifier(entity);
     utilities.setTenant(entity, executionContext);
-    if (existing) {
-        entity.versionInfo = existing.versionInfo;
-        if (existing.owner) {
-            entity.owner = existing.owner;
+    if (existingEntity) {
+        entity.versionInfo = existingEntity.versionInfo;
+        if (existingEntity.owner) {
+            entity.owner = existingEntity.owner;
         }
         utilities.setVersionInfo(entity, executionContext);
     } else {
