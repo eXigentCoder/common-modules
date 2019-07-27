@@ -27,6 +27,7 @@ module.exports = function() {
             stringIdentifier: { $ref: `#/definitions/stringIdentifier` },
             tenantInfo: { $ref: `#/definitions/tenantInfo` },
             authorization: { $ref: `#/definitions/authorization` },
+            statuses: { $ref: `#/definitions/statuses` },
             collectionName: commonSchemas.identifier,
             auditCollectionName: commonSchemas.identifier,
             auditChanges: commonSchemas.boolean,
@@ -141,6 +142,11 @@ module.exports = function() {
                     },
                 },
                 required: [`interaction`],
+            },
+            statuses: {
+                type: `object`,
+                additionalProperties: false,
+                properties: {},
             },
             jsonSchema: {
                 type: `object`,

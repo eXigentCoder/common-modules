@@ -19,6 +19,7 @@ export interface EntityMetadata {
     stringIdentifier?: StringIdentifier;
     tenantInfo?: TenantInfo;
     authorization?: Authorization;
+    statuses?: Statuses;
     /**
      * A human readable string identifier used to refer to an entitiy
      */
@@ -74,3 +75,4 @@ export interface Ownership {
     allowedActions: string[];
     idSchema?: JsonSchema;
 }
+export interface Statuses {}
