@@ -55,7 +55,7 @@ describe(`Config`, () => {
         const appName = `someApplication`;
         const options = {
             name: appName,
-            configPath: `config-custom/more`,
+            configPath: `packages/config/config-custom/more`,
         };
         config.initialise(options);
         expect(config.get(`isAwesome`)).to.equal(`pimpMyRide`);
