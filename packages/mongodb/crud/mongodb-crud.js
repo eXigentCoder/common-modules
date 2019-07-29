@@ -166,7 +166,7 @@ function getSearch(utilities) {
         await runStepWithHooks(setEntityFromDBUsingQuery, hookContext);
         await runStepWithHooks(mapEntityForOutput, hookContext);
         return {
-            items:hookContext.entity
+            items: hookContext.entity,
         };
     };
 }

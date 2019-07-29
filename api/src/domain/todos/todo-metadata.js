@@ -13,7 +13,7 @@ const { identifier } = require('@bit/exigentcoder.common-modules.json-schema');
 let _metadata;
 
 /**
- * @returns {import('@bit/exigentcoder.common-modules.mongodb/entity-metadata/types').EntityMetadata}
+ * @returns {import('@bit/exigentcoder.common-modules.entity-metadata/types').EntityMetadata}
  */
 module.exports = function getMetadata() {
     if (_metadata) {
@@ -35,6 +35,16 @@ module.exports = function getMetadata() {
             schemas: {
                 core: core(),
             },
+            statuses: [
+                {
+                    pathToStatusValue: 'status',
+                    allowedValues: [
+                        { name: 'Todo' },
+                        { name: 'In Progress' },
+                        { name: 'Done' },
+                    ],
+                },
+            ],
         },
         inputValidator,
         outputValidator

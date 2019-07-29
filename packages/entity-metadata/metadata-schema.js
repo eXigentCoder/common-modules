@@ -27,7 +27,11 @@ module.exports = function() {
             stringIdentifier: { $ref: `#/definitions/stringIdentifier` },
             tenantInfo: { $ref: `#/definitions/tenantInfo` },
             authorization: { $ref: `#/definitions/authorization` },
-            statuses: { $ref: `#/definitions/statuses` },
+            statuses: {
+                type: `array`,
+                items: { $ref: `#/definitions/statusRules` },
+                uniqueItems: true,
+            },
             collectionName: commonSchemas.identifier,
             auditCollectionName: commonSchemas.identifier,
             auditChanges: commonSchemas.boolean,
@@ -143,10 +147,24 @@ module.exports = function() {
                 },
                 required: [`interaction`],
             },
-            statuses: {
+            status: {
                 type: `object`,
+                properties: {
+                    name: { type: `string` },
+                },
                 additionalProperties: false,
-                properties: {},
+            },
+            statusRules: {
+                type: `object`,
+                properties: {
+                    pathToStatusValue: { type: `string` },
+                    allowedValues: {
+                        type: `array`,
+                        items: { $ref: `#/definitions/status` },
+                        uniqueItems: true,
+                    },
+                },
+                additionalProperties: false,
             },
             jsonSchema: {
                 type: `object`,

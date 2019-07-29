@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 module.exports = function(options) {
     return {
-        isAwesome: false
-    }
-}
+        isAwesome: false,
+    };
+};
