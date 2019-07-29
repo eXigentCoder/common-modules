@@ -6,18 +6,19 @@ const {
     deleteById,
     replaceById,
     search,
-} = require('./organisation-service');
+} = require('./todo-service');
 const {
     createQueryStringMapper,
 } = require('@bit/exigentcoder.common-modules.mongodb');
 const get = require('lodash/get');
 
-describe('Organisations Service', () => {
+describe('To-do Service', () => {
     const metadata = getMetadata();
     const queryStringMapper = createQueryStringMapper(metadata.schemas.core);
-    const validOrganisationForCreation = function() {
+    const validTodoForCreation = function() {
         return {
-            title: 'Bobs awesome organisation',
+            title: 'important task',
+            description: 'Make the world a better place',
         };
     };
     const validContext = {
@@ -34,29 +35,23 @@ describe('Organisations Service', () => {
             await expect(create()).to.be.rejected;
         });
 
-        it('should fail if passed a valid organisation but no context', async () => {
+        it('should fail if passed a valid to-do but no context', async () => {
             // @ts-ignore
-            await expect(create(validOrganisationForCreation())).to.be.rejected;
+            await expect(create(validTodoForCreation())).to.be.rejected;
         });
 
-        it("should succeed if passed a valid organisation that doesn't exist and valid context", async () => {
-            const created = await create(
-                validOrganisationForCreation(),
-                validContext
-            );
+        it("should succeed if passed a valid to-do that doesn't exist and valid context", async () => {
+            const created = await create(validTodoForCreation(), validContext);
             expect(created).to.be.ok;
         });
 
         it('should return an object with the version info set on it', async () => {
-            const created = await create(
-                validOrganisationForCreation(),
-                validContext
-            );
+            const created = await create(validTodoForCreation(), validContext);
             expect(created.versionInfo).to.be.ok;
         });
 
         it('should not modify the object passed in', async () => {
-            const obj = validOrganisationForCreation();
+            const obj = validTodoForCreation();
             const oldCopy = JSON.parse(JSON.stringify(obj));
             expect(oldCopy).to.eql(obj);
             const created = await create(obj, validContext);
@@ -66,20 +61,13 @@ describe('Organisations Service', () => {
         });
 
         it('should generate the identifier based on the title of the object', async () => {
-            const created = await create(
-                validOrganisationForCreation(),
-                validContext
-            );
+            const created = await create(validTodoForCreation(), validContext);
             expect(created.identifier).to.be.ok;
-            expect(created.identifier).to.equal('bobs-awesome-organisation');
+            expect(created.identifier).to.equal('important-task');
         });
 
         it('should return an object with the identifier set', async () => {
-            const metadata = getMetadata();
-            const created = await create(
-                validOrganisationForCreation(),
-                validContext
-            );
+            const created = await create(validTodoForCreation(), validContext);
             expect(created).to.be.ok;
             expect(get(created, metadata.identifier.pathToId)).to.be.ok;
         });
@@ -91,10 +79,7 @@ describe('Organisations Service', () => {
         });
 
         it('should return the item if the id is valid', async () => {
-            const created = await create(
-                validOrganisationForCreation(),
-                validContext
-            );
+            const created = await create(validTodoForCreation(), validContext);
             const retrieved = await getById(created._id);
             expect(retrieved).eql(created);
         });
@@ -104,20 +89,14 @@ describe('Organisations Service', () => {
         //     await expect(deleteById(new Date().toISOString())).to.be.rejected;
         // });
         it('should not throw an error if deleting a document that exists', async () => {
-            const created = await create(
-                validOrganisationForCreation(),
-                validContext
-            );
+            const created = await create(validTodoForCreation(), validContext);
             await deleteById(created._id);
         });
     });
 
     describe('Replace by id', () => {
         it('should return the item if the id is valid', async () => {
-            const created = await create(
-                validOrganisationForCreation(),
-                validContext
-            );
+            const created = await create(validTodoForCreation(), validContext);
             const toUpdate = JSON.parse(JSON.stringify(created));
             toUpdate.title += 'updated';
             const updated = await replaceById(
@@ -135,7 +114,7 @@ describe('Organisations Service', () => {
             expect(result.items).to.be.an('array');
         });
         it('should allow query Params', async () => {
-            const org = validOrganisationForCreation();
+            const org = validTodoForCreation();
             org.title = 'TestForQuery';
             await create(org, validContext);
             const result = await search(query);

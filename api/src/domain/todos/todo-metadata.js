@@ -5,7 +5,7 @@ const {
     inputValidator,
     outputValidator,
 } = require('../../validation/validators');
-const { core } = require('./organisation-schemas');
+const { core } = require('./todo-schemas');
 const {
     jsonSchemas,
 } = require('@bit/exigentcoder.common-modules.validation-mongodb');
@@ -31,7 +31,7 @@ module.exports = function getMetadata() {
                 schema: identifier,
                 entitySourcePath: 'title',
             },
-            collectionName: 'organisations',
+            collectionName: 'todos',
             schemas: {
                 core: core(),
             },
