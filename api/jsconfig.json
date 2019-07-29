@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "checkJs": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true
+    },
+    "typeAcquisition": {
+        "include": ["mocha", "chai"]
+    }
+}
