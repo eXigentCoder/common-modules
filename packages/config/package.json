@@ -1,39 +1,11 @@
 {
-  "_from": "@bit/exigentcoder.common-modules.config@0.21.0",
-  "_id": "@bit/exigentcoder.common-modules.config@0.21.0",
-  "_inBundle": false,
-  "_integrity": "sha1-JIZRf454MgoRAXJtlu6N4uTQ15I=",
-  "_location": "/@bit/exigentcoder.common-modules.config",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "@bit/exigentcoder.common-modules.config@0.21.0",
-    "name": "@bit/exigentcoder.common-modules.config",
-    "escapedName": "@bit%2fexigentcoder.common-modules.config",
-    "scope": "@bit",
-    "rawSpec": "0.21.0",
-    "saveSpec": null,
-    "fetchSpec": "0.21.0"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://node.bit.dev/exigentcoder.common-modules.config/-/exigentcoder.common-modules.config-0.21.0.tgz",
-  "_shasum": "2486517f8e78320a1101726d96ee8de2e4d0d792",
-  "_spec": "@bit/exigentcoder.common-modules.config@0.21.0",
-  "_where": "C:\\development\\common-modules\\api",
   "bit": {
     "env": {
       "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
     }
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "debug": "4.1.1",
-    "lodash": "4.17.14",
-    "nconf": "0.10.0"
-  },
+  "dependencies": {},
   "deprecated": false,
   "devDependencies": {},
   "homepage": "https://bit.dev/exigentcoder/common-modules/config",

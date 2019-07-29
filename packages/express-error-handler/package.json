@@ -5,16 +5,9 @@
     }
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "@bit/exigentcoder.common-modules.common-errors": "0.20.7",
-    "@hapi/boom": "7.4.2",
-    "debug": "4.1.1"
-  },
+  "dependencies": {},
   "deprecated": false,
-  "devDependencies": {
-    "express": "4.17.1",
-    "node-mocks-http": "1.7.6"
-  },
+  "devDependencies": {},
   "homepage": "https://bit.dev/exigentcoder/common-modules/express-error-handler",
   "license": "SEE LICENSE IN LICENSE",
   "main": "express-error-handler/index.js",

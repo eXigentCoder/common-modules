@@ -5,20 +5,9 @@
     }
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "@bit/exigentcoder.common-modules.common-errors": "0.20.7",
-    "@bit/exigentcoder.common-modules.json-schema": "0.21.0",
-    "@bit/exigentcoder.common-modules.validation": "0.21.0",
-    "@bit/exigentcoder.common-modules.version-info": "0.21.0",
-    "json-schema": "0.2.3",
-    "lodash": "4.17.14",
-    "pluralize": "8.0.0"
-  },
+  "dependencies": {},
   "deprecated": false,
-  "devDependencies": {
-    "fs-extra": "8.1.0",
-    "json-schema-to-typescript": "6.1.3"
-  },
+  "devDependencies": {},
   "homepage": "https://bit.dev/exigentcoder/common-modules/entity-metadata",
   "license": "SEE LICENSE IN LICENSE",
   "main": "entity-metadata/index.js",

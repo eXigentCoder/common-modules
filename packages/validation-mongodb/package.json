@@ -5,13 +5,9 @@
     }
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "mongodb": "3.2.7"
-  },
+  "dependencies": {},
   "deprecated": false,
-  "devDependencies": {
-    "@bit/exigentcoder.common-modules.validation": "0.21.0"
-  },
+  "devDependencies": {},
   "homepage": "https://bit.dev/exigentcoder/common-modules/validation-mongodb",
   "license": "SEE LICENSE IN LICENSE",
   "main": "validation-mongodb/index.js",

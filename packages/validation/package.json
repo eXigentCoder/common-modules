@@ -5,12 +5,7 @@
     }
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "@bit/exigentcoder.common-modules.common-errors": "0.20.7",
-    "ajv": "6.10.2",
-    "ajv-errors": "1.0.1",
-    "better-ajv-errors": "0.6.4"
-  },
+  "dependencies": {},
   "deprecated": false,
   "devDependencies": {},
   "homepage": "https://bit.dev/exigentcoder/common-modules/validation",
