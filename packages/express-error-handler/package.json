@@ -1,0 +1,24 @@
+{
+  "bit": {
+    "env": {
+      "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
+    }
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@bit/exigentcoder.common-modules.common-errors": "0.20.7",
+    "@hapi/boom": "7.4.2",
+    "debug": "4.1.1"
+  },
+  "deprecated": false,
+  "devDependencies": {
+    "express": "4.17.1",
+    "node-mocks-http": "1.7.6"
+  },
+  "homepage": "https://bit.dev/exigentcoder/common-modules/express-error-handler",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "express-error-handler/index.js",
+  "name": "@bit/exigentcoder.common-modules.express-error-handler",
+  "peerDependencies": {},
+  "version": "0.21.0"
+}

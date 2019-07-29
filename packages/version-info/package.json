@@ -1,0 +1,29 @@
+{
+  "bit": {
+    "env": {
+      "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
+    }
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@bit/exigentcoder.common-modules.common-errors": "0.20.7",
+    "@bit/exigentcoder.common-modules.entity-metadata": "0.21.0",
+    "@bit/exigentcoder.common-modules.json-schema": "0.21.0",
+    "@bit/exigentcoder.common-modules.validation": "0.21.0",
+    "lodash": "4.17.14",
+    "moment": "2.24.0",
+    "uuid": "3.3.2",
+    "v8n": "1.3.2"
+  },
+  "deprecated": false,
+  "devDependencies": {
+    "@bit/exigentcoder.common-modules.validation-mongodb": "0.21.0",
+    "mongodb": "3.2.7"
+  },
+  "homepage": "https://bit.dev/exigentcoder/common-modules/version-info",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "version-info/index.js",
+  "name": "@bit/exigentcoder.common-modules.version-info",
+  "peerDependencies": {},
+  "version": "0.21.0"
+}
