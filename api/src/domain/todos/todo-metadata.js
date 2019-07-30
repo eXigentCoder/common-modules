@@ -1,15 +1,15 @@
 'use strict';
 
-const generateEntityMetadata = require('@bit/exigentcoder.common-modules.entity-metadata');
+const generateEntityMetadata = require(`@bit/exigentcoder.common-modules.entity-metadata`);
 const {
     inputValidator,
     outputValidator,
-} = require('../../validation/validators');
-const { core } = require('./todo-schemas');
+} = require(`../../validation/validators`);
+const { core } = require(`./todo-schemas`);
 const {
     jsonSchemas,
-} = require('@bit/exigentcoder.common-modules.validation-mongodb');
-const { identifier } = require('@bit/exigentcoder.common-modules.json-schema');
+} = require(`@bit/exigentcoder.common-modules.validation-mongodb`);
+const { identifier } = require(`@bit/exigentcoder.common-modules.json-schema`);
 let _metadata;
 
 /**
@@ -21,27 +21,36 @@ module.exports = function getMetadata() {
     }
     _metadata = generateEntityMetadata(
         {
-            baseUrl: 'https://www.google.com',
+            baseUrl: `https://www.google.com`,
             identifier: {
-                pathToId: '_id',
+                pathToId: `_id`,
                 schema: jsonSchemas.objectId,
             },
             stringIdentifier: {
-                pathToId: 'identifier',
+                pathToId: `identifier`,
                 schema: identifier,
-                entitySourcePath: 'title',
+                entitySourcePath: `title`,
             },
-            collectionName: 'todos',
+            collectionName: `todos`,
             schemas: {
                 core: core(),
             },
             statuses: [
                 {
-                    pathToStatusValue: 'status',
+                    pathToStatusValue: `status`,
                     allowedValues: [
-                        { name: 'Todo' },
-                        { name: 'In Progress' },
-                        { name: 'Done' },
+                        {
+                            name: `Todo`,
+                            description: `An item that still needs to be done`,
+                        },
+                        {
+                            name: `In Progress`,
+                            description: `An item that is currently being worked on`,
+                        },
+                        {
+                            name: `Done`,
+                            description: `An item that is completed`,
+                        },
                     ],
                 },
             ],

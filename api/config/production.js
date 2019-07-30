@@ -3,7 +3,7 @@ module.exports = function() {
     return {
         logging: {
             pino: {
-                level: 'info',
+                level: `info`,
                 prettyPrint: false,
             },
         },

@@ -1,15 +1,15 @@
 'use strict';
 
-const superTest = require('supertest');
-const app = require('../express/app');
+const superTest = require(`supertest`);
+const app = require(`../express/app`);
 
-describe('Health route', () => {
-    it('should return 200 OK if the server is running', done => {
+describe(`Health route`, () => {
+    it(`should return 200 OK if the server is running`, done => {
         const request = superTest(app);
         request
-            .get('/')
+            .get(`/`)
             .expect(200)
-            .expect('Content-Type', /json/)
+            .expect(`Content-Type`, /json/)
             .end(done);
     });
 });

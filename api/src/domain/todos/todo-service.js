@@ -3,10 +3,10 @@
 const {
     inputValidator,
     outputValidator,
-} = require('../../validation/validators');
-const getMetadata = require('./todo-metadata');
-const { getCrud } = require('@bit/exigentcoder.common-modules.mongodb');
-const { getDb } = require('../../mongodb');
+} = require(`../../validation/validators`);
+const getMetadata = require(`./todo-metadata`);
+const { getCrud } = require(`@bit/exigentcoder.common-modules.mongodb`);
+const { getDb } = require(`../../mongodb`);
 
 /** @type {import('@bit/exigentcoder.common-modules.mongodb/mongodb/crud/mongodb-crud').GetCrud} */
 let _crud;

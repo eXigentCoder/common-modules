@@ -2,7 +2,7 @@
 
 //todo should move to lib
 module.exports = ajv => {
-    ajv.addKeyword('firebaseTimestamp', {
+    ajv.addKeyword(`firebaseTimestamp`, {
         validate: validateAndCoerce,
     });
 };

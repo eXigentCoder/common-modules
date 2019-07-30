@@ -2,6 +2,6 @@
 
 module.exports = function(options) {
     return {
-        isAwesome: 'pimpMyRide',
+        isAwesome: `pimpMyRide`,
     };
 };

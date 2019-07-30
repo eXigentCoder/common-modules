@@ -151,8 +151,10 @@ module.exports = function() {
                 type: `object`,
                 properties: {
                     name: { type: `string` },
+                    description: { type: `string` },
                 },
                 additionalProperties: false,
+                required: [`name`],
             },
             statusRules: {
                 type: `object`,

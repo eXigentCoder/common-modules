@@ -1,16 +1,16 @@
 'use strict';
 
-const reqCorrelationHeaderName = 'X-Request-ID';
+const reqCorrelationHeaderName = `X-Request-ID`;
 const resCorrelationHeaderName = reqCorrelationHeaderName;
-const reqCorrelationIdParamName = 'requestId';
-const _ = require('lodash');
-const host = 'localhost';
+const reqCorrelationIdParamName = `requestId`;
+const _ = require(`lodash`);
+const host = `localhost`;
 const port = 3037;
-const packageJson = require('../package.json');
+const packageJson = require(`../package.json`);
 
 module.exports = function() {
     return {
-        scheme: 'http',
+        scheme: `http`,
         host,
         port,
         paginate: {
@@ -23,9 +23,9 @@ module.exports = function() {
         },
         logging: {
             pino: {
-                level: 'trace',
+                level: `trace`,
                 prettyPrint: {
-                    translateTime: 'SYS:standard',
+                    translateTime: `SYS:standard`,
                 },
             },
             correlationId: {
@@ -61,24 +61,24 @@ module.exports = function() {
                 mergeParams: true, // Allows routers to inherit parameters from their ancestor routes.
             },
             corsOptions: {
-                origin: [host + ':' + port],
+                origin: [host + `:` + port],
             },
             helmetOptions: {
                 //todo setup security options, see https://www.npmjs.com/package/helmet
                 contentSecurityPolicy: {
                     // loading resources
                     directives: {
-                        defaultSrc: ["'self'"], //todo only allow resources (css, js, html, etc) from our api.
-                        styleSrc: ["'self'", "'unsafe-inline'"], // inline css and css sections in headers.
-                        imgSrc: ["'self'", 'data:'],
-                        scriptSrc: ["'self'", "'unsafe-inline'"],
-                        fontSrc: ["'self'", 'data:'],
-                        reportUri: '/report-violation', // CSP violations will be posted here (server) from the browser.
+                        defaultSrc: [`'self'`], //todo only allow resources (css, js, html, etc) from our api.
+                        styleSrc: [`'self'`, `'unsafe-inline'`], // inline css and css sections in headers.
+                        imgSrc: [`'self'`, `data:`],
+                        scriptSrc: [`'self'`, `'unsafe-inline'`],
+                        fontSrc: [`'self'`, `data:`],
+                        reportUri: `/report-violation`, // CSP violations will be posted here (server) from the browser.
                     },
                 },
                 frameguard: {
                     // iframe related security
-                    action: 'sameorigin', //todo only allows iframes from the same domain with this option
+                    action: `sameorigin`, //todo only allows iframes from the same domain with this option
                 },
                 // hpkp: { // todo pins the public key of your https cert to prevent man-in-the-middle attacks
                 //     maxAge: 7776000, // ninetyDaysInSeconds
@@ -111,9 +111,9 @@ module.exports = function() {
         },
         mongoDb: {
             urlConfig: {
-                username: '',
-                password: '',
-                server: 'localhost',
+                username: ``,
+                password: ``,
+                server: `localhost`,
                 dbName: `${packageJson.name}-${process.env.NODE_ENV}`,
             },
             clientOptions: {
@@ -125,9 +125,9 @@ module.exports = function() {
 
 function convertHeaderStringToObject(header) {
     const headers = {};
-    const pairs = header.split('\r\n');
+    const pairs = header.split(`\r\n`);
     pairs.forEach(pair => {
-        const parts = pair.split(':');
+        const parts = pair.split(`:`);
         if (!_.isNil(parts[0]) && !_.isNil(parts[1])) {
             headers[parts[0].trim()] = parts[1].trim();
         }

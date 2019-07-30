@@ -80,5 +80,6 @@ export interface StatusRules {
     allowedValues?: Status[];
 }
 export interface Status {
-    name?: string;
+    name: string;
+    description?: string;
 }

@@ -14,26 +14,45 @@
             "jsx": false
         }
     },
-    "plugins": ["node", "prettier", "mocha"],
+    "plugins": ["node", "prettier", "mocha", "jsdoc"],
     "extends": ["eslint:recommended", "plugin:node/recommended", "prettier"],
     "rules": {
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "single", { "avoidEscape": true }],
+        "quotes": ["warn", "backtick", { "avoidEscape": true }],
         "semi": ["error", "always"],
         "no-console": ["off"],
         "node/exports-style": ["error", "module.exports"],
         "strict": ["error", "global"],
-        "require-atomic-updates": ["off"]
+        "no-shadow": ["error"],
+        "require-atomic-updates": ["off"],
+        "jsdoc/check-param-names": 1,
+        "jsdoc/check-syntax": 1,
+        "jsdoc/check-tag-names": 1,
+        "jsdoc/check-types": 1,
+        "jsdoc/no-undefined-types": 1,
+        "jsdoc/require-param-description": 1,
+        "jsdoc/require-param-name": 1,
+        "jsdoc/require-param-type": 1,
+        "jsdoc/require-returns": 0,
+        "jsdoc/require-returns-check": 1,
+        "jsdoc/require-returns-description": 1,
+        "jsdoc/require-returns-type": 1,
+        "jsdoc/valid-types": 1
     },
     "overrides": [
         {
-            "files": ["**/*.test.js", "./test-init.js"],
+            "files": [
+                "**/*.test.js",
+                "**/test-init.js",
+                "**/packages/tester-*/**"
+            ],
             "env": {
                 "mocha": true
             },
             "rules": {
-                "node/no-unpublished-require": ["off"]
+                "node/no-unpublished-require": ["off"],
+                "node/no-extraneous-require": ["off"]
             },
             "globals": {
                 "chai": true,
