@@ -29,7 +29,7 @@ module.exports = function() {
             authorization: { $ref: `#/definitions/authorization` },
             statuses: {
                 type: `array`,
-                items: { $ref: `#/definitions/statusRules` },
+                items: { $ref: `#/definitions/statusFieldDefinition` },
                 uniqueItems: true,
             },
             collectionName: commonSchemas.identifier,
@@ -156,10 +156,10 @@ module.exports = function() {
                 additionalProperties: false,
                 required: [`name`],
             },
-            statusRules: {
+            statusFieldDefinition: {
                 type: `object`,
                 properties: {
-                    pathToStatusValue: { type: `string` },
+                    pathToStatusField: { type: `string` },
                     allowedValues: {
                         type: `array`,
                         items: { $ref: `#/definitions/status` },

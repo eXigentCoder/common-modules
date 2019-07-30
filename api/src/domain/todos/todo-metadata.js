@@ -37,7 +37,7 @@ module.exports = function getMetadata() {
             },
             statuses: [
                 {
-                    pathToStatusValue: `status`,
+                    pathToStatusField: `status`,
                     allowedValues: [
                         {
                             name: `Todo`,

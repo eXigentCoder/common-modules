@@ -19,7 +19,7 @@ export interface EntityMetadata {
     stringIdentifier?: StringIdentifier;
     tenantInfo?: TenantInfo;
     authorization?: Authorization;
-    statuses?: StatusRules[];
+    statuses?: StatusFieldDefinition[];
     /**
      * A human readable string identifier used to refer to an entitiy
      */
@@ -75,8 +75,8 @@ export interface Ownership {
     allowedActions: string[];
     idSchema?: JsonSchema;
 }
-export interface StatusRules {
-    pathToStatusValue?: string;
+export interface StatusFieldDefinition {
+    pathToStatusField?: string;
     allowedValues?: Status[];
 }
 export interface Status {
