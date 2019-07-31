@@ -76,8 +76,9 @@ export interface Ownership {
     idSchema?: JsonSchema;
 }
 export interface StatusFieldDefinition {
-    pathToStatusField?: string;
-    allowedValues?: Status[];
+    pathToStatusField: string;
+    allowedValues: Status[];
+    isRequired: boolean;
 }
 export interface Status {
     name: string;

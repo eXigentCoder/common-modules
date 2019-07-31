@@ -15,10 +15,4 @@ module.exports = function filterPropertiesForReplace(schema, metadata) {
     if (metadata.authorization && metadata.authorization.ownership) {
         removeFromRequired(schema, ``, `owner`);
     }
-    // delete schema.properties.status;
-    // removeFromArrayIfExists(schema.required, 'status');
-    // delete schema.properties.statusDate;
-    // removeFromArrayIfExists(schema.required, 'statusDate');
-    // delete schema.properties.statusLog;
-    // removeFromArrayIfExists(schema.required, 'statusLog');
 };

@@ -165,7 +165,9 @@ module.exports = function() {
                         items: { $ref: `#/definitions/status` },
                         uniqueItems: true,
                     },
+                    isRequired: { type: `boolean` },
                 },
+                required: [`pathToStatusField`, `allowedValues`, `isRequired`],
                 additionalProperties: false,
             },
             jsonSchema: {

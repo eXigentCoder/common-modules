@@ -1,6 +1,7 @@
 {
     "mocha.files.glob": "./packages/**/*.test.js",
     "mocha.requires": ["./test-init.js"],
+    "mocha.files.ignore": ["**/.git/**/*", "**/node_modules/**/*"],
     "mocha.options": {
         "exit": true,
         "timeout": 30000

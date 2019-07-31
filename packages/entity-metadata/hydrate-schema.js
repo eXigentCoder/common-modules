@@ -19,7 +19,7 @@ function hydrateSchema(schema, metadata) {
     addTenantInfo(schema, metadata.tenantInfo);
     addVersionInfo(schema);
     addOwnerInfo(schema, metadata);
-    // addStatusInfo(schema);
+    addStatusInfo(schema, metadata);
 }
 
 /**
@@ -69,44 +69,54 @@ function addOwnerInfo(schema, metadata) {
     addFullRequiredSchema(schema, `owner`, ownershipSchema(metadata));
 }
 
-// function addStatusInfo(schema) {
-//     ensurePropsAndRequired(schema);
-//     if (!schema.statuses) {
-//         return;
-//     }
-//     if (!schema.updateStatusSchema) {
-//         throw new Error(
-//             'Cannot have statuses array specified on the schema but not provide an updateStatusSchema property'
-//         );
-//     }
-//     const statusNames = schema.statuses.map(status => status.name);
-//     schema.properties.status = {
-//         type: 'string',
-//         enum: statusNames,
-//     };
-//     schema.properties.statusDate = {
-//         type: 'string',
-//         format: 'date-time',
-//         faker: 'date.past',
-//     };
-//     schema.properties.statusLog = {
-//         type: 'array',
-//         items: {
-//             type: 'object',
-//             properties: {
-//                 status: schema.properties.status,
-//                 statusDate: schema.properties.statusDate,
-//                 data: schema.updateStatusSchema, //todo anyof?
-//             },
-//             required: ['status', 'statusDate', 'data'], //todo - data check schema anyof?
-//             additionalProperties: false,
-//         },
-//         additionalItems: false,
-//     };
-//     schema.required.push('status');
-//     schema.required.push('statusDate');
-//     schema.required.push('statusLog');
-// }
+/**
+ * @param {import('./types').JsonSchema} schema
+ * @param {import('./types').EntityMetadata} metadata
+ */
+function addStatusInfo(schema, metadata) {
+    if (!metadata.statuses || metadata.statuses.length === 0) {
+        return;
+    }
+    for (const definition of metadata.statuses) {
+        // if (!definition.updateStatusSchema) {
+        //     throw new Error(
+        //         `Cannot have statuses array specified on the schema but not provide an updateStatusSchema property`
+        //     );
+        // }
+        const statusNames = definition.allowedValues.map(status => status.name);
+        const statusSchema = {
+            type: `string`,
+            enum: statusNames,
+        };
+        if (definition.isRequired) {
+            addFullRequiredSchema(schema, definition.pathToStatusField, statusSchema);
+        } else {
+            addSchema(schema, definition.pathToStatusField, statusSchema);
+        }
+        // schema.properties.statusDate = {
+        //     type: `string`,
+        //     format: `date-time`,
+        //     faker: `date.past`,
+        // };
+        // schema.properties.statusLog = {
+        //     type: `array`,
+        //     items: {
+        //         type: `object`,
+        //         properties: {
+        //             status: schema.properties.status,
+        //             statusDate: schema.properties.statusDate,
+        //             data: schema.updateStatusSchema, //todo anyof?
+        //         },
+        //         required: [`status`, `statusDate`, `data`], //todo - data check schema anyof?
+        //         additionalProperties: false,
+        //     },
+        //     additionalItems: false,
+        // };
+        // schema.required.push(`status`);
+        // schema.required.push(`statusDate`);
+        // schema.required.push(`statusLog`);
+    }
+}
 
 module.exports = {
     hydrateSchema,
@@ -114,4 +124,5 @@ module.exports = {
     addStringIdentifier,
     addTenantInfo,
     addVersionInfo,
+    addStatusInfo,
 };
