@@ -96,6 +96,17 @@ describe(`MongoDB`, () => {
                 await expect(created.statusDate).to.be.ok;
                 await expect(created.statusLog).to.be.ok;
             });
+            it(`Should allow you to set a valid status if one is required`, async () => {
+                const md = withStatuses(stringIdTenant());
+                const { create } = await getPopulatedCrud(md);
+                const entity = validEntity();
+                entity.status = `todo`;
+                const context = createContext();
+                const created = await create(entity, context);
+                await expect(created.status).to.be.ok;
+                await expect(created.statusDate).to.be.ok;
+                await expect(created.statusLog).to.be.ok;
+            });
         });
     });
 });
