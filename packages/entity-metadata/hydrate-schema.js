@@ -84,20 +84,47 @@ function addStatusInfo(schema, metadata) {
         //     );
         // }
         const statusNames = definition.allowedValues.map(status => status.name);
+        /**@type {import('./types').JsonSchema} */
         const statusSchema = {
             type: `string`,
             enum: statusNames,
         };
+        /**@type {import('./types').JsonSchema} */
+        const dateSchema = {
+            type: `string`,
+            format: `date-time`,
+            faker: `date.past`,
+        };
+        /**@type {import('./types').JsonSchema} */
+        const logSchema = {
+            type: `array`,
+            items: {
+                type: `object`,
+                properties: {
+                    status: statusSchema,
+                    statusDate: dateSchema,
+                    data: definition.updateStatusSchema || {
+                        // eslint-disable-next-line node/no-unsupported-features/es-syntax
+                        type: [`object`, `string`, `null`],
+                    },
+                },
+                required: [`status`, `statusDate`],
+                additionalProperties: false,
+            },
+            additionalItems: false,
+        };
+        if (definition.updateStatusSchema) {
+            logSchema.items.required.push(`data`);
+        }
         if (definition.isRequired) {
             addFullRequiredSchema(schema, definition.pathToStatusField, statusSchema);
+            addFullRequiredSchema(schema, `${definition.pathToStatusField}Date`, dateSchema);
+            addFullRequiredSchema(schema, `${definition.pathToStatusField}Log`, logSchema);
         } else {
             addSchema(schema, definition.pathToStatusField, statusSchema);
+            addSchema(schema, `${definition.pathToStatusField}Date`, dateSchema);
+            addSchema(schema, `${definition.pathToStatusField}Log`, logSchema);
         }
-        // schema.properties.statusDate = {
-        //     type: `string`,
-        //     format: `date-time`,
-        //     faker: `date.past`,
-        // };
         // schema.properties.statusLog = {
         //     type: `array`,
         //     items: {

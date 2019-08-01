@@ -29,7 +29,7 @@ describe(`Entity Metadata`, () => {
                 addStatusInfo(schema, { statuses });
                 expect(schema).to.eql(copy);
             });
-            it(`should add the status to the schema if metadata.statuses has a valid definition`, () => {
+            it(`should add the status to the schema if metadata.statuses has a valid definition and is required`, () => {
                 const schema = {};
                 const copy = JSON.parse(JSON.stringify(schema));
                 /**@type {import('./types').StatusFieldDefinition} */
@@ -42,6 +42,24 @@ describe(`Entity Metadata`, () => {
                 addStatusInfo(schema, { statuses });
                 expect(schema).to.not.eql(copy);
                 expect(schema.properties.kanbanStatus).to.be.ok;
+                expect(schema.properties.kanbanStatusDate).to.be.ok;
+                expect(schema.properties.kanbanStatusLog).to.be.ok;
+            });
+            it(`should add the status to the schema if metadata.statuses has a valid definition and is not required`, () => {
+                const schema = {};
+                const copy = JSON.parse(JSON.stringify(schema));
+                /**@type {import('./types').StatusFieldDefinition} */
+                const definiton = {
+                    pathToStatusField: `kanbanStatus`,
+                    isRequired: false,
+                    allowedValues: [{ name: `to do` }, { name: `in progress` }, { name: `done` }],
+                };
+                const statuses = [definiton];
+                addStatusInfo(schema, { statuses });
+                expect(schema).to.not.eql(copy);
+                expect(schema.properties.kanbanStatus).to.be.ok;
+                expect(schema.properties.kanbanStatusDate).to.be.ok;
+                expect(schema.properties.kanbanStatusLog).to.be.ok;
             });
         });
         describe(`Add Tenant Info`, () => {
