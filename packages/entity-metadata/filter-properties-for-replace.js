@@ -15,4 +15,13 @@ module.exports = function filterPropertiesForReplace(schema, metadata) {
     if (metadata.authorization && metadata.authorization.ownership) {
         removeFromRequired(schema, ``, `owner`);
     }
+    if (metadata.statuses && metadata.statuses.length > 0) {
+        for (const definition of metadata.statuses) {
+            if (!definition.isRequired) {
+                removeFromRequired(schema, ``, definition.pathToStatusField);
+            }
+            removeFromRequired(schema, ``, `${definition.pathToStatusField}Date`);
+            removeFromRequired(schema, ``, `${definition.pathToStatusField}Log`);
+        }
+    }
 };
