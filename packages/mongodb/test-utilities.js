@@ -109,6 +109,26 @@ function stringIdNoTenantOwnership({
     });
 }
 
+/**
+ *
+ * @param {import('../entity-metadata/types').EntityMetadata} metadata
+ * @returns {import('../entity-metadata/types').EntityMetadata}
+ */
+function withStatuses(metadata, isRequired = true, pathToStatusField = `status`) {
+    /**@type {import('../entity-metadata/types').EntityMetadata} */
+    // @ts-ignore
+    const status = {
+        statuses: [
+            {
+                allowedValues: [{ name: `todo` }, { name: `in progress ` }, { name: `done` }],
+                isRequired,
+                pathToStatusField,
+            },
+        ],
+    };
+    return Object.assign(status, metadata);
+}
+
 function validEntity() {
     return {
         username: `bob-${randomString()}`,
@@ -145,4 +165,5 @@ module.exports = {
     randomString,
     urlConfig,
     stringIdNoTenantOwnership,
+    withStatuses,
 };

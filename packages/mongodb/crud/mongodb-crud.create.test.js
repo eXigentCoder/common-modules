@@ -4,6 +4,7 @@ const { ValidationError, TenantError } = require(`../../common-errors`);
 
 const {
     getPopulatedCrud,
+    withStatuses,
     createContext,
     noStringIdNoTenant,
     stringIdNoTenant,
@@ -84,6 +85,16 @@ describe(`MongoDB`, () => {
                 const context = createContext();
                 context.identity.tenant.id = ``;
                 await expect(create(entity, context)).to.be.rejectedWith(TenantError);
+            });
+            it(`Should have the first status if the metadata has it specified as required`, async () => {
+                const md = withStatuses(stringIdTenant());
+                const { create } = await getPopulatedCrud(md);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                await expect(created.status).to.be.ok;
+                await expect(created.statusDate).to.be.ok;
+                await expect(created.statusLog).to.be.ok;
             });
         });
     });

@@ -125,23 +125,6 @@ function addStatusInfo(schema, metadata) {
             addSchema(schema, `${definition.pathToStatusField}Date`, dateSchema);
             addSchema(schema, `${definition.pathToStatusField}Log`, logSchema);
         }
-        // schema.properties.statusLog = {
-        //     type: `array`,
-        //     items: {
-        //         type: `object`,
-        //         properties: {
-        //             status: schema.properties.status,
-        //             statusDate: schema.properties.statusDate,
-        //             data: schema.updateStatusSchema, //todo anyof?
-        //         },
-        //         required: [`status`, `statusDate`, `data`], //todo - data check schema anyof?
-        //         additionalProperties: false,
-        //     },
-        //     additionalItems: false,
-        // };
-        // schema.required.push(`status`);
-        // schema.required.push(`statusDate`);
-        // schema.required.push(`statusLog`);
     }
 }
 

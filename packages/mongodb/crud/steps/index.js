@@ -187,6 +187,11 @@ async function setMetadataFields({ existingEntity, entity, executionContext, uti
     }
 }
 
+/** @type {import('../../types').Hook} */
+async function setStatuses({ entity, executionContext, utilities }) {
+    utilities.setStatuses(entity, executionContext);
+}
+
 module.exports = {
     runStepWithHooks,
     getAuthorizeFn,
@@ -203,4 +208,5 @@ module.exports = {
     moveCurrentEntityToExisting,
     setEntityFromDBUsingQuery,
     setMetadataFields,
+    setStatuses,
 };
