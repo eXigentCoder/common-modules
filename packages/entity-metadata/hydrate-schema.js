@@ -78,11 +78,12 @@ function addStatusInfo(schema, metadata) {
         return;
     }
     for (const definition of metadata.statuses) {
-        // if (!definition.updateStatusSchema) {
-        //     throw new Error(
-        //         `Cannot have statuses array specified on the schema but not provide an updateStatusSchema property`
-        //     );
-        // }
+        definition.pathToStatusDateField =
+            definition.pathToStatusDateField || `${definition.pathToStatusField}Date`;
+        definition.pathToStatusLogField =
+            definition.pathToStatusLogField || `${definition.pathToStatusField}Log`;
+        definition.pathToStatusDataField =
+            definition.pathToStatusDataField || `${definition.pathToStatusField}Data`;
         const statusNames = definition.allowedValues.map(status => status.name);
         /**@type {import('./types').JsonSchema} */
         const statusSchema = {
@@ -118,12 +119,12 @@ function addStatusInfo(schema, metadata) {
         }
         if (definition.isRequired) {
             addFullRequiredSchema(schema, definition.pathToStatusField, statusSchema);
-            addFullRequiredSchema(schema, `${definition.pathToStatusField}Date`, dateSchema);
-            addFullRequiredSchema(schema, `${definition.pathToStatusField}Log`, logSchema);
+            addFullRequiredSchema(schema, definition.pathToStatusDateField, dateSchema);
+            addFullRequiredSchema(schema, definition.pathToStatusLogField, logSchema);
         } else {
             addSchema(schema, definition.pathToStatusField, statusSchema);
-            addSchema(schema, `${definition.pathToStatusField}Date`, dateSchema);
-            addSchema(schema, `${definition.pathToStatusField}Log`, logSchema);
+            addSchema(schema, definition.pathToStatusDateField, dateSchema);
+            addSchema(schema, definition.pathToStatusLogField, logSchema);
         }
     }
 }

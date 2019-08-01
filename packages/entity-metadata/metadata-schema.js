@@ -160,6 +160,9 @@ module.exports = function() {
                 type: `object`,
                 properties: {
                     pathToStatusField: { type: `string` },
+                    pathToStatusDateField: { type: `string` },
+                    pathToStatusLogField: { type: `string` },
+                    pathToStatusDataField: { type: `string` },
                     allowedValues: {
                         type: `array`,
                         items: { $ref: `#/definitions/status` },

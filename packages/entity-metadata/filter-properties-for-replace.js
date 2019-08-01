@@ -20,8 +20,8 @@ module.exports = function filterPropertiesForReplace(schema, metadata) {
             if (!definition.isRequired) {
                 removeFromRequired(schema, ``, definition.pathToStatusField);
             }
-            removeFromRequired(schema, ``, `${definition.pathToStatusField}Date`);
-            removeFromRequired(schema, ``, `${definition.pathToStatusField}Log`);
+            removeFromRequired(schema, ``, definition.pathToStatusDateField);
+            removeFromRequired(schema, ``, definition.pathToStatusLogField);
         }
     }
 };

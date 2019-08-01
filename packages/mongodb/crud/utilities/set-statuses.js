@@ -16,25 +16,25 @@ function createSetStatusesIfApplicable(metadata) {
         for (const definition of metadata.statuses) {
             const currentValue = get(entity, definition.pathToStatusField);
             const firstStatus = definition.allowedValues[0].name;
-            const log = get(entity, `${definition.pathToStatusField}Log`, []);
+            const log = get(entity, definition.pathToStatusLogField, []);
             log.push({
                 status: currentValue || firstStatus,
                 statusDate: now,
                 //data:??
             });
             if (currentValue) {
-                const newDate = get(entity, `${definition.pathToStatusField}Date`, now);
-                set(entity, `${definition.pathToStatusField}Date`, newDate);
-                const newLog = get(entity, `${definition.pathToStatusField}Log`, log);
-                set(entity, `${definition.pathToStatusField}Log`, newLog);
+                const newDate = get(entity, definition.pathToStatusDateField, now);
+                set(entity, definition.pathToStatusDateField, newDate);
+                const newLog = get(entity, definition.pathToStatusLogField, log);
+                set(entity, definition.pathToStatusLogField, newLog);
                 return;
             }
             if (!definition.isRequired) {
                 return; //not required so skip until someone sets it.
             }
             set(entity, definition.pathToStatusField, firstStatus);
-            set(entity, `${definition.pathToStatusField}Date`, now);
-            set(entity, `${definition.pathToStatusField}Log`, log);
+            set(entity, definition.pathToStatusDateField, now);
+            set(entity, definition.pathToStatusLogField, log);
         }
     };
 }

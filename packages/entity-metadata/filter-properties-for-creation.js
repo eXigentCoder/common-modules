@@ -21,8 +21,8 @@ module.exports = function filterPropertiesForCreation(schema, metadata) {
     if (metadata.statuses && metadata.statuses.length > 0) {
         for (const definition of metadata.statuses) {
             removeFromRequired(schema, ``, definition.pathToStatusField);
-            removeSchemaAndRequired(schema, `${definition.pathToStatusField}Date`);
-            removeSchemaAndRequired(schema, `${definition.pathToStatusField}Log`);
+            removeSchemaAndRequired(schema, definition.pathToStatusDateField);
+            removeSchemaAndRequired(schema, definition.pathToStatusLogField);
         }
     }
 };
