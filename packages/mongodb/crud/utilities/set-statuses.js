@@ -10,13 +10,14 @@ const moment = require(`moment`);
  * @returns {import("../../types").SetStatusesIfApplicable}
  */
 function createSetStatusesIfApplicable(metadata) {
-    return function setStatusesIfApplicable(entity, context) {
+    return function setStatusesIfApplicable(entity, existingEntity, context) {
         if (!metadata.statuses || metadata.statuses.length === 0) {
             return;
         }
         const now = moment.utc().toISOString();
         for (const definition of metadata.statuses) {
             const currentValue = get(entity, definition.pathToStatusField);
+            const oldValue = get(existingEntity, definition.pathToStatusField);
             const firstStatus = definition.allowedValues[0].name;
             const log = get(entity, definition.pathToStatusLogField, []);
             const statusData = get(entity, definition.pathToStatusDataField);
@@ -26,7 +27,7 @@ function createSetStatusesIfApplicable(metadata) {
                 statusDate: now,
                 data: statusData,
             });
-            if (currentValue) {
+            if (currentValue /* && currentValue !== oldValue */) {
                 const newDate = get(entity, definition.pathToStatusDateField, now);
                 set(entity, definition.pathToStatusDateField, newDate);
                 const newLog = get(entity, definition.pathToStatusLogField, log);

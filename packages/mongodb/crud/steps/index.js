@@ -188,8 +188,8 @@ async function setMetadataFields({ existingEntity, entity, executionContext, uti
 }
 
 /** @type {import('../../types').Hook} */
-async function setStatuses({ entity, executionContext, utilities }) {
-    utilities.setStatuses(entity, executionContext);
+async function setStatuses({ entity, executionContext, existingEntity, utilities }) {
+    utilities.setStatuses(entity, existingEntity, executionContext);
 }
 
 module.exports = {

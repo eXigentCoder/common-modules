@@ -91,7 +91,11 @@ export type CreateAddTenantToFilter = (metatada: EntityMetadata) => AddTenantToF
 export type AddTenantToFilter = (query: Query, context: ExecutionContext) => void;
 export type GetUtils = (params: CreateUtilityParams) => Promise<Utilities>;
 export type SetOwnerIfApplicable = (entity: any, context: ExecutionContext) => void;
-export type SetStatusesIfApplicable = (entity: any, context: ExecutionContext) => void;
+export type SetStatusesIfApplicable = (
+    entity: any,
+    existingEntity: any,
+    context: ExecutionContext
+) => void;
 export type TitleToStringIdentifier = (title: string) => string;
 
 export interface UrlConfig {

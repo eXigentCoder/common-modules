@@ -7,6 +7,7 @@ const {
     stringIdNoTenant,
     stringIdTenant,
     validEntity,
+    withStatuses,
 } = require(`../test-utilities`);
 
 describe(`MongoDB`, () => {
@@ -82,6 +83,31 @@ describe(`MongoDB`, () => {
                 delete toUpdate.name;
                 const replaced = await replaceById(toUpdate._id.toString(), toUpdate, context);
                 expect(replaced.name).to.eql(created.name);
+            });
+            describe(`Status Logic`, () => {
+                it(`should allow you to update the entity without changing the status`, async () => {
+                    const md = withStatuses(noStringIdNoTenant());
+                    const { replaceById, create } = await getPopulatedCrud(md);
+                    const entity = validEntity();
+                    const statusData = { someReason: 42, saveMe: true };
+                    entity.statusData = statusData;
+                    const created = await create(entity, createContext());
+                    expect(created.status).to.be.ok;
+                    expect(created.statusDate).to.be.ok;
+                    expect(created.statusLog).to.be.ok;
+                    expect(created.statusData).to.not.be.ok;
+                    const toUpdate = JSON.parse(JSON.stringify(created));
+                    toUpdate.username += `-updated`;
+                    try {
+                        const replaced = await replaceById(toUpdate._id, toUpdate, createContext());
+
+                        expect(replaced.username).to.eql(toUpdate.username);
+                        expect(replaced._id.toString()).to.eql(toUpdate._id.toString());
+                        expect(replaced.versionInfo).to.not.eql(toUpdate.versionInfo);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                });
             });
         });
     });
