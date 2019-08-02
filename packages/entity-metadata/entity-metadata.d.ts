@@ -82,7 +82,8 @@ export interface StatusFieldDefinition {
     pathToStatusDataField?: string;
     allowedValues: Status[];
     isRequired: boolean;
-    updateStatusSchema?: JsonSchema;
+    dataRequired?: boolean;
+    statusDataSchema?: JsonSchema;
 }
 export interface Status {
     name: string;

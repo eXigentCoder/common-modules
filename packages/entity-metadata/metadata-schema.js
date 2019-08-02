@@ -169,9 +169,10 @@ module.exports = function() {
                         uniqueItems: true,
                     },
                     isRequired: { type: `boolean` },
-                    updateStatusSchema: { $ref: `#/definitions/jsonSchema` },
+                    dataRequired: { type: `boolean` },
+                    statusDataSchema: { $ref: `#/definitions/jsonSchema` },
                 },
-                required: [`pathToStatusField`, `allowedValues`, `isRequired`],
+                required: [`pathToStatusField`, `allowedValues`, `isRequired`, `dataRequired`],
                 additionalProperties: false,
             },
             jsonSchema: {

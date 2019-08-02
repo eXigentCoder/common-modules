@@ -87,7 +87,7 @@ describe(`MongoDB`, () => {
                 await expect(create(entity, context)).to.be.rejectedWith(TenantError);
             });
             it(`Should have the first status if the metadata has it specified as required`, async () => {
-                const md = withStatuses(stringIdTenant());
+                const md = withStatuses(stringIdTenant(), { dataRequired: false });
                 const { create } = await getPopulatedCrud(md);
                 const entity = validEntity();
                 const context = createContext();
@@ -97,7 +97,7 @@ describe(`MongoDB`, () => {
                 await expect(created.statusLog).to.be.ok;
             });
             it(`Should allow you to set a valid status if one is required`, async () => {
-                const md = withStatuses(stringIdTenant());
+                const md = withStatuses(stringIdTenant(), { dataRequired: false });
                 const { create } = await getPopulatedCrud(md);
                 const entity = validEntity();
                 entity.status = `todo`;
@@ -106,6 +106,21 @@ describe(`MongoDB`, () => {
                 await expect(created.status).to.be.ok;
                 await expect(created.statusDate).to.be.ok;
                 await expect(created.statusLog).to.be.ok;
+            });
+            it(`Should allow you to pass through status data`, async () => {
+                const md = withStatuses(stringIdTenant());
+                const { create } = await getPopulatedCrud(md);
+                const entity = validEntity();
+                entity.status = `todo`;
+                const statusData = { someReason: 42, saveMe: true };
+                entity.statusData = statusData;
+                const context = createContext();
+                const created = await create(entity, context);
+                await expect(created.status).to.be.ok;
+                await expect(created.statusDate).to.be.ok;
+                await expect(created.statusLog).to.be.ok;
+                await expect(created.statusData).to.not.be.ok;
+                await expect(created.statusLog[0].data).to.eql(statusData);
             });
         });
     });

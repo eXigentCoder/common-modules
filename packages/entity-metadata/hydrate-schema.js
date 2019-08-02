@@ -84,6 +84,10 @@ function addStatusInfo(schema, metadata) {
             definition.pathToStatusLogField || `${definition.pathToStatusField}Log`;
         definition.pathToStatusDataField =
             definition.pathToStatusDataField || `${definition.pathToStatusField}Data`;
+        definition.statusDataSchema = definition.statusDataSchema || {
+            // eslint-disable-next-line node/no-unsupported-features/es-syntax
+            type: [`object`, `string`, `null`],
+        };
         const statusNames = definition.allowedValues.map(status => status.name);
         /**@type {import('./types').JsonSchema} */
         const statusSchema = {
@@ -104,17 +108,14 @@ function addStatusInfo(schema, metadata) {
                 properties: {
                     status: statusSchema,
                     statusDate: dateSchema,
-                    data: definition.updateStatusSchema || {
-                        // eslint-disable-next-line node/no-unsupported-features/es-syntax
-                        type: [`object`, `string`, `null`],
-                    },
+                    data: definition.statusDataSchema,
                 },
                 required: [`status`, `statusDate`],
                 additionalProperties: false,
             },
             additionalItems: false,
         };
-        if (definition.updateStatusSchema) {
+        if (definition.dataRequired) {
             logSchema.items.required.push(`data`);
         }
         if (definition.isRequired) {

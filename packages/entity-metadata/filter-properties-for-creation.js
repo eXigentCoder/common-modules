@@ -1,6 +1,11 @@
 'use strict';
 
-const { removeSchemaAndRequired, removeFromRequired } = require(`./json-schema-utilities`);
+const {
+    removeSchemaAndRequired,
+    removeFromRequired,
+    addFullRequiredSchema,
+    addSchema,
+} = require(`./json-schema-utilities`);
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -23,6 +28,15 @@ module.exports = function filterPropertiesForCreation(schema, metadata) {
             removeFromRequired(schema, ``, definition.pathToStatusField);
             removeSchemaAndRequired(schema, definition.pathToStatusDateField);
             removeSchemaAndRequired(schema, definition.pathToStatusLogField);
+            if (definition.dataRequired) {
+                addFullRequiredSchema(
+                    schema,
+                    definition.pathToStatusDataField,
+                    definition.statusDataSchema
+                );
+            } else {
+                addSchema(schema, definition.pathToStatusDataField, definition.statusDataSchema);
+            }
         }
     }
 };

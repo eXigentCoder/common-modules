@@ -114,7 +114,10 @@ function stringIdNoTenantOwnership({
  * @param {import('../entity-metadata/types').EntityMetadata} metadata
  * @returns {import('../entity-metadata/types').EntityMetadata}
  */
-function withStatuses(metadata, isRequired = true, pathToStatusField = `status`) {
+function withStatuses(
+    metadata,
+    { isRequired = true, pathToStatusField = `status`, dataRequired = true } = {}
+) {
     /**@type {import('../entity-metadata/types').EntityMetadata} */
     // @ts-ignore
     const status = {
@@ -123,6 +126,7 @@ function withStatuses(metadata, isRequired = true, pathToStatusField = `status`)
                 allowedValues: [{ name: `todo` }, { name: `in progress ` }, { name: `done` }],
                 isRequired,
                 pathToStatusField,
+                dataRequired,
             },
         ],
     };

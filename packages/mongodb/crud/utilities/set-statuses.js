@@ -1,6 +1,8 @@
 'use strict';
 const get = require(`lodash/get`);
 const set = require(`lodash/set`);
+const unset = require(`lodash/unset`);
+
 const moment = require(`moment`);
 /**
  *
@@ -17,10 +19,12 @@ function createSetStatusesIfApplicable(metadata) {
             const currentValue = get(entity, definition.pathToStatusField);
             const firstStatus = definition.allowedValues[0].name;
             const log = get(entity, definition.pathToStatusLogField, []);
+            const statusData = get(entity, definition.pathToStatusDataField);
+            unset(entity, definition.pathToStatusDataField);
             log.push({
                 status: currentValue || firstStatus,
                 statusDate: now,
-                //data:??
+                data: statusData,
             });
             if (currentValue) {
                 const newDate = get(entity, definition.pathToStatusDateField, now);
