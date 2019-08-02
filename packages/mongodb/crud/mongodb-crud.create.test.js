@@ -92,9 +92,24 @@ describe(`MongoDB`, () => {
                 const entity = validEntity();
                 const context = createContext();
                 const created = await create(entity, context);
-                await expect(created.status).to.be.ok;
-                await expect(created.statusDate).to.be.ok;
-                await expect(created.statusLog).to.be.ok;
+                expect(created.status).to.be.ok;
+                expect(created.statusDate).to.be.ok;
+                expect(created.statusLog).to.be.ok;
+                expect(created.statusData).to.not.be.ok;
+            });
+            it(`Should not have a status if one was not provided and the definition had one allowed but not required`, async () => {
+                const md = withStatuses(stringIdTenant(), {
+                    isRequired: false,
+                    dataRequired: false,
+                });
+                const { create } = await getPopulatedCrud(md);
+                const entity = validEntity();
+                const context = createContext();
+                const created = await create(entity, context);
+                expect(created.status).to.not.be.ok;
+                expect(created.statusDate).to.not.be.ok;
+                expect(created.statusLog).to.not.be.ok;
+                expect(created.statusData).to.not.be.ok;
             });
             it(`Should allow you to set a valid status if one is required`, async () => {
                 const md = withStatuses(stringIdTenant(), { dataRequired: false });
@@ -103,9 +118,10 @@ describe(`MongoDB`, () => {
                 entity.status = `todo`;
                 const context = createContext();
                 const created = await create(entity, context);
-                await expect(created.status).to.be.ok;
-                await expect(created.statusDate).to.be.ok;
-                await expect(created.statusLog).to.be.ok;
+                expect(created.status).to.be.ok;
+                expect(created.statusDate).to.be.ok;
+                expect(created.statusLog).to.be.ok;
+                expect(created.statusData).to.not.be.ok;
             });
             it(`Should allow you to pass through status data`, async () => {
                 const md = withStatuses(stringIdTenant());
@@ -116,11 +132,11 @@ describe(`MongoDB`, () => {
                 entity.statusData = statusData;
                 const context = createContext();
                 const created = await create(entity, context);
-                await expect(created.status).to.be.ok;
-                await expect(created.statusDate).to.be.ok;
-                await expect(created.statusLog).to.be.ok;
-                await expect(created.statusData).to.not.be.ok;
-                await expect(created.statusLog[0].data).to.eql(statusData);
+                expect(created.status).to.be.ok;
+                expect(created.statusDate).to.be.ok;
+                expect(created.statusLog).to.be.ok;
+                expect(created.statusData).to.not.be.ok;
+                expect(created.statusLog[0].data).to.eql(statusData);
             });
         });
     });
