@@ -1,6 +1,11 @@
 'use strict';
 
-const { removeFromRequired, removeFromRequiredForEntityPath } = require(`./json-schema-utilities`);
+const {
+    removeFromRequired,
+    removeFromRequiredForEntityPath,
+    addFullRequiredSchema,
+    addSchema,
+} = require(`./json-schema-utilities`);
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -22,6 +27,15 @@ module.exports = function filterPropertiesForReplace(schema, metadata) {
             }
             removeFromRequired(schema, ``, definition.pathToStatusDateField);
             removeFromRequired(schema, ``, definition.pathToStatusLogField);
+            if (definition.dataRequired) {
+                addFullRequiredSchema(
+                    schema,
+                    definition.pathToStatusDataField,
+                    definition.statusDataSchema
+                );
+            } else {
+                addSchema(schema, definition.pathToStatusDataField, definition.statusDataSchema);
+            }
         }
     }
 };
