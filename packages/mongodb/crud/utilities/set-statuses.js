@@ -10,7 +10,7 @@ const { ValidationError } = require(`../../../common-errors`);
  * @returns {import("../../types").SetStatusesIfApplicable}
  */
 function createSetStatusesIfApplicable(metadata) {
-    return function setStatusesIfApplicable(entity, existingEntity, context) {
+    return function setStatusesIfApplicable(entity, existingEntity) {
         if (!metadata.statuses || metadata.statuses.length === 0) {
             return;
         }

@@ -4,6 +4,10 @@
       "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
     }
   },
+  "engines": {
+    "node": "^10.0.0",
+    "npm": ">= 6.0.0"
+  },
   "bundleDependencies": false,
   "dependencies": {},
   "deprecated": false,

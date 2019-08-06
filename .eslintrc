@@ -38,7 +38,10 @@
         "jsdoc/require-returns-check": 1,
         "jsdoc/require-returns-description": 1,
         "jsdoc/require-returns-type": 1,
-        "jsdoc/valid-types": 1
+        "jsdoc/valid-types": 1,
+        //TEMP Hack for having the package.json files...
+        "node/no-extraneous-require": ["off"],
+        "node/no-unpublished-require": ["off"]
     },
     "overrides": [
         {
