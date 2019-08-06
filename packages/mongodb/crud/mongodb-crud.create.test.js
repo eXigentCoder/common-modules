@@ -4,6 +4,7 @@ const { ValidationError, TenantError } = require(`../../common-errors`);
 
 const {
     getPopulatedCrud,
+    withStatuses,
     createContext,
     noStringIdNoTenant,
     stringIdNoTenant,
@@ -84,6 +85,72 @@ describe(`MongoDB`, () => {
                 const context = createContext();
                 context.identity.tenant.id = ``;
                 await expect(create(entity, context)).to.be.rejectedWith(TenantError);
+            });
+            describe(`Status Logic`, () => {
+                const statusData = { someReason: 42, saveMe: true };
+                it(`Should have the first status if the metadata has it specified as required`, async () => {
+                    const md = withStatuses(stringIdTenant(), { dataRequired: false });
+                    const { create } = await getPopulatedCrud(md);
+                    const entity = validEntity();
+                    const context = createContext();
+                    const created = await create(entity, context);
+                    expect(created.status).to.be.ok;
+                    expect(created.statusDate).to.be.ok;
+                    expect(created.statusLog).to.be.ok;
+                    expect(created.statusData).to.not.be.ok;
+                });
+                it(`Should throw an error if statusData provided but no status`, async () => {
+                    const md = withStatuses(stringIdTenant(), {
+                        dataRequired: false,
+                        isRequired: false,
+                    });
+                    const { create } = await getPopulatedCrud(md);
+                    const entity = validEntity();
+                    entity.statusData = statusData;
+                    const context = createContext();
+                    await expect(create(entity, context)).to.be.rejected;
+                });
+                it(`Should not have a status if one was not provided and the definition had one allowed but not required`, async () => {
+                    const md = withStatuses(stringIdTenant(), {
+                        isRequired: false,
+                        dataRequired: false,
+                    });
+                    const { create } = await getPopulatedCrud(md);
+                    const entity = validEntity();
+                    const context = createContext();
+                    const created = await create(entity, context);
+                    expect(created.status).to.not.be.ok;
+                    expect(created.statusDate).to.not.be.ok;
+                    expect(created.statusLog).to.not.be.ok;
+                    expect(created.statusData).to.not.be.ok;
+                });
+                it(`Should allow you to set a valid status if one is required`, async () => {
+                    const md = withStatuses(stringIdTenant(), { dataRequired: false });
+                    const { create } = await getPopulatedCrud(md);
+                    const entity = validEntity();
+                    entity.status = `todo`;
+                    const context = createContext();
+                    const created = await create(entity, context);
+                    expect(created.status).to.be.ok;
+                    expect(created.statusDate).to.be.ok;
+                    expect(created.statusLog).to.be.ok;
+                    expect(created.statusData).to.not.be.ok;
+                });
+                it(`Should allow you to pass through status data`, async () => {
+                    const md = withStatuses(stringIdTenant());
+                    const { create } = await getPopulatedCrud(md);
+                    const entity = validEntity();
+                    entity.status = `todo`;
+
+                    entity.statusData = statusData;
+                    const context = createContext();
+                    const created = await create(entity, context);
+                    expect(created.status).to.be.ok;
+                    expect(created.statusDate).to.be.ok;
+                    expect(created.statusLog).to.be.ok;
+                    expect(created.statusData).to.not.be.ok;
+                    expect(created.statusLog[0].data).to.eql(statusData);
+                });
             });
         });
     });

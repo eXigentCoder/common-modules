@@ -1,6 +1,10 @@
 'use strict';
 
-const { removeSchemaAndRequired } = require(`./json-schema-utilities`);
+const {
+    removeSchemaAndRequired,
+    removeFromRequired,
+    addSchema,
+} = require(`./json-schema-utilities`);
 
 /**
  * @param {import('./types').JsonSchema} schema
@@ -18,10 +22,12 @@ module.exports = function filterPropertiesForCreation(schema, metadata) {
     if (metadata.authorization && metadata.authorization.ownership) {
         removeSchemaAndRequired(schema, `owner`);
     }
-    // delete schema.properties.status;
-    // removeFromArrayIfExists(schema.required, 'status');
-    // delete schema.properties.statusDate;
-    // removeFromArrayIfExists(schema.required, 'statusDate');
-    // delete schema.properties.statusLog;
-    // removeFromArrayIfExists(schema.required, 'statusLog');
+    if (metadata.statuses && metadata.statuses.length > 0) {
+        for (const definition of metadata.statuses) {
+            removeFromRequired(schema, ``, definition.pathToStatusField);
+            removeSchemaAndRequired(schema, definition.pathToStatusDateField);
+            removeSchemaAndRequired(schema, definition.pathToStatusLogField);
+            addSchema(schema, definition.pathToStatusDataField, definition.statusDataSchema);
+        }
+    }
 };

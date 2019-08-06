@@ -27,6 +27,11 @@ module.exports = function() {
             stringIdentifier: { $ref: `#/definitions/stringIdentifier` },
             tenantInfo: { $ref: `#/definitions/tenantInfo` },
             authorization: { $ref: `#/definitions/authorization` },
+            statuses: {
+                type: `array`,
+                items: { $ref: `#/definitions/statusFieldDefinition` },
+                uniqueItems: true,
+            },
             collectionName: commonSchemas.identifier,
             auditCollectionName: commonSchemas.identifier,
             auditChanges: commonSchemas.boolean,
@@ -141,6 +146,34 @@ module.exports = function() {
                     },
                 },
                 required: [`interaction`],
+            },
+            status: {
+                type: `object`,
+                properties: {
+                    name: { type: `string` },
+                    description: { type: `string` },
+                },
+                additionalProperties: false,
+                required: [`name`],
+            },
+            statusFieldDefinition: {
+                type: `object`,
+                properties: {
+                    pathToStatusField: { type: `string` },
+                    pathToStatusDateField: { type: `string` },
+                    pathToStatusLogField: { type: `string` },
+                    pathToStatusDataField: { type: `string` },
+                    allowedValues: {
+                        type: `array`,
+                        items: { $ref: `#/definitions/status` },
+                        uniqueItems: true,
+                    },
+                    isRequired: { type: `boolean` },
+                    dataRequired: { type: `boolean` },
+                    statusDataSchema: { $ref: `#/definitions/jsonSchema` },
+                },
+                required: [`pathToStatusField`, `allowedValues`, `isRequired`, `dataRequired`],
+                additionalProperties: false,
             },
             jsonSchema: {
                 type: `object`,

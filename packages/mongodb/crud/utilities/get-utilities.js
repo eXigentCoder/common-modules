@@ -10,6 +10,7 @@ const {
     createSetOwnerIfApplicable,
     createSetTenant,
     createStringIdentifierSetter,
+    createSetStatusesIfApplicable,
 } = require(`.`);
 
 /** @type {import('../../types').GetUtils} */
@@ -57,6 +58,7 @@ async function getUtils({
         setOwnerIfApplicable: createSetOwnerIfApplicable(metadata),
         enforcer,
         titleToStringIdentifier,
+        setStatuses: createSetStatusesIfApplicable(metadata),
     };
 }
 

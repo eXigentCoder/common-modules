@@ -1,7 +1,7 @@
 'use strict';
 
 const { createStringIdentifierSetter } = require(`./create-string-identifier-setter`);
-const { noStringIdNoTenant, stringIdNoTenant} = require(`../../test-utilities`);
+const { noStringIdNoTenant, stringIdNoTenant } = require(`../../test-utilities`);
 const { titleToStringIdentifier } = require(`./title-to-string-identifier`);
 describe(`MongoDB`, () => {
     describe(`createStringIdentifierSetter`, () => {

@@ -10,4 +10,5 @@ module.exports = {
     ...require(`./ensure-entity-is-object`),
     ...require(`./set-owner-if-applicable`),
     ...require(`./title-to-string-identifier`),
+    ...require(`./set-statuses`),
 };

@@ -1,0 +1,17 @@
+{
+  "bit": {
+    "env": {
+      "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
+    }
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "devDependencies": {},
+  "homepage": "https://bit.dev/exigentcoder/common-modules/validation",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "validation/index.js",
+  "name": "@bit/exigentcoder.common-modules.validation",
+  "peerDependencies": {},
+  "version": "0.21.0"
+}

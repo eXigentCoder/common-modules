@@ -42,6 +42,7 @@ export interface Utilities {
     enforcer?: Enforcer;
     setOwnerIfApplicable: SetOwnerIfApplicable;
     titleToStringIdentifier: TitleToStringIdentifier;
+    setStatuses: SetStatusesIfApplicable;
 }
 
 export interface Crud<T> {
@@ -65,7 +66,7 @@ export type Search<T> = (
     query: Query | Object,
     context: ExecutionContext,
     hooks?: Hooks
-) => Promise<{items:T[]}>;
+) => Promise<{ items: T[] }>;
 
 export interface Auditors<T> {
     writeCreation: WriteCreation<T>;
@@ -90,6 +91,11 @@ export type CreateAddTenantToFilter = (metatada: EntityMetadata) => AddTenantToF
 export type AddTenantToFilter = (query: Query, context: ExecutionContext) => void;
 export type GetUtils = (params: CreateUtilityParams) => Promise<Utilities>;
 export type SetOwnerIfApplicable = (entity: any, context: ExecutionContext) => void;
+export type SetStatusesIfApplicable = (
+    entity: any,
+    existingEntity: any,
+    context: ExecutionContext
+) => void;
 export type TitleToStringIdentifier = (title: string) => string;
 
 export interface UrlConfig {
@@ -169,6 +175,8 @@ export interface HookContext {
     utilities: Utilities;
     /** The entity currently being worked with*/
     entity?: any;
+    /** The entity in its exisitng stored state*/
+    existingEntity?: any;
     query?: Query;
     hooks: Hooks;
     /** Any additional properties */

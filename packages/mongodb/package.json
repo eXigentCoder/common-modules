@@ -1,0 +1,17 @@
+{
+  "bit": {
+    "env": {
+      "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
+    }
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "devDependencies": {},
+  "homepage": "https://bit.dev/exigentcoder/common-modules/mongodb",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "mongodb/index.js",
+  "name": "@bit/exigentcoder.common-modules.mongodb",
+  "peerDependencies": {},
+  "version": "0.22.0"
+}

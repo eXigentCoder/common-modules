@@ -18,6 +18,7 @@ const {
     replace,
     setEntityFromDBUsingQuery,
     setMetadataFields,
+    setStatuses,
 } = require(`./steps`);
 /**
  * @typedef {import('../../entity-metadata').EntityMetadata} EntityMetadata
@@ -65,6 +66,7 @@ function getCreate(utilities) {
         await runStepWithHooks(setEntityFromInput, hookContext);
         await runStepWithHooks(getValidateEntityFn(`create`), hookContext);
         await runStepWithHooks(setMetadataFields, hookContext);
+        await runStepWithHooks(setStatuses, hookContext);
         await runStepWithHooks(getAuthorizeFn(`create`), hookContext);
         await runStepWithHooks(getValidateEntityFn(`core`), hookContext);
         await runStepWithHooks(insertEntityIntoDb, hookContext);
@@ -137,6 +139,7 @@ function getReplaceById(utilities) {
         await runStepWithHooks(setEntityFromInput, hookContext);
         await runStepWithHooks(getValidateEntityFn(`replace`), hookContext);
         await runStepWithHooks(setMetadataFields, hookContext);
+        await runStepWithHooks(setStatuses, hookContext);
         await runStepWithHooks(getValidateEntityFn(`core`), hookContext);
         await runStepWithHooks(replace, hookContext);
         await runStepWithHooks(getWriteAuditEntryFn(`replace`), hookContext);
@@ -166,7 +169,7 @@ function getSearch(utilities) {
         await runStepWithHooks(setEntityFromDBUsingQuery, hookContext);
         await runStepWithHooks(mapEntityForOutput, hookContext);
         return {
-            items:hookContext.entity
+            items: hookContext.entity,
         };
     };
 }

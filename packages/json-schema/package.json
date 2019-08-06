@@ -1,0 +1,17 @@
+{
+  "bit": {
+    "env": {
+      "tester": "exigentcoder.common-modules/tester-mocha@0.20.5"
+    }
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "devDependencies": {},
+  "homepage": "https://bit.dev/exigentcoder/common-modules/json-schema",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "json-schema/index.js",
+  "name": "@bit/exigentcoder.common-modules.json-schema",
+  "peerDependencies": {},
+  "version": "0.21.0"
+}
