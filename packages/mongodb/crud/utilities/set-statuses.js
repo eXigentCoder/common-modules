@@ -2,8 +2,8 @@
 const get = require(`lodash/get`);
 const set = require(`lodash/set`);
 const unset = require(`lodash/unset`);
-
 const moment = require(`moment`);
+const { ValidationError } = require(`../../../common-errors`);
 /**
  *
  * @param {import("../../../entity-metadata/types").EntityMetadata} metadata
@@ -26,17 +26,26 @@ function createSetStatusesIfApplicable(metadata) {
     };
     function updateStatusForExistingEntity({ definition, entity, existingEntity, now }) {
         const newStatus = get(entity, definition.pathToStatusField);
-        if (!newStatus) {
-            throw new Error(`Allowed to clear statuses?`);
-        }
-        const oldValue = get(existingEntity, definition.pathToStatusField);
-        if (!oldValue) {
-            return setStatusForNewEntity({ definition, entity, now });
-        }
-        if (newStatus === oldValue) {
+        const oldStatus = get(existingEntity, definition.pathToStatusField);
+        const sameStatus = newStatus === oldStatus;
+        const clearingStatus = !newStatus && !!oldStatus;
+        const settingStatusForTheFirstTime = !oldStatus && !!newStatus;
+        //const updatingStatus = !!oldStatus && !!newStatus && !sameStatus;
+        if (sameStatus) {
             return;
         }
-        const log = get(entity, definition.pathToStatusLogField, []);
+        if (clearingStatus) {
+            if (definition.isRequired) {
+                throw new ValidationError(
+                    `${definition.pathToStatusField} is required and cannot be cleared from the ${metadata.title}`
+                );
+            }
+        }
+        if (settingStatusForTheFirstTime) {
+            return setStatusForNewEntity({ definition, entity, now });
+        }
+
+        const log = get(existingEntity, definition.pathToStatusLogField, []);
         const statusData = get(entity, definition.pathToStatusDataField);
         unset(entity, definition.pathToStatusDataField);
         log.push({
@@ -47,27 +56,25 @@ function createSetStatusesIfApplicable(metadata) {
         set(entity, definition.pathToStatusDateField, now);
         set(entity, definition.pathToStatusLogField, log);
     }
+
     function setStatusForNewEntity({ definition, entity, now }) {
-        const currentValue = get(entity, definition.pathToStatusField);
+        const specifiedValue = get(entity, definition.pathToStatusField);
         const firstStatus = definition.allowedValues[0].name;
-        const statusToSet = currentValue || firstStatus;
-        const log = get(entity, definition.pathToStatusLogField, []);
+        const statusToSet = specifiedValue || firstStatus;
         const statusData = get(entity, definition.pathToStatusDataField);
         unset(entity, definition.pathToStatusDataField);
-        log.push({
-            status: statusToSet,
-            statusDate: now,
-            data: statusData,
-        });
-        if (currentValue) {
-            const newDate = get(entity, definition.pathToStatusDateField, now);
-            set(entity, definition.pathToStatusDateField, newDate);
-            const newLog = get(entity, definition.pathToStatusLogField, log);
-            set(entity, definition.pathToStatusLogField, newLog);
-            return;
-        }
-        if (!definition.isRequired) {
-            return; //not required so skip until someone sets it.
+        const log = [
+            {
+                status: statusToSet,
+                statusDate: now,
+                data: statusData,
+            },
+        ];
+        if (!specifiedValue && !definition.isRequired) {
+            if (statusData) {
+                throw new Error(`Can't specify status data but no status.`);
+            }
+            return; //not required and not specified so skip until someone sets it.
         }
         set(entity, definition.pathToStatusField, statusToSet);
         set(entity, definition.pathToStatusDateField, now);

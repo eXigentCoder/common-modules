@@ -87,6 +87,7 @@ describe(`MongoDB`, () => {
                 await expect(create(entity, context)).to.be.rejectedWith(TenantError);
             });
             describe(`Status Logic`, () => {
+                const statusData = { someReason: 42, saveMe: true };
                 it(`Should have the first status if the metadata has it specified as required`, async () => {
                     const md = withStatuses(stringIdTenant(), { dataRequired: false });
                     const { create } = await getPopulatedCrud(md);
@@ -97,6 +98,17 @@ describe(`MongoDB`, () => {
                     expect(created.statusDate).to.be.ok;
                     expect(created.statusLog).to.be.ok;
                     expect(created.statusData).to.not.be.ok;
+                });
+                it(`Should throw an error if statusData provided but no status`, async () => {
+                    const md = withStatuses(stringIdTenant(), {
+                        dataRequired: false,
+                        isRequired: false,
+                    });
+                    const { create } = await getPopulatedCrud(md);
+                    const entity = validEntity();
+                    entity.statusData = statusData;
+                    const context = createContext();
+                    await expect(create(entity, context)).to.be.rejected;
                 });
                 it(`Should not have a status if one was not provided and the definition had one allowed but not required`, async () => {
                     const md = withStatuses(stringIdTenant(), {
@@ -129,7 +141,7 @@ describe(`MongoDB`, () => {
                     const { create } = await getPopulatedCrud(md);
                     const entity = validEntity();
                     entity.status = `todo`;
-                    const statusData = { someReason: 42, saveMe: true };
+
                     entity.statusData = statusData;
                     const context = createContext();
                     const created = await create(entity, context);

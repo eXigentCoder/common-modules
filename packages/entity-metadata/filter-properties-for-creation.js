@@ -3,7 +3,6 @@
 const {
     removeSchemaAndRequired,
     removeFromRequired,
-    addFullRequiredSchema,
     addSchema,
 } = require(`./json-schema-utilities`);
 
@@ -28,15 +27,7 @@ module.exports = function filterPropertiesForCreation(schema, metadata) {
             removeFromRequired(schema, ``, definition.pathToStatusField);
             removeSchemaAndRequired(schema, definition.pathToStatusDateField);
             removeSchemaAndRequired(schema, definition.pathToStatusLogField);
-            if (definition.dataRequired) {
-                addFullRequiredSchema(
-                    schema,
-                    definition.pathToStatusDataField,
-                    definition.statusDataSchema
-                );
-            } else {
-                addSchema(schema, definition.pathToStatusDataField, definition.statusDataSchema);
-            }
+            addSchema(schema, definition.pathToStatusDataField, definition.statusDataSchema);
         }
     }
 };

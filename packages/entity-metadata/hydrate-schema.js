@@ -110,7 +110,7 @@ function addStatusInfo(schema, metadata) {
                     statusDate: dateSchema,
                     data: definition.statusDataSchema,
                 },
-                required: [`status`, `statusDate`],
+                required: [`statusDate`],
                 additionalProperties: false,
             },
             additionalItems: false,
@@ -119,6 +119,7 @@ function addStatusInfo(schema, metadata) {
             logSchema.items.required.push(`data`);
         }
         if (definition.isRequired) {
+            logSchema.items.required.push(`status`);
             addFullRequiredSchema(schema, definition.pathToStatusField, statusSchema);
             addFullRequiredSchema(schema, definition.pathToStatusDateField, dateSchema);
             addFullRequiredSchema(schema, definition.pathToStatusLogField, logSchema);
