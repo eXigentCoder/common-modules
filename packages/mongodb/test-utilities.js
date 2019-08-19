@@ -123,7 +123,7 @@ function withStatuses(
     const status = {
         statuses: [
             {
-                allowedValues: [{ name: `todo` }, { name: `in progress ` }, { name: `done` }],
+                allowedValues: [{ name: `todo` }, { name: `in progress` }, { name: `done` }],
                 isRequired,
                 pathToStatusField,
                 dataRequired,

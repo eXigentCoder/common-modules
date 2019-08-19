@@ -56,10 +56,16 @@ function initialise(inputOptions) {
     const environmentConfigFromFile = loadConfigFromFile(`config/` + environment, inputOptions);
     const defaultConfigFromFile = loadConfigFromFile(`config/default`, inputOptions);
 
-    _.merge(internalConfig, defaultConfigFromFile, environmentConfigFromFile);
+    _.mergeWith(internalConfig, defaultConfigFromFile, environmentConfigFromFile, customizer);
     nconf.defaults(internalConfig);
     debug(`Configuration initialised`);
     initialised = true;
+
+    function customizer(objValue, srcValue) {
+        if (_.isArray(objValue)) {
+            return objValue.concat(srcValue);
+        }
+    }
 }
 
 function loadConfigFromFile(filePath, options) {

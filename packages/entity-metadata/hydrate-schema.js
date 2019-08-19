@@ -5,7 +5,8 @@ const {
     addSchema,
 } = require(`./json-schema-utilities`);
 const withVersionInfo = require(`../version-info/with-version-info`);
-const merge = require(`lodash/merge`);
+const mergeWith = require(`lodash/mergeWith`);
+const isArray = require(`lodash/isArray`);
 const ownershipSchema = require(`./ownership-schema`);
 
 /**
@@ -56,7 +57,12 @@ function addTenantInfo(schema, tenantInfo) {
  * @param {import('./types').JsonSchema} schema
  */
 function addVersionInfo(schema) {
-    return merge(schema, withVersionInfo());
+    return mergeWith(schema, withVersionInfo(), customizer);
+    function customizer(objValue, srcValue) {
+        if (isArray(objValue)) {
+            return objValue.concat(srcValue);
+        }
+    }
 }
 /**
  * @param {import('./types').JsonSchema} schema
