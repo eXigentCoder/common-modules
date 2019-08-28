@@ -354,7 +354,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "exigentcoder.common-modules/json-schema-faker@0.21.0": {
+    "exigentcoder.common-modules/json-schema-faker@0.23.4": {
         "files": [
             {
                 "relativePath": "packages/json-schema-faker/index.js",
