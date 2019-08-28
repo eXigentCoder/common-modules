@@ -180,6 +180,7 @@ async function setMetadataFields({ existingEntity, entity, executionContext, uti
             entity.owner = existingEntity.owner;
         }
         utilities.setVersionInfo(entity, executionContext);
+        entity._id = existingEntity._id;
     } else {
         utilities.setOwnerIfApplicable(entity, executionContext);
         utilities.setVersionInfo(entity, executionContext);
