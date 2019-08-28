@@ -2,20 +2,9 @@
 
 const jsf = require(`json-schema-faker`);
 const ObjectId = require(`mongodb`).ObjectId;
-const faker = require(`faker`);
 const uuid = require(`uuid`);
 
-jsf.extend(`faker`, () => {
-    // @ts-ignore
-    faker.custom = {
-        mongoId: () => {
-            return new ObjectId().toString();
-        },
-    };
-    return faker;
-});
-
-jsf.format(`mongoId`, () => {
+jsf.format(`mongoDbObjectId`, () => {
     return new ObjectId().toString();
 });
 

@@ -1,27 +1,29 @@
 'use strict';
 
-/** a mongodb object id
- * @type {import("../entity-metadata/types").JsonSchema}*/
-const objectId = {
-    type: [`string`, `object`],
-    format: `mongoId`,
-    mongoId: true,
-    faker: {
-        'custom.mongoId': true,
-    },
-    minLength: 24,
-    maxLength: 24,
-    additionalProperties: true,
-    properties: {
-        _bsontype: {
-            type: `string`,
-            enum: [`ObjectID`],
-        },
-        id: {
-            type: `object`,
-        },
-    },
-    required: [`_bsontype`, `id`],
-};
+//TODO RK, maybe a good idea to use oneOf here?
 
-module.exports = { objectId };
+/** a mongodb object id
+ * @param {import("../entity-metadata/types").MongoDbObjectIdCoercion} coerceTo
+ * @returns {import("../entity-metadata/types").JsonSchema}*/
+function mongoDbObjectId(coerceTo = `object`) {
+    return {
+        type: [`string`, `object`],
+        format: `mongoDbObjectId`,
+        mongoDbObjectIdCoercion: coerceTo,
+        minLength: 24,
+        maxLength: 24,
+        additionalProperties: true,
+        properties: {
+            _bsontype: {
+                type: `string`,
+                enum: [`ObjectID`],
+            },
+            id: {
+                type: `object`,
+            },
+        },
+        required: [`_bsontype`, `id`],
+    };
+}
+
+module.exports = { mongoDbObjectId };

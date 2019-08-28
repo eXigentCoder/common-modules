@@ -8,7 +8,7 @@ const metadata = {
     collectionName: `bobs`,
     identifier: {
         pathToId: `_id`,
-        schema: jsonSchemas.objectId,
+        schema: jsonSchemas.mongoDbObjectId(),
     },
     schemas: {
         core: {

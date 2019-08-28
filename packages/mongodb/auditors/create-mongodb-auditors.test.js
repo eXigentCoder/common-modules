@@ -3,7 +3,7 @@
 const crypto = require(`crypto`);
 const { getDb, createAuditors } = require(`..`);
 const { createInputValidator, createOutputValidator } = require(`../../validation`);
-const { jsonSchemas, addMongoId } = require(`../../validation-mongodb`);
+const { jsonSchemas, addMongoDbObjectId } = require(`../../validation-mongodb`);
 const generateEntityMetadata = require(`../../entity-metadata`);
 const ObjectId = require(`mongodb`).ObjectId;
 const { createVersionInfoSetter } = require(`../../version-info`);
@@ -57,8 +57,8 @@ async function getAuditors() {
         dbName: `test-common`,
     };
     const db = await getDb(urlConfig);
-    const inputValidator = createInputValidator(addMongoId);
-    const outputValidator = createOutputValidator(addMongoId);
+    const inputValidator = createInputValidator(addMongoDbObjectId);
+    const outputValidator = createOutputValidator(addMongoDbObjectId);
     const inputMetadata = validMetaData();
     const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
     const setVersionInfo = createVersionInfoSetter({ metadata, validator: inputValidator });
@@ -83,7 +83,7 @@ function validMetaData() {
             },
         },
         name: `user`,
-        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
+        identifier: { pathToId: `_id`, schema: jsonSchemas.mongoDbObjectId() },
         stringIdentifier: { pathToId: `username`, schema: { type: `string` } },
         collectionName: `users`,
         auditChanges: true,

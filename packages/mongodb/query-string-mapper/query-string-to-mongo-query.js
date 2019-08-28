@@ -36,11 +36,11 @@ module.exports = function createQueryStringMapper(schema, options = defaultOptio
             {},
             {
                 casters: {
-                    mongoId: val => new ObjectId(val),
+                    mongoDbObjectId: val => new ObjectId(val),
                 },
                 castParams: {
-                    _id: `mongoId`,
-                    owner: `mongoId`,
+                    _id: `mongoDbObjectId`,
+                    owner: `mongoDbObjectId`,
                 },
             },
             options.agpOptions

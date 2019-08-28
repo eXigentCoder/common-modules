@@ -24,7 +24,7 @@ module.exports = function getMetadata() {
             baseUrl: `https://www.google.com`,
             identifier: {
                 pathToId: `_id`,
-                schema: jsonSchemas.objectId,
+                schema: jsonSchemas.mongoDbObjectId(),
             },
             stringIdentifier: {
                 pathToId: `identifier`,

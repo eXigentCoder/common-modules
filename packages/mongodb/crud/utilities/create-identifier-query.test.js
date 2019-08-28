@@ -1,7 +1,7 @@
 'use strict';
 const generateEntityMetadata = require(`../../../entity-metadata`);
 const { createInputValidator, createOutputValidator } = require(`../../../validation`);
-const { addMongoId } = require(`../../../validation-mongodb`);
+const { addMongoDbObjectId } = require(`../../../validation-mongodb`);
 const { createGetIdentifierQuery } = require(`./create-identifier-query`);
 const ObjectId = require(`mongodb`).ObjectId;
 const { ValidationError } = require(`../../../common-errors`);
@@ -9,8 +9,8 @@ const { noStringIdNoTenant, stringIdNoTenant } = require(`../../test-utilities`)
 describe(`MongoDB`, () => {
     describe(`createGetIdentifierQuery`, () => {
         describe(`no string identifer`, () => {
-            const inputValidator = createInputValidator(addMongoId);
-            const outputValidator = createOutputValidator(addMongoId);
+            const inputValidator = createInputValidator(addMongoDbObjectId);
+            const outputValidator = createOutputValidator(addMongoDbObjectId);
             const inputMetadata = noStringIdNoTenant();
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             const getIdentifierQuery = createGetIdentifierQuery(metadata);
@@ -49,8 +49,8 @@ describe(`MongoDB`, () => {
             });
         });
         describe(`has a string identifer`, () => {
-            const inputValidator = createInputValidator(addMongoId);
-            const outputValidator = createOutputValidator(addMongoId);
+            const inputValidator = createInputValidator(addMongoDbObjectId);
+            const outputValidator = createOutputValidator(addMongoDbObjectId);
             const inputMetadata = stringIdNoTenant();
             const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
             const getIdentifierQuery = createGetIdentifierQuery(metadata);

@@ -3,7 +3,7 @@
 const { getDb, getCrud, createQueryStringMapper } = require(`.`);
 const generateEntityMetadata = require(`../entity-metadata`);
 const { createInputValidator, createOutputValidator } = require(`../validation`);
-const { jsonSchemas, addMongoId } = require(`../validation-mongodb`);
+const { jsonSchemas, addMongoDbObjectId } = require(`../validation-mongodb`);
 const schemas = require(`../json-schema`);
 const crypto = require(`crypto`);
 const { newModel } = require(`casbin`);
@@ -20,8 +20,8 @@ const urlConfig = {
  */
 async function getPopulatedCrud(getMetadata, enforcer) {
     const db = await getDb(urlConfig);
-    const inputValidator = createInputValidator(addMongoId);
-    const outputValidator = createOutputValidator(addMongoId);
+    const inputValidator = createInputValidator(addMongoDbObjectId);
+    const outputValidator = createOutputValidator(addMongoDbObjectId);
     const inputMetadata = typeof getMetadata === `function` ? getMetadata() : getMetadata;
     const metadata = generateEntityMetadata(inputMetadata, inputValidator, outputValidator);
     const queryMapper = createQueryStringMapper(metadata.schemas.core);
@@ -59,7 +59,7 @@ function noStringIdNoTenant() {
             },
         },
         name: `user`,
-        identifier: { pathToId: `_id`, schema: jsonSchemas.objectId },
+        identifier: { pathToId: `_id`, schema: jsonSchemas.mongoDbObjectId() },
         collectionName: `crud-users`,
         baseUrl: `https://ryankotzen.com`,
     };

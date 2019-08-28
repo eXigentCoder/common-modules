@@ -1,28 +1,28 @@
 'use strict';
 
-const { objectId } = require(`./json-schema`);
+const { mongoDbObjectId } = require(`./json-schema`);
 const { createInputValidator } = require(`../validation/ajv`);
-const addMongoId = require(`./add-mongo-id`);
+const addMongoDbObjectId = require(`./add-mongo-db-object-id`);
 const mongodb = require(`mongodb`);
 const schemaId = __filename;
 
 describe(`Validation - MongoDB`, () => {
-    describe(`ObjectId`, function() {
+    describe(`mongoDbObjectId`, function() {
         const schema = {
             type: `object`,
-            properties: { id: objectId },
+            properties: { id: mongoDbObjectId() },
         };
-        const validator = createInputValidator(addMongoId);
+        const validator = createInputValidator(addMongoDbObjectId);
         validator.addSchema(schema, schemaId);
 
-        it(`should validate against at least 100 mongoId strings`, function() {
+        it(`should validate against at least 100 mongodb ObjectId strings`, function() {
             for (let i = 0; i < 100; i++) {
                 const id = new mongodb.ObjectID();
                 expect(validator.validate(schemaId, { id: id.toString() })).to.be.ok;
             }
         });
 
-        it(`should validate against at least 100 mongoId objects`, function() {
+        it(`should validate against at least 100 mongodb ObjectId objects`, function() {
             for (let i = 0; i < 100; i++) {
                 validator.ensureValid(schemaId, { id: new mongodb.ObjectID() });
             }
