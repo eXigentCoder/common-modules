@@ -9,6 +9,9 @@ function mongoDbObjectId(coerceTo = `object`) {
     return {
         type: [`string`, `object`],
         format: `mongoDbObjectId`,
+        faker: {
+            'custom.mongoId': true,
+        },
         mongoDbObjectIdCoercion: coerceTo,
         minLength: 24,
         maxLength: 24,
