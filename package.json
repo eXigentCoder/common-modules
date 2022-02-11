@@ -65,7 +65,7 @@
     "@bit/bit.utils.validation.empty": "1.0.0",
     "@elastic.io/casbin-mongoose-adapter": "git+https://github.com/elasticio/casbin-mongoose-adapter.git",
     "@hapi/boom": "7.4.2",
-    "ajv": "6.10.2",
+    "ajv": "6.12.3",
     "ajv-errors": "1.0.1",
     "api-query-params": "4.13.0",
     "better-ajv-errors": "0.6.4",
