@@ -49,7 +49,7 @@
     "@bit/exigentcoder.common-modules.validation": "file:../packages/validation",
     "@bit/exigentcoder.common-modules.validation-mongodb": "file:../packages/validation-mongodb",
     "@bit/exigentcoder.common-modules.version-info": "file:../packages/version-info",
-    "@hapi/boom": "7.4.2",
+    "@hapi/boom": "7.4.11",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "debug": "4.1.1",
