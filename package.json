@@ -71,7 +71,7 @@
     "better-ajv-errors": "0.6.4",
     "casbin": "3.0.3",
     "debug": "4.1.1",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "faker": "4.1.0",
     "fs-extra": "8.1.0",
     "glob": "7.1.4",
