@@ -29,7 +29,7 @@
     "eslint-plugin-mocha": "6.0.0",
     "eslint-plugin-node": "9.1.0",
     "eslint-plugin-prettier": "3.1.0",
-    "mocha": "6.2.0",
+    "mocha": "10.2.0",
     "node-mocks-http": "1.7.6",
     "nodemon": "1.19.1",
     "npm-check": "5.9.0",
